@@ -40,5 +40,5 @@ Automate the generation of professional PDF documents for client material confir
 ## 💻 Tech Stack
 * **Language:** Python 3.14+
 * **Environment:** Virtual Environment (`venv`)
-* **Editor:** VS Code (Vim mode)
+* **Editor:** VS Code 
 * **Key Libraries:** `PyYAML`, `fpdf2`, `Pillow`, `CustomTkinter`

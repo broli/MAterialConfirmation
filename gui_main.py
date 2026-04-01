@@ -141,32 +141,133 @@ class PKBApp(ctk.CTk):
     # TAB 2: CATALOG MANAGER (ADMIN)
     # ==========================================
     def setup_admin_tab(self):
-        self.tab_admin.grid_columnconfigure((0, 1), weight=1)
+        self.tab_admin.grid_columnconfigure(0, weight=1)
+        self.tab_admin.grid_rowconfigure(0, weight=1)
 
-        ctk.CTkLabel(self.tab_admin, text="Add New Product to Database", font=ctk.CTkFont(size=18, weight="bold")).grid(row=0, column=0, columnspan=2, pady=10)
+        # Base container for switching between Browser and Form
+        self.admin_container = ctk.CTkFrame(self.tab_admin, fg_color="transparent")
+        self.admin_container.grid(row=0, column=0, sticky="nsew")
+        self.admin_container.grid_columnconfigure(0, weight=1)
+        self.admin_container.grid_rowconfigure(1, weight=1)
 
-        # Basic Info
-        self.cat_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Category File (e.g., faucets.yaml)")
-        self.cat_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.build_browser_view()
+        self.build_form_view()
 
-        self.id_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Unique ID (e.g., KHL_PUR_02)")
-        self.id_entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+        # Start by showing the database browser
+        self.show_browser_view()
 
-        self.brand_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Brand (e.g., Kohler)")
-        self.brand_entry.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+    # --- Helper Data Functions ---
+    def get_unique_values(self, key):
+        """Scans loaded catalog for unique values to populate dropdowns."""
+        values = set()
+        for item in self.catalog.values():
+            if key in item and item[key]:
+                values.add(item[key])
+        return sorted(list(values))
 
-        self.model_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Model (e.g., Purist)")
-        self.model_entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+    def get_existing_categories(self):
+        """Reads the files in the categories folder."""
+        cat_path = os.path.join("database", "categories")
+        if not os.path.exists(cat_path):
+            return ["faucets.yaml", "vanities.yaml"] # Defaults if empty
+        return [f for f in os.listdir(cat_path) if f.endswith('.yaml')]
 
-        self.type_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Type (e.g., Widespread Faucet)")
-        self.type_entry.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+    # --- View 1: Database Browser ---
+    def build_browser_view(self):
+        self.browser_frame = ctk.CTkFrame(self.admin_container, fg_color="transparent")
+        self.browser_frame.grid_columnconfigure(0, weight=1)
+        self.browser_frame.grid_rowconfigure(1, weight=1)
 
-        self.finish_entry = ctk.CTkEntry(self.tab_admin, placeholder_text="Finish (e.g., Matte Black)")
-        self.finish_entry.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+        # Header
+        header = ctk.CTkFrame(self.browser_frame, fg_color="transparent")
+        header.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+        ctk.CTkLabel(header, text="Database Browser", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left")
+        ctk.CTkButton(header, text="+ Add New Product", command=self.show_form_view, fg_color="green", hover_color="darkgreen").pack(side="right")
 
-        # Dimensions
-        dim_frame = ctk.CTkFrame(self.tab_admin)
-        dim_frame.grid(row=4, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
+        # Tree/List View inside a scrollable frame
+        self.tree_frame = ctk.CTkScrollableFrame(self.browser_frame)
+        self.tree_frame.grid(row=1, column=0, sticky="nsew")
+
+    def refresh_browser_list(self):
+        """Draws the current YAML files and their contents."""
+        for widget in self.tree_frame.winfo_children():
+            widget.destroy()
+
+        cat_path = os.path.join("database", "categories")
+        if not os.path.exists(cat_path):
+            return
+
+        for cat_file in os.listdir(cat_path):
+            if not cat_file.endswith('.yaml'): continue
+            
+            # File / Category Title
+            cat_header = ctk.CTkLabel(self.tree_frame, text=f"📁 {cat_file.upper()}", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF")
+            cat_header.pack(anchor="w", pady=(15, 2), padx=5)
+            
+            file_path = os.path.join(cat_path, cat_file)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    items = yaml.safe_load(f) or []
+                    for item in items:
+                        # Product details indented
+                        text = f"  ├─ [{item.get('id')}] : {item.get('brand')} {item.get('model')} - {item.get('finish')}"
+                        ctk.CTkLabel(self.tree_frame, text=text, font=ctk.CTkFont(family="Courier", size=12)).pack(anchor="w", padx=10)
+            except Exception:
+                pass
+
+    # --- View 2: Add Product Form ---
+    def build_form_view(self):
+        self.form_frame = ctk.CTkFrame(self.admin_container, fg_color="transparent")
+        self.form_frame.grid_columnconfigure((0, 1), weight=1)
+
+        # Header
+        header = ctk.CTkFrame(self.form_frame, fg_color="transparent")
+        header.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 10))
+        ctk.CTkButton(header, text="← Back", command=self.show_browser_view, width=60).pack(side="left")
+        ctk.CTkLabel(header, text="Add New Product", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
+
+        # Basic Info with Smart Comboboxes & Labels
+        # Row 1: Labels
+        ctk.CTkLabel(self.form_frame, text="Category File", anchor="w").grid(row=1, column=0, padx=10, pady=(10, 0), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Unique ID", anchor="w").grid(row=1, column=1, padx=10, pady=(10, 0), sticky="ew")
+        
+        # Row 2: Inputs
+        self.cat_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_existing_categories())
+        self.cat_combobox.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="ew")
+        if self.get_existing_categories():
+            self.cat_combobox.set(self.get_existing_categories()[0]) 
+
+        self.id_entry = ctk.CTkEntry(self.form_frame)
+        self.id_entry.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew")
+
+        # Row 3: Labels
+        ctk.CTkLabel(self.form_frame, text="Brand", anchor="w").grid(row=3, column=0, padx=10, pady=(10, 0), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Model", anchor="w").grid(row=3, column=1, padx=10, pady=(10, 0), sticky="ew")
+
+        # Row 4: Inputs
+        self.brand_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('brand'))
+        self.brand_combobox.grid(row=4, column=0, padx=10, pady=(0, 10), sticky="ew")
+        self.brand_combobox.set("") 
+
+        self.model_entry = ctk.CTkEntry(self.form_frame)
+        self.model_entry.grid(row=4, column=1, padx=10, pady=(0, 10), sticky="ew")
+
+        # Row 5: Labels
+        ctk.CTkLabel(self.form_frame, text="Type", anchor="w").grid(row=5, column=0, padx=10, pady=(10, 0), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Finish", anchor="w").grid(row=5, column=1, padx=10, pady=(10, 0), sticky="ew")
+
+        # Row 6: Inputs
+        self.type_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('type'))
+        self.type_combobox.grid(row=6, column=0, padx=10, pady=(0, 10), sticky="ew")
+        self.type_combobox.set("") 
+
+        self.finish_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('finish'))
+        self.finish_combobox.grid(row=6, column=1, padx=10, pady=(0, 10), sticky="ew")
+        self.finish_combobox.set("") 
+
+        # Row 7: Dimensions
+        dim_frame = ctk.CTkFrame(self.form_frame)
+        dim_frame.grid(row=7, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
         ctk.CTkLabel(dim_frame, text="Dimensions (Optional - use inches like 48\")").pack(side="left", padx=10)
         
         self.w_entry = ctk.CTkEntry(dim_frame, placeholder_text="Width", width=80)
@@ -176,60 +277,83 @@ class PKBApp(ctk.CTk):
         self.d_entry = ctk.CTkEntry(dim_frame, placeholder_text="Depth", width=80)
         self.d_entry.pack(side="left", padx=5)
 
-        # Description
-        self.desc_entry = ctk.CTkTextbox(self.tab_admin, height=60)
-        self.desc_entry.insert("0.0", "Marketing description here...")
-        self.desc_entry.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+        # Row 8: Description Label
+        ctk.CTkLabel(self.form_frame, text="Marketing Description", anchor="w").grid(row=8, column=0, columnspan=2, padx=10, pady=(10, 0), sticky="ew")
+        
+        # Row 9: Description Input
+        self.desc_entry = ctk.CTkTextbox(self.form_frame, height=60)
+        self.desc_entry.grid(row=9, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
 
-        # Image Upload
+        # Row 10: Image Upload
         self.image_path_var = ctk.StringVar(value="")
-        img_frame = ctk.CTkFrame(self.tab_admin, fg_color="transparent")
-        img_frame.grid(row=6, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
+        img_frame = ctk.CTkFrame(self.form_frame, fg_color="transparent")
+        img_frame.grid(row=10, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
         
         ctk.CTkButton(img_frame, text="Browse Image...", command=self.browse_image).pack(side="left", padx=10)
         ctk.CTkLabel(img_frame, textvariable=self.image_path_var).pack(side="left")
 
-        # Save Button
-        ctk.CTkButton(self.tab_admin, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=7, column=0, columnspan=2, pady=20)
+        # Row 11: Save Button
+        ctk.CTkButton(self.form_frame, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=11, column=0, columnspan=2, pady=20)
 
+    # --- View Switchers ---
+    def show_browser_view(self):
+        self.form_frame.grid_forget()
+        self.browser_frame.grid(row=0, column=0, sticky="nsew")
+        self.refresh_browser_list()
+
+    def show_form_view(self):
+        self.browser_frame.grid_forget()
+        self.form_frame.grid(row=0, column=0, sticky="nsew")
+        
+        # Refresh combobox values before showing form
+        self.brand_combobox.configure(values=self.get_unique_values('brand'))
+        self.type_combobox.configure(values=self.get_unique_values('type'))
+        self.finish_combobox.configure(values=self.get_unique_values('finish'))
+        self.cat_combobox.configure(values=self.get_existing_categories())
+
+        # Reset form fields
+        self.id_entry.delete(0, 'end')
+        self.model_entry.delete(0, 'end')
+        self.w_entry.delete(0, 'end')
+        self.h_entry.delete(0, 'end')
+        self.d_entry.delete(0, 'end')
+        self.desc_entry.delete("0.0", "end")
+        self.image_path_var.set("")
+
+    # --- Form Actions ---
     def browse_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
         if file_path:
             self.image_path_var.set(file_path)
 
     def save_product(self):
-        cat_file = self.cat_entry.get().strip()
+        cat_file = self.cat_combobox.get().strip()
         if not cat_file.endswith(".yaml"):
             cat_file += ".yaml"
 
-        # Construct the product dictionary
         product = {
             "id": self.id_entry.get().strip(),
-            "brand": self.brand_entry.get().strip(),
+            "brand": self.brand_combobox.get().strip(),
             "model": self.model_entry.get().strip(),
-            "type": self.type_entry.get().strip(),
-            "finish": self.finish_entry.get().strip(),
+            "type": self.type_combobox.get().strip(),
+            "finish": self.finish_combobox.get().strip(),
             "description": self.desc_entry.get("0.0", "end").strip(),
             "dimensions": {}
         }
 
-        # Add optional dimensions
         if self.w_entry.get().strip(): product["dimensions"]["width"] = self.w_entry.get().strip()
         if self.h_entry.get().strip(): product["dimensions"]["height"] = self.h_entry.get().strip()
         if self.d_entry.get().strip(): product["dimensions"]["depth"] = self.d_entry.get().strip()
 
-        # Basic Validation
         if not product["id"] or not product["brand"]:
             messagebox.showwarning("Incomplete Data", "ID and Brand are required.")
             return
 
-        # Handle Image Copying
         source_image_path = self.image_path_var.get()
         if source_image_path:
             filename = os.path.basename(source_image_path)
             dest_image_path = os.path.join("database", "assets", filename)
             
-            # Only copy if the file isn't already in the assets folder
             if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
                 shutil.copy(source_image_path, dest_image_path)
             
@@ -238,16 +362,13 @@ class PKBApp(ctk.CTk):
             messagebox.showwarning("Missing Image", "Please select a product image.")
             return
 
-        # Append to YAML
         target_yaml_path = os.path.join("database", "categories", cat_file)
         
-        # Load existing data to append correctly
         existing_data = []
         if os.path.exists(target_yaml_path):
             with open(target_yaml_path, 'r', encoding='utf-8') as f:
                 existing_data = yaml.safe_load(f) or []
 
-        # Check for duplicate ID
         if any(item.get('id') == product["id"] for item in existing_data):
             messagebox.showerror("Duplicate ID", f"The ID '{product['id']}' already exists in {cat_file}.")
             return
@@ -259,9 +380,11 @@ class PKBApp(ctk.CTk):
 
         messagebox.showinfo("Success", f"Product '{product['id']}' saved to {cat_file}!")
         
-        # Reload the app's memory so the new item shows up in Tab 1 immediately
         self.catalog = self.db_loader.load_all_categories()
         self.populate_catalog_list()
+        
+        # Return to browser view after successful save
+        self.show_browser_view()
 
 # --- Execution ---
 if __name__ == "__main__":
