@@ -52,6 +52,8 @@ class SessionManager:
 
 # --- Test Execution ---
 if __name__ == "__main__":
+    from pdf_engine import PDFGenerator  # Import the PDF engine
+    
     # 1. Boot up the Database (Module 1)
     print("--- 1. Loading Master Catalog ---")
     db_loader = CatalogLoader()
@@ -60,12 +62,12 @@ if __name__ == "__main__":
     # 2. Process the Client Session (Module 2)
     print("\n--- 2. Processing Client Session ---")
     session_mgr = SessionManager(db_loader)
+    pdf_payload = session_mgr.process_client_session("test_client.yaml")
     
-    # Process our test file
-    pdf_data = session_mgr.process_client_session("test_client.yaml")
-    
-    # 3. Verify the final payload structure
-    if pdf_data:
-        print("\n--- 3. Final Payload Ready for PDF ---")
-        print(f"Client: {pdf_data['client_info']['name']}")
-        print(f"Total Products Ready to Print: {len(pdf_data['products'])}")
+    # 3. Generate the PDF (Module 3)
+    if pdf_payload and pdf_payload.get("products"):
+        print("\n--- 3. Generating PDF Document ---")
+        pdf_maker = PDFGenerator()
+        pdf_maker.create_pdf(pdf_payload)
+    else:
+        print("\n❌ No data payload available to generate PDF.")
