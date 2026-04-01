@@ -1,0 +1,31 @@
+- id: KHL_PUR_G_01
+  brand: "Kohler"
+  model: "Purist"
+  type: "Widespread Faucet"
+  finish: "Vibrant Brushed Moderne Gold"
+  dimensions: 
+    height: '6-3/8"'
+    spout_reach: '5-1/2"'
+  description: "Minimalist design with cross handles and solid brass construction."
+  image_file: "kohler_purist_gold.jpg"
+
+- id: PKB_VAN_48_GRY
+  brand: "Wyndham"
+  model: "Icon"
+  type: "Freestanding Vanity"
+  finish: "Dark Gray"
+  dimensions: 
+    width: '48"'
+    height: '34"'
+    depth: '22"'
+  description: "Modern vanity with integrated porcelain sink and soft-close drawers."
+  image_file: "wyndham_icon_48.jpg"
+
+- id: DLT_TRN_RING_BLK
+  brand: "Delta"
+  model: "Trinsic"
+  type: "Towel Ring"
+  finish: "Matte Black"
+  dimensions: {} 
+  description: "Sleek wall-mounted towel ring to match the Trinsic suite."
+  image_file: "delta_trinsic_ring.jpg"
