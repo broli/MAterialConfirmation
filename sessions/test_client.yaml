@@ -1,0 +1,10 @@
+# sessions/test_client.yaml
+client_info:
+  name: "John Doe"
+  project: "Master Bathroom Remodel"
+  date: "2026-04-01"
+
+selected_items:
+  - id: KHL_PUR_G_01    # The Faucet
+  - id: PKB_VAN_48_GRY  # The Vanity
+  # - id: FAKE_ID_123   # You can uncomment this later to test the error handler

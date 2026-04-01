@@ -1,0 +1,86 @@
+import yaml
+import os
+import sys
+
+class CatalogLoader:
+    def __init__(self, base_path="database"):
+        self.base_path = base_path
+        self.categories_path = os.path.join(base_path, "categories")
+        self.assets_path = os.path.join(base_path, "assets")
+        self.master_catalog = {}
+        self.errors = []
+
+    def validate_structure(self):
+        """Checks if the required folders exist."""
+        for path in [self.categories_path, self.assets_path]:
+            if not os.path.exists(path):
+                self.errors.append(f"CRITICAL: Folder not found: {path}")
+                return False
+        return True
+
+    def load_all_categories(self):
+        """Reads every .yaml file in the categories folder and validates entries."""
+        if not self.validate_structure():
+            return None
+
+        files = [f for f in os.listdir(self.categories_path) if f.endswith('.yaml')]
+        
+        if not files:
+            self.errors.append("WARNING: No .yaml files found in categories folder.")
+            return {}
+
+        for filename in files:
+            file_path = os.path.join(self.categories_path, filename)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+                    if not data:
+                        continue
+                    
+                    for item in data:
+                        self._validate_item(item, filename)
+                        # Use ID as the key for fast lookup later
+                        self.master_catalog[item['id']] = item
+            except Exception as e:
+                self.errors.append(f"ERROR reading {filename}: {e}")
+
+        return self.master_catalog
+
+    def _validate_item(self, item, filename):
+        """Internal check for required fields and image existence."""
+        required_fields = ['id', 'brand', 'model', 'type', 'finish', 'image_file']
+        
+        # 1. Check required fields
+        for field in required_fields:
+            if field not in item:
+                self.errors.append(f"MISSING FIELD [{field}] in {filename} (ID: {item.get('id', 'Unknown')})")
+
+        # 2. Check if image exists in assets
+        if 'image_file' in item:
+            img_path = os.path.join(self.assets_path, item['image_file'])
+            if not os.path.exists(img_path):
+                self.errors.append(f"MISSING IMAGE: '{item['image_file']}' referenced in {filename} (ID: {item['id']})")
+
+    def report(self):
+        """Prints a summary of the validation."""
+        if not self.errors:
+            print(f"✅ Success! Loaded {len(self.master_catalog)} products with no errors.")
+        else:
+            print(f"⚠️ Found {len(self.errors)} issues during loading:")
+            for err in self.errors:
+                print(f"  - {err}")
+
+# --- Test Execution ---
+if __name__ == "__main__":
+    # Create the instance
+    loader = CatalogLoader()
+    
+    print("--- Starting PKB Catalog Validation ---")
+    catalog = loader.load_all_categories()
+    loader.report()
+    
+    # Example: Print first item found to verify data structure
+    if catalog:
+        first_id = list(catalog.keys())[0]
+        print(f"\nSample Product (ID: {first_id}):")
+        print(f"Brand: {catalog[first_id]['brand']} | Model: {catalog[first_id]['model']}")
