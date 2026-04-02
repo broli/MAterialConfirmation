@@ -1,0 +1,48 @@
+- id: '82611'
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Chrome
+  description: ''
+  dimensions: {}
+  image_file: Horizon chrome chrome-moen-bathtub-shower-faucet-combos-82611-64_600.jpg
+- id: 82611SRN
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Brushed Nickel
+  description: ''
+  dimensions: {}
+  image_file: Horizon BN spot-resist-brushed-nickel-moen-bathtub-shower-faucet-combos-82611srn-64_600.jpg
+- id: 82611BL
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Matte Black
+  description: ''
+  dimensions: {}
+  image_file: Horizon MB matte-black-moen-bathtub-shower-faucet-combos-82611bl-64_600.jpg
+- id: 220C4EPSRN
+  brand: PKB
+  model: Arcade Bundle
+  type: Shower Fixtures
+  finish: Brushed Nickel
+  description: ''
+  dimensions: {}
+  image_file: Arcade Brushed Nickel.png
+- id: 220C4EP
+  brand: PKB
+  model: Arcade Bundle
+  type: Shower Fixtures
+  finish: Chrome
+  description: ''
+  dimensions: {}
+  image_file: Arcade chrome.png
+- id: 220C4EPBL
+  brand: PKB
+  model: Arcade Bundle
+  type: Shower Fixtures
+  finish: Matte Black
+  description: ''
+  dimensions: {}
+  image_file: Arcade matte black .png

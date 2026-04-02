@@ -2,9 +2,12 @@ client_info:
   name: test
   project: test
 selected_items:
-- id: KHL_PUR_G_01
-- id: PKB_VAN_48_GRY
-- id: DLT_TRN_RING_BLK
+- id: '82611'
+- id: 82611SRN
+- id: 82611BL
+- id: 220C4EPSRN
+- id: 220C4EP
+- id: 220C4EPBL
 - id: DLT-1130602
 - id: DLT-1130601
 - id: DLT-1132601

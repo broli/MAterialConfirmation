@@ -107,8 +107,8 @@ class PDFGenerator:
             # Stamp the cover image full bleed
             pdf.image(cover_img, x=0, y=0, w=215.9)
             
-            # Inject dynamic client info (Adjust Y as needed for your specific square)
-            pdf.set_y(200) 
+            # Adjusted Y value to place the text higher on the page
+            pdf.set_y(170) 
             
             # 1. "Prepared for:" Label (Gray #8E8E8E)
             pdf.set_font("helvetica", "I", 14)
@@ -142,46 +142,48 @@ class PDFGenerator:
         pdf.set_text_color(0, 0, 0)
         
         for item in products:
-            # --- Product Title ---
-            pdf.set_font("helvetica", "B", 12)
-            pdf.set_text_color(0, 51, 102) # Dark Blue
-            pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}", ln=True)
-            
-            # --- Product Specs ---
-            pdf.set_font("helvetica", "", 10)
-            pdf.set_text_color(0, 0, 0) # Black reset
-            pdf.cell(0, 6, f"Type: {item.get('type', '')} | Finish: {item.get('finish', '')}", ln=True)
-            
-            # --- Dynamic Dimensions ---
-            dims = item.get("dimensions", {})
-            if dims:
-                # This handles our flexible dictionary format perfectly
-                dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
-                pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
-            
-            # --- Description ---
-            pdf.set_font("helvetica", "I", 9)
-            pdf.multi_cell(0, 5, item.get('description', ''))
-            pdf.ln(2)
-            
-            # --- Image Processing ---
-            image_file = item.get("image_file")
-            if image_file:
-                opt_image_path = self.optimize_image(image_file)
-                if opt_image_path:
-                    # width 90mm keeps it neat, height auto-scales
-                    pdf.image(opt_image_path, w=90)
-                    pdf.ln(5)
-                else:
-                    pdf.set_font("helvetica", "B", 10)
-                    pdf.set_text_color(255, 0, 0)
-                    pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
-                    pdf.set_text_color(0, 0, 0)
-            
-            # --- Visual Separator ---
-            pdf.ln(5)
-            pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
-            pdf.ln(10)
+            # unbreakable() keeps the product details and its photo glued together
+            with pdf.unbreakable():
+                # --- Product Title ---
+                pdf.set_font("helvetica", "B", 12)
+                pdf.set_text_color(0, 51, 102) # Dark Blue
+                pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}", ln=True)
+                
+                # --- Product Specs ---
+                pdf.set_font("helvetica", "", 10)
+                pdf.set_text_color(0, 0, 0) # Black reset
+                pdf.cell(0, 6, f"Type: {item.get('type', '')} | Finish: {item.get('finish', '')}", ln=True)
+                
+                # --- Dynamic Dimensions ---
+                dims = item.get("dimensions", {})
+                if dims:
+                    dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
+                    pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
+                
+                # --- Description ---
+                pdf.set_font("helvetica", "I", 9)
+                pdf.multi_cell(0, 5, item.get('description', ''))
+                pdf.ln(2)
+                
+                # --- Image Processing ---
+                image_file = item.get("image_file")
+                if image_file:
+                    opt_image_path = self.optimize_image(image_file)
+                    if opt_image_path:
+                        # width 90mm keeps it neat, height auto-scales
+                        pdf.image(opt_image_path, w=90)
+                        pdf.ln(5)
+                    else:
+                        pdf.set_font("helvetica", "B", 10)
+                        pdf.set_text_color(255, 0, 0)
+                        pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
+                        pdf.set_text_color(0, 0, 0)
+                
+                # --- Visual Separator ---
+                # FIX: Replaced line() with a zero-height cell that has a bottom border to avoid get_y() errors
+                pdf.ln(5)
+                pdf.cell(0, 0, "", border="B", ln=True)
+                pdf.ln(10)
         
         # --- Export ---
         client_name_safe = client_info.get("name", "Client").replace(" ", "_")

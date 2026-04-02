@@ -39,6 +39,8 @@ class CatalogLoader:
                     
                     for item in data:
                         self._validate_item(item, filename)
+                        # Tag the item with its category for the GUI to use
+                        item['category_file'] = filename.replace('.yaml', '') 
                         # Use ID as the key for fast lookup later
                         self.master_catalog[item['id']] = item
             except Exception as e:
@@ -72,14 +74,11 @@ class CatalogLoader:
 
 # --- Test Execution ---
 if __name__ == "__main__":
-    # Create the instance
     loader = CatalogLoader()
-    
     print("--- Starting PKB Catalog Validation ---")
     catalog = loader.load_all_categories()
     loader.report()
     
-    # Example: Print first item found to verify data structure
     if catalog:
         first_id = list(catalog.keys())[0]
         print(f"\nSample Product (ID: {first_id}):")
