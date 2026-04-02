@@ -6,7 +6,6 @@ import yaml
 import shutil
 from PIL import Image
 
-# Import our backend engine
 from catalog_loader import CatalogLoader
 from session_manager import SessionManager
 from pdf_engine import PDFGenerator
@@ -21,16 +20,14 @@ class PKBApp(ctk.CTk):
         self.title("PKB Material Confirmation System")
         self.geometry("1000x700")
 
-        # Load Database
         self.db_loader = CatalogLoader()
         self.catalog = self.db_loader.load_all_categories()
         self.selected_items = []
+        self.custom_pages = [] # NEW: Hold paths to custom attachments
         
-        # State variables for editing
         self.editing_item_id = None
         self.editing_original_cat = None
 
-        # --- Main Layout: Tabs ---
         self.tabview = ctk.CTkTabview(self)
         self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
         
@@ -47,7 +44,7 @@ class PKBApp(ctk.CTk):
         self.tab_gen.grid_columnconfigure(1, weight=1)
         self.tab_gen.grid_rowconfigure(0, weight=1)
 
-        # 1. Left Sidebar (Client Info)
+        # 1. Left Sidebar
         self.sidebar_frame = ctk.CTkFrame(self.tab_gen, width=250, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
@@ -61,10 +58,19 @@ class PKBApp(ctk.CTk):
         self.project_name_entry = ctk.CTkEntry(self.sidebar_frame, placeholder_text="Project / Address")
         self.project_name_entry.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
 
-        self.generate_btn = ctk.CTkButton(self.sidebar_frame, text="Generate PDF", command=self.generate_pdf, fg_color="green", hover_color="darkgreen")
-        self.generate_btn.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+        # NEW: Custom Attachments UI
+        ctk.CTkLabel(self.sidebar_frame, text="Custom Attachments").grid(row=6, column=0, padx=20, pady=(10, 0), sticky="ew")
+        
+        self.attach_btn = ctk.CTkButton(self.sidebar_frame, text="Attach Image/Page...", command=self.attach_custom_page, fg_color="gray", hover_color="darkgray")
+        self.attach_btn.grid(row=7, column=0, padx=20, pady=(5, 10), sticky="ew")
+        
+        self.custom_pages_frame = ctk.CTkScrollableFrame(self.sidebar_frame, fg_color="transparent", height=100)
+        self.custom_pages_frame.grid(row=8, column=0, padx=10, pady=0, sticky="nsew")
 
-        # 2. Middle Panel (Search & Catalog Picker)
+        self.generate_btn = ctk.CTkButton(self.sidebar_frame, text="Generate PDF", command=self.generate_pdf, fg_color="green", hover_color="darkgreen")
+        self.generate_btn.grid(row=9, column=0, padx=20, pady=20, sticky="ew")
+
+        # 2. Middle Panel
         self.middle_frame = ctk.CTkFrame(self.tab_gen, fg_color="transparent")
         self.middle_frame.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="nsew")
         self.middle_frame.grid_columnconfigure(0, weight=1)
@@ -78,10 +84,39 @@ class PKBApp(ctk.CTk):
         self.catalog_frame.grid(row=1, column=0, sticky="nsew")
         self.populate_catalog_list()
 
-        # 3. Right Panel (Current Selection)
+        # 3. Right Panel
         self.selection_frame = ctk.CTkScrollableFrame(self.tab_gen, label_text="Client Selection", width=250)
         self.selection_frame.grid(row=0, column=2, padx=(10, 20), pady=20, sticky="nsew")
 
+    # --- Custom Attachments Logic ---
+    def attach_custom_page(self):
+        file_paths = filedialog.askopenfilenames(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
+        for path in file_paths:
+            if path not in self.custom_pages:
+                self.custom_pages.append(path)
+        self.refresh_custom_pages_ui()
+
+    def remove_custom_page(self, path):
+        if path in self.custom_pages:
+            self.custom_pages.remove(path)
+        self.refresh_custom_pages_ui()
+
+    def refresh_custom_pages_ui(self):
+        for widget in self.custom_pages_frame.winfo_children():
+            widget.destroy()
+            
+        for path in self.custom_pages:
+            filename = os.path.basename(path)
+            display_name = filename if len(filename) < 18 else filename[:15] + "..."
+            
+            frame = ctk.CTkFrame(self.custom_pages_frame, fg_color="transparent")
+            frame.pack(fill="x", pady=2)
+            
+            ctk.CTkLabel(frame, text=display_name, font=ctk.CTkFont(size=11)).pack(side="left", padx=5)
+            ctk.CTkButton(frame, text="X", width=20, height=20, fg_color="red", hover_color="darkred",
+                          command=lambda p=path: self.remove_custom_page(p)).pack(side="right", padx=5)
+
+    # --- Catalog Logic ---
     def on_search(self, event):
         query = self.search_entry.get().strip().lower()
         self.populate_catalog_list(query)
@@ -115,11 +150,10 @@ class PKBApp(ctk.CTk):
             cat_lbl.pack(anchor="w", pady=(15, 2), padx=5)
 
             for item_id, item_data in grouped_items[cat]:
-                # FIX: Injected Finish into the button string for clarity
                 finish = item_data.get('finish', '')
                 finish_str = f" - {finish}" if finish else ""
-                
                 btn_text = f"{item_data.get('brand')} {item_data.get('model')}{finish_str} ({item_data.get('type')})"
+                
                 btn = ctk.CTkButton(self.catalog_frame, text=btn_text, anchor="w", 
                                     command=lambda idx=item_id: self.add_to_selection(idx))
                 btn.pack(pady=2, padx=10, fill="x")
@@ -140,8 +174,6 @@ class PKBApp(ctk.CTk):
 
         for item_id in self.selected_items:
             item_data = self.catalog.get(item_id, {})
-            
-            # FIX: Also added finish to the right-side selection list
             finish = item_data.get('finish', '')
             finish_str = f" - {finish}" if finish else ""
             short_name = f"{item_data.get('brand')} {item_data.get('model')}{finish_str}"
@@ -151,7 +183,6 @@ class PKBApp(ctk.CTk):
             
             lbl = ctk.CTkLabel(frame, text=short_name, width=150, anchor="w")
             lbl.pack(side="left", padx=5)
-            # Add tooltip or wrap text if it gets too long
             lbl.configure(wraplength=150)
             
             ctk.CTkButton(frame, text="X", width=30, fg_color="red", hover_color="darkred",
@@ -168,7 +199,8 @@ class PKBApp(ctk.CTk):
                 "name": client_name,
                 "project": self.project_name_entry.get().strip()
             },
-            "selected_items": [{"id": i} for i in self.selected_items]
+            "selected_items": [{"id": i} for i in self.selected_items],
+            "custom_pages": self.custom_pages # NEW: Append custom files
         }
         
         os.makedirs("sessions", exist_ok=True)
@@ -261,7 +293,7 @@ class PKBApp(ctk.CTk):
             except Exception:
                 pass
 
-    # --- View 1.5: Product Details / Edit / Delete Pop-up ---
+    # --- View 1.5: Product Details ---
     def view_product_details(self, item_id):
         item = self.catalog.get(item_id)
         if not item: return
@@ -271,7 +303,6 @@ class PKBApp(ctk.CTk):
         top.geometry("500x680")
         top.attributes("-topmost", True)
 
-        # Image Display
         img_file = item.get("image_file")
         if img_file:
             img_path = os.path.join("database", "assets", img_file)
@@ -285,7 +316,6 @@ class PKBApp(ctk.CTk):
                 except Exception as e:
                     ctk.CTkLabel(top, text=f"[ Image Error: {e} ]", text_color="red").pack(pady=10)
         
-        # Details Text
         details = f"ID: {item_id}\n"
         details += f"Category File: {item.get('category_file', 'N/A')}.yaml\n\n"
         details += f"Brand: {item.get('brand')}\n"
@@ -306,7 +336,6 @@ class PKBApp(ctk.CTk):
         desc.configure(state="disabled")
         desc.pack(pady=10, padx=20)
 
-        # Action Buttons Frame
         btn_frame = ctk.CTkFrame(top, fg_color="transparent")
         btn_frame.pack(side="bottom", pady=20, fill="x", padx=20)
 
@@ -373,7 +402,7 @@ class PKBApp(ctk.CTk):
             window.destroy()
         messagebox.showinfo("Deleted", f"Product {item_id} has been removed.")
 
-    # --- View 2: Add / Edit Product Form ---
+    # --- View 2: Add / Edit Form ---
     def build_form_view(self):
         self.form_frame = ctk.CTkFrame(self.admin_container, fg_color="transparent")
         self.form_frame.grid_columnconfigure((0, 1), weight=1)
@@ -385,7 +414,6 @@ class PKBApp(ctk.CTk):
         self.form_header_label = ctk.CTkLabel(header, text="Add New Product", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_header_label.pack(side="left", padx=20)
 
-        # Basic Info with Smart Comboboxes & Labels
         ctk.CTkLabel(self.form_frame, text="Category File", anchor="w").grid(row=1, column=0, padx=10, pady=(10, 0), sticky="ew")
         ctk.CTkLabel(self.form_frame, text="Unique ID", anchor="w").grid(row=1, column=1, padx=10, pady=(10, 0), sticky="ew")
         

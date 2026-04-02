@@ -1,27 +1,3 @@
-- id: '82611'
-  brand: PKB
-  model: Horizon Bundle
-  type: Shower Fixtures
-  finish: Chrome
-  description: ''
-  dimensions: {}
-  image_file: Horizon chrome chrome-moen-bathtub-shower-faucet-combos-82611-64_600.jpg
-- id: 82611SRN
-  brand: PKB
-  model: Horizon Bundle
-  type: Shower Fixtures
-  finish: Brushed Nickel
-  description: ''
-  dimensions: {}
-  image_file: Horizon BN spot-resist-brushed-nickel-moen-bathtub-shower-faucet-combos-82611srn-64_600.jpg
-- id: 82611BL
-  brand: PKB
-  model: Horizon Bundle
-  type: Shower Fixtures
-  finish: Matte Black
-  description: ''
-  dimensions: {}
-  image_file: Horizon MB matte-black-moen-bathtub-shower-faucet-combos-82611bl-64_600.jpg
 - id: 220C4EPSRN
   brand: PKB
   model: Arcade Bundle
@@ -46,3 +22,51 @@
   description: ''
   dimensions: {}
   image_file: Arcade matte black .png
+- id: '82611'
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Chrome
+  description: ''
+  dimensions: {}
+  image_file: BN 82611SRN.tif. final.png
+- id: 82611SRN
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Brushed Nickel
+  description: ''
+  dimensions: {}
+  image_file: BN 82611SRN.tif. final.png
+- id: 82611BL
+  brand: PKB
+  model: Horizon Bundle
+  type: Shower Fixtures
+  finish: Matte Black
+  description: ''
+  dimensions: {}
+  image_file: Matte black 82611BL.final.png
+- id: 1011-BN-1.8GPM
+  brand: PKB
+  model: Hydrorail
+  type: Hydrorail with silderail and handshower
+  finish: Brushed Nickel
+  description: ''
+  dimensions: {}
+  image_file: Kauai_1011-BN_1.Final.png
+- id: 1011-CH-1.8GPM
+  brand: PKB
+  model: Hydrorail
+  type: Hydrorail with silderail and handshower
+  finish: Chrome
+  description: ''
+  dimensions: {}
+  image_file: Kauai_1011-CH_1.final.png
+- id: 011-MB-1.8GPM
+  brand: PKB
+  model: Hydrorail
+  type: Hydrorail with silderail and handshower
+  finish: Matte Black
+  description: ''
+  dimensions: {}
+  image_file: Kauai_1011-MB_1.final.png

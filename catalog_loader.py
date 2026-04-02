@@ -20,6 +20,10 @@ class CatalogLoader:
 
     def load_all_categories(self):
         """Reads every .yaml file in the categories folder and validates entries."""
+        # FIX: Wipe the internal memory so old edits don't persist as "ghost" items
+        self.master_catalog.clear()
+        self.errors.clear()
+
         if not self.validate_structure():
             return None
 

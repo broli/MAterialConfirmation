@@ -1,0 +1,170 @@
+- id: R8712D3GCH
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '12'
+  image_file: Moen_R8712D3GCH.jpg
+- id: LR8724D3GCH
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '24'
+  image_file: Moen_R8712D3GCH.jpg
+- id: R8736D3GCH
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '36'
+  image_file: Moen_R8712D3GCH.jpg
+- id: R8718D3GCH
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '18'
+  image_file: Moen_R8712D3GCH.jpg
+- id: R8712D3GBN
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '12'
+  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+- id: R8718D3GBN
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '18'
+  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+- id: R8736D3GBN
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '36'
+  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+- id: R8724PS
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '24'
+  image_file: Contemporary grab bar chrome.png
+- id: R8712PS
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '12'
+  image_file: Contemporary grab bar chrome.png
+- id: LR8724D3GBN
+  brand: Moen
+  model: Traditional
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '24'
+  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+- id: R8718PS
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions:
+    width: '18'
+  image_file: Contemporary grab bar chrome.png
+- id: R8736PS
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Chrome
+  description: ''
+  dimensions: {}
+  image_file: Contemporary grab bar chrome.png
+- id: R8712P
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '12'
+  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+- id: R8736P
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '36'
+  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+- id: R8712BL
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Matte Black
+  description: ''
+  dimensions:
+    width: '12'
+  image_file: 51IK7miEa7L._AC_SL1500_.jpg
+- id: R8718BL
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Matte Black
+  description: ''
+  dimensions:
+    width: '18'
+  image_file: 51IK7miEa7L._AC_SL1500_.jpg
+- id: R8724P
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '24'
+  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+- id: R8718P
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Brushed Nickel
+  description: ''
+  dimensions:
+    width: '18'
+  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+- id: R8724BL
+  brand: Moen
+  model: Contemporary
+  type: Grab Bar
+  finish: Matte Black
+  description: ''
+  dimensions:
+    width: '24'
+  image_file: 51IK7miEa7L._AC_SL1500_.jpg

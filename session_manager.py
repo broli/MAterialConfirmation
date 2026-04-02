@@ -26,7 +26,9 @@ class SessionManager:
         # Prepare the final data payload for the PDF Generator
         ready_for_pdf = {
             "client_info": session_data.get("client_info", {}),
-            "products": []
+            "products": [],
+            # NEW: Pass custom pages through to the payload
+            "custom_pages": session_data.get("custom_pages", []) 
         }
 
         print(f"\nProcessing session for: {ready_for_pdf['client_info'].get('name', 'Unknown Client')}")

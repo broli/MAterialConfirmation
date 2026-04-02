@@ -2,15 +2,23 @@ client_info:
   name: test
   project: test
 selected_items:
-- id: '82611'
-- id: 82611SRN
-- id: 82611BL
-- id: 220C4EPSRN
-- id: 220C4EP
-- id: 220C4EPBL
-- id: DLT-1130602
-- id: DLT-1130601
-- id: DLT-1132601
-- id: DLT-1132602
-- id: K-26109-LA-0
-- id: K-26109-RA-0
+- id: R8712D3GCH
+- id: LR8724D3GCH
+- id: R8736D3GCH
+- id: R8718D3GCH
+- id: R8712D3GBN
+- id: R8718D3GBN
+- id: R8736D3GBN
+- id: R8724PS
+- id: R8712PS
+- id: LR8724D3GBN
+- id: R8718PS
+- id: R8736PS
+- id: R8712P
+- id: R8736P
+- id: R8712BL
+- id: R8718BL
+- id: R8724P
+- id: R8718P
+- id: R8724BL
+custom_pages: []

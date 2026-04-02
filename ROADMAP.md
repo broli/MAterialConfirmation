@@ -27,13 +27,19 @@ Automate the generation of professional PDF documents for client material confir
 
 ## 📅 Phase 4: Database Management & Distribution
 - [x] **Basic Admin Panel:** Form to save and append new items to YAML with image copying.
-- [ ] **Advanced Admin UI (Database Browser):** - Read all existing YAML files.
+- [x] **Advanced Admin UI (Database Browser):** - Read all existing YAML files.
     - Display a Tree/List view showing current items categorized by file (e.g., Faucets -> Kohler Purist).
-- [ ] **Smart Data Entry Form:**
+- [x] **Smart Data Entry Form:**
     - "Add New Product" button that transitions the view from the Database Browser to the Entry Form.
     - Dynamic Dropdowns (`Combobox`) for Category, Brand, Type, and Finish. These will auto-populate by reading existing database entries, but allow the user to type in a new value if needed.
-- [ ] **Shared Storage:** Configure the app to sync the catalog and assets via OneDrive for the whole team.
-- [ ] **Packaging:** Bundle the app into an `.exe` (Windows) using `PyInstaller`.
+
+
+## 📅 Phase 5: Polish & Deployment
+- [x] **Custom "One-Off" Pages:** Allow users to upload a custom image directly into the Document Generator to be appended as a full-page attachment in the PDF, without saving it to the master catalog.
+- [ ] **Grab bar size on selector:** to be able to distinguish items that only differ in size
+- [ ] **Colapse categories:** add 1 grab bar. hide entire grab bar category 
+- [ ] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path.
+- [ ] **Packaging:** Bundle the app into a single `.exe` file using `PyInstaller` for easy team distribution.
 
 ---
 
