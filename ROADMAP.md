@@ -36,8 +36,9 @@ Automate the generation of professional PDF documents for client material confir
 
 ## 📅 Phase 5: Polish & Deployment
 - [x] **Custom "One-Off" Pages:** Allow users to upload a custom image directly into the Document Generator to be appended as a full-page attachment in the PDF, without saving it to the master catalog.
-- [ ] **Grab bar size on selector:** to be able to distinguish items that only differ in size
-- [ ] **Colapse categories:** add 1 grab bar. hide entire grab bar category 
+- [x] **Grab bar size on selector:** to be able to distinguish items that only differ in size
+- [x] **Colapse categories:** add 1 grab bar. hide entire grab bar category 
+- [ ] **Add title to extra image:** add a text box before the image for the "one off"
 - [ ] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path.
 - [ ] **Packaging:** Bundle the app into a single `.exe` file using `PyInstaller` for easy team distribution.
 

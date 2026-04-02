@@ -23,7 +23,7 @@ class PKBApp(ctk.CTk):
         self.db_loader = CatalogLoader()
         self.catalog = self.db_loader.load_all_categories()
         self.selected_items = []
-        self.custom_pages = [] # NEW: Hold paths to custom attachments
+        self.custom_pages = [] 
         
         self.editing_item_id = None
         self.editing_original_cat = None
@@ -58,7 +58,6 @@ class PKBApp(ctk.CTk):
         self.project_name_entry = ctk.CTkEntry(self.sidebar_frame, placeholder_text="Project / Address")
         self.project_name_entry.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
 
-        # NEW: Custom Attachments UI
         ctk.CTkLabel(self.sidebar_frame, text="Custom Attachments").grid(row=6, column=0, padx=20, pady=(10, 0), sticky="ew")
         
         self.attach_btn = ctk.CTkButton(self.sidebar_frame, text="Attach Image/Page...", command=self.attach_custom_page, fg_color="gray", hover_color="darkgray")
@@ -76,7 +75,7 @@ class PKBApp(ctk.CTk):
         self.middle_frame.grid_columnconfigure(0, weight=1)
         self.middle_frame.grid_rowconfigure(1, weight=1)
 
-        self.search_entry = ctk.CTkEntry(self.middle_frame, placeholder_text="Search by Brand, Model, Type, Finish, or ID...")
+        self.search_entry = ctk.CTkEntry(self.middle_frame, placeholder_text="Search by Brand, Model, Type, Finish, Size, or ID...")
         self.search_entry.grid(row=0, column=0, pady=(0, 10), sticky="ew")
         self.search_entry.bind("<KeyRelease>", self.on_search)
 
@@ -132,7 +131,9 @@ class PKBApp(ctk.CTk):
         grouped_items = {}
         for item_id, item in self.catalog.items():
             if query:
-                search_text = f"{item.get('brand','')} {item.get('model','')} {item.get('finish','')} {item.get('type','')} {item_id}".lower()
+                dims = item.get('dimensions', {})
+                dim_search = " ".join([str(v) for v in dims.values() if v])
+                search_text = f"{item.get('brand','')} {item.get('model','')} {item.get('finish','')} {dim_search} {item.get('type','')} {item_id}".lower()
                 if query not in search_text:
                     continue
             
@@ -146,17 +147,48 @@ class PKBApp(ctk.CTk):
             return
 
         for cat in sorted(grouped_items.keys()):
-            cat_lbl = ctk.CTkLabel(self.catalog_frame, text=cat.upper(), font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF")
-            cat_lbl.pack(anchor="w", pady=(15, 2), padx=5)
+            cat_container = ctk.CTkFrame(self.catalog_frame, fg_color="transparent")
+            cat_container.pack(fill="x", pady=(5, 0))
+
+            items_frame = ctk.CTkFrame(cat_container, fg_color="transparent")
+            
+            # FIX 1: Default to False (Collapsed)
+            is_expanded = ctk.BooleanVar(value=False)
+
+            def toggle_category(frame=items_frame, var=is_expanded, btn=None, c_name=cat):
+                if var.get():
+                    frame.pack_forget()
+                    var.set(False)
+                    if btn: btn.configure(text=f"▶ {c_name.upper()}")
+                else:
+                    frame.pack(fill="x")
+                    var.set(True)
+                    if btn: btn.configure(text=f"▼ {c_name.upper()}")
+
+            # FIX 2: Start the button text with the rightward pointing arrow ▶
+            cat_btn = ctk.CTkButton(cat_container, text=f"▶ {cat.upper()}", 
+                                    font=ctk.CTkFont(weight="bold", size=14), 
+                                    text_color="#00BFFF", fg_color="transparent", 
+                                    hover_color=("gray70", "gray30"), anchor="w")
+            
+            cat_btn.configure(command=lambda f=items_frame, v=is_expanded, b=cat_btn, c=cat: toggle_category(f, v, b, c))
+            cat_btn.pack(fill="x", padx=5, pady=(5, 2))
+
+            # FIX 3: Removed `items_frame.pack(fill="x")` so they start completely hidden
 
             for item_id, item_data in grouped_items[cat]:
                 finish = item_data.get('finish', '')
                 finish_str = f" - {finish}" if finish else ""
-                btn_text = f"{item_data.get('brand')} {item_data.get('model')}{finish_str} ({item_data.get('type')})"
                 
-                btn = ctk.CTkButton(self.catalog_frame, text=btn_text, anchor="w", 
+                dims = item_data.get('dimensions', {})
+                dim_vals = [str(v) for v in dims.values() if v]
+                dim_str = f" [{ ' x '.join(dim_vals) }]" if dim_vals else ""
+
+                btn_text = f"{item_data.get('brand')} {item_data.get('model')}{finish_str}{dim_str} ({item_data.get('type')})"
+                
+                btn = ctk.CTkButton(items_frame, text=btn_text, anchor="w", 
                                     command=lambda idx=item_id: self.add_to_selection(idx))
-                btn.pack(pady=2, padx=10, fill="x")
+                btn.pack(pady=2, padx=15, fill="x") 
 
     def add_to_selection(self, item_id):
         if item_id not in self.selected_items:
@@ -176,7 +208,12 @@ class PKBApp(ctk.CTk):
             item_data = self.catalog.get(item_id, {})
             finish = item_data.get('finish', '')
             finish_str = f" - {finish}" if finish else ""
-            short_name = f"{item_data.get('brand')} {item_data.get('model')}{finish_str}"
+            
+            dims = item_data.get('dimensions', {})
+            dim_vals = [str(v) for v in dims.values() if v]
+            dim_str = f" [{ ' x '.join(dim_vals) }]" if dim_vals else ""
+            
+            short_name = f"{item_data.get('brand')} {item_data.get('model')}{finish_str}{dim_str}"
             
             frame = ctk.CTkFrame(self.selection_frame, fg_color="transparent")
             frame.pack(fill="x", pady=2)
@@ -200,7 +237,7 @@ class PKBApp(ctk.CTk):
                 "project": self.project_name_entry.get().strip()
             },
             "selected_items": [{"id": i} for i in self.selected_items],
-            "custom_pages": self.custom_pages # NEW: Append custom files
+            "custom_pages": self.custom_pages 
         }
         
         os.makedirs("sessions", exist_ok=True)
