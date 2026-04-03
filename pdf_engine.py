@@ -106,7 +106,7 @@ class PDFGenerator:
         cover_img = os.path.join(self.assets_path, "Bath Document Cover Page.png")
         if os.path.exists(cover_img):
             pdf.image(cover_img, x=0, y=0, w=215.9)
-            pdf.set_y(150) 
+            pdf.set_y(170) 
             
             pdf.set_font("helvetica", "I", 14)
             pdf.set_text_color(142, 142, 142) 
@@ -134,7 +134,6 @@ class PDFGenerator:
         
         # --- PRODUCTS ---
         for item in products:
-            # 1. Pre-calculate Image & Block Height
             target_w = 90
             target_h = 0
             opt_image_path = None
@@ -152,21 +151,18 @@ class PDFGenerator:
                         target_h = 100
                         target_w = target_h / ratio
             
-            # Predict total block height (title + text + image + padding)
-            block_height = 8 + 6 + 15  # Title + Specs + Desc buffer
+            block_height = 8 + 6 + 15  
             if item.get("dimensions", {}):
                 block_height += 6
             if opt_image_path:
                 block_height += target_h + 5
             else:
                 block_height += 10
-            block_height += 10 # Bottom padding
+            block_height += 10 
             
-            # 2. Manual Page Break Check (If Y + block > bottom margin, jump to next page)
             if pdf.get_y() + block_height > 260:
                 pdf.add_page()
             
-            # 3. Print the Item
             pdf.set_font("helvetica", "B", 12)
             pdf.set_text_color(0, 51, 102)
             pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}", ln=True)
@@ -193,15 +189,30 @@ class PDFGenerator:
                 pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
                 pdf.set_text_color(0, 0, 0)
             
-            # Since we removed `unbreakable()`, get_y() is safe to use again!
             pdf.ln(3)
             pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
             pdf.ln(3) 
                 
         # --- CUSTOM PAGES ---
-        for img_path in custom_pages:
+        for page_data in custom_pages:
+            # Handle backwards compatibility if it's just a string path
+            if isinstance(page_data, str):
+                img_path = page_data
+                title = ""
+            else:
+                img_path = page_data.get("path", "")
+                title = page_data.get("title", "")
+
             if os.path.exists(img_path):
                 pdf.add_page()
+                
+                # Print Title if provided
+                if title:
+                    pdf.set_font("helvetica", "B", 16)
+                    pdf.set_text_color(0, 51, 102)
+                    pdf.cell(0, 10, title, ln=True, align="C")
+                    pdf.ln(5)
+                    
                 opt_path = self.optimize_custom_image(img_path)
                 if opt_path:
                     pdf.image(opt_path, x=13, y=pdf.get_y(), w=190)

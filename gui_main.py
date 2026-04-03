@@ -20,8 +20,15 @@ class PKBApp(ctk.CTk):
         self.title("PKB Material Confirmation System")
         self.geometry("1000x700")
 
-        self.db_loader = CatalogLoader()
+        # --- Cloud/Shared Database Setup ---
+        self.db_path = self.setup_database_path()
+        self.categories_path = os.path.join(self.db_path, "categories")
+        self.assets_path = os.path.join(self.db_path, "assets")
+
+        # Load Database using the cloud path
+        self.db_loader = CatalogLoader(base_path=self.db_path)
         self.catalog = self.db_loader.load_all_categories()
+        
         self.selected_items = []
         self.custom_pages = [] 
         
@@ -36,6 +43,44 @@ class PKBApp(ctk.CTk):
 
         self.setup_generator_tab()
         self.setup_admin_tab()
+
+    def setup_database_path(self):
+        """Checks for a saved cloud path, or prompts the user to select one."""
+        config_file = "config.yaml"
+        
+        # 1. Check if we already have a saved configuration
+        if os.path.exists(config_file):
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = yaml.safe_load(f) or {}
+                    saved_path = config.get("database_path", "")
+                    # Ensure the path still exists (e.g., OneDrive wasn't uninstalled)
+                    if saved_path and os.path.exists(saved_path):
+                        return saved_path
+            except Exception:
+                pass
+        
+        # 2. If no config exists, prompt the user for the Shared OneDrive folder
+        messagebox.showinfo("First Time Setup", "Welcome!\n\nPlease select the shared PKB database folder (e.g., located on your OneDrive) to connect to the master catalog.")
+        selected_path = filedialog.askdirectory(title="Select Shared PKB Database Folder")
+        
+        # 3. Validate and save the selection
+        if selected_path:
+            # Check if it looks like the correct folder by ensuring categories and assets exist
+            if os.path.exists(os.path.join(selected_path, "categories")) and os.path.exists(os.path.join(selected_path, "assets")):
+                try:
+                    with open(config_file, 'w', encoding='utf-8') as f:
+                        yaml.dump({"database_path": selected_path}, f)
+                    return selected_path
+                except Exception as e:
+                    messagebox.showerror("Error", f"Could not save configuration: {e}")
+            else:
+                messagebox.showwarning("Invalid Folder", "The selected folder doesn't contain 'categories' and 'assets' subfolders. Defaulting to local 'database' folder.")
+        else:
+            messagebox.showwarning("No Folder Selected", "Defaulting to local 'database' folder.")
+            
+        # Fallback to local if they cancel or pick a bad folder
+        return "database"
 
     # ==========================================
     # TAB 1: DOCUMENT GENERATOR
@@ -91,22 +136,34 @@ class PKBApp(ctk.CTk):
     def attach_custom_page(self):
         file_paths = filedialog.askopenfilenames(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
         for path in file_paths:
-            if path not in self.custom_pages:
-                self.custom_pages.append(path)
+            if not any(page.get("path") == path for page in self.custom_pages):
+                filename = os.path.basename(path)
+                
+                dialog = ctk.CTkInputDialog(text=f"Enter a title for:\n{filename}\n(Leave blank for no text)", title="Attachment Title")
+                title = dialog.get_input()
+                
+                if title is None:
+                    title = ""
+                    
+                self.custom_pages.append({"path": path, "title": title.strip()})
+                
         self.refresh_custom_pages_ui()
 
     def remove_custom_page(self, path):
-        if path in self.custom_pages:
-            self.custom_pages.remove(path)
+        self.custom_pages = [page for page in self.custom_pages if page.get("path") != path]
         self.refresh_custom_pages_ui()
 
     def refresh_custom_pages_ui(self):
         for widget in self.custom_pages_frame.winfo_children():
             widget.destroy()
             
-        for path in self.custom_pages:
+        for page in self.custom_pages:
+            path = page.get("path")
+            title = page.get("title")
             filename = os.path.basename(path)
-            display_name = filename if len(filename) < 18 else filename[:15] + "..."
+            
+            display_text = title if title else f"[{filename}]"
+            display_name = display_text if len(display_text) < 18 else display_text[:15] + "..."
             
             frame = ctk.CTkFrame(self.custom_pages_frame, fg_color="transparent")
             frame.pack(fill="x", pady=2)
@@ -152,7 +209,6 @@ class PKBApp(ctk.CTk):
 
             items_frame = ctk.CTkFrame(cat_container, fg_color="transparent")
             
-            # FIX 1: Default to False (Collapsed)
             is_expanded = ctk.BooleanVar(value=False)
 
             def toggle_category(frame=items_frame, var=is_expanded, btn=None, c_name=cat):
@@ -165,7 +221,6 @@ class PKBApp(ctk.CTk):
                     var.set(True)
                     if btn: btn.configure(text=f"▼ {c_name.upper()}")
 
-            # FIX 2: Start the button text with the rightward pointing arrow ▶
             cat_btn = ctk.CTkButton(cat_container, text=f"▶ {cat.upper()}", 
                                     font=ctk.CTkFont(weight="bold", size=14), 
                                     text_color="#00BFFF", fg_color="transparent", 
@@ -173,8 +228,6 @@ class PKBApp(ctk.CTk):
             
             cat_btn.configure(command=lambda f=items_frame, v=is_expanded, b=cat_btn, c=cat: toggle_category(f, v, b, c))
             cat_btn.pack(fill="x", padx=5, pady=(5, 2))
-
-            # FIX 3: Removed `items_frame.pack(fill="x")` so they start completely hidden
 
             for item_id, item_data in grouped_items[cat]:
                 finish = item_data.get('finish', '')
@@ -250,7 +303,8 @@ class PKBApp(ctk.CTk):
             session_mgr = SessionManager(self.db_loader)
             pdf_payload = session_mgr.process_client_session(session_filename)
             if pdf_payload:
-                pdf_maker = PDFGenerator()
+                # IMPORTANT: Pass the shared cloud path into the PDF engine!
+                pdf_maker = PDFGenerator(base_path=self.db_path)
                 output_file = pdf_maker.create_pdf(pdf_payload)
                 messagebox.showinfo("Success", f"PDF Generated!\nSaved to: {output_file}")
         except Exception as e:
@@ -280,10 +334,9 @@ class PKBApp(ctk.CTk):
         return sorted(list(values))
 
     def get_existing_categories(self):
-        cat_path = os.path.join("database", "categories")
-        if not os.path.exists(cat_path):
+        if not os.path.exists(self.categories_path):
             return ["faucets.yaml", "vanities.yaml"] 
-        return [f for f in os.listdir(cat_path) if f.endswith('.yaml')]
+        return [f for f in os.listdir(self.categories_path) if f.endswith('.yaml')]
 
     # --- View 1: Database Browser ---
     def build_browser_view(self):
@@ -303,19 +356,18 @@ class PKBApp(ctk.CTk):
         for widget in self.tree_frame.winfo_children():
             widget.destroy()
 
-        cat_path = os.path.join("database", "categories")
-        if not os.path.exists(cat_path):
+        if not os.path.exists(self.categories_path):
             return
 
         txt_color = ctk.ThemeManager.theme["CTkLabel"]["text_color"]
 
-        for cat_file in os.listdir(cat_path):
+        for cat_file in os.listdir(self.categories_path):
             if not cat_file.endswith('.yaml'): continue
             
             cat_header = ctk.CTkLabel(self.tree_frame, text=f"📁 {cat_file.upper()}", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF")
             cat_header.pack(anchor="w", pady=(15, 2), padx=5)
             
-            file_path = os.path.join(cat_path, cat_file)
+            file_path = os.path.join(self.categories_path, cat_file)
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     items = yaml.safe_load(f) or []
@@ -342,7 +394,7 @@ class PKBApp(ctk.CTk):
 
         img_file = item.get("image_file")
         if img_file:
-            img_path = os.path.join("database", "assets", img_file)
+            img_path = os.path.join(self.assets_path, img_file)
             if os.path.exists(img_path):
                 try:
                     pil_img = Image.open(img_path)
@@ -410,7 +462,7 @@ class PKBApp(ctk.CTk):
         self.desc_entry.insert("0.0", item.get('description', ''))
 
         if item.get('image_file'):
-            abs_img_path = os.path.abspath(os.path.join("database", "assets", item.get('image_file')))
+            abs_img_path = os.path.abspath(os.path.join(self.assets_path, item.get('image_file')))
             if os.path.exists(abs_img_path):
                 self.image_path_var.set(abs_img_path)
 
@@ -420,7 +472,7 @@ class PKBApp(ctk.CTk):
 
         item = self.catalog.get(item_id)
         cat_file = item.get('category_file') + '.yaml'
-        target_yaml_path = os.path.join("database", "categories", cat_file)
+        target_yaml_path = os.path.join(self.categories_path, cat_file)
 
         if os.path.exists(target_yaml_path):
             with open(target_yaml_path, 'r', encoding='utf-8') as f:
@@ -569,7 +621,7 @@ class PKBApp(ctk.CTk):
         source_image_path = self.image_path_var.get()
         if source_image_path:
             filename = os.path.basename(source_image_path)
-            dest_image_path = os.path.join("database", "assets", filename)
+            dest_image_path = os.path.join(self.assets_path, filename)
             
             if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
                 shutil.copy(source_image_path, dest_image_path)
@@ -578,10 +630,10 @@ class PKBApp(ctk.CTk):
             messagebox.showwarning("Missing Image", "Please select a product image.")
             return
 
-        target_yaml_path = os.path.join("database", "categories", cat_file)
+        target_yaml_path = os.path.join(self.categories_path, cat_file)
 
         if self.editing_item_id:
-            orig_yaml_path = os.path.join("database", "categories", self.editing_original_cat)
+            orig_yaml_path = os.path.join(self.categories_path, self.editing_original_cat)
             if os.path.exists(orig_yaml_path):
                 with open(orig_yaml_path, 'r', encoding='utf-8') as f:
                     old_data = yaml.safe_load(f) or []
