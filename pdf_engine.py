@@ -106,7 +106,7 @@ class PDFGenerator:
         cover_img = os.path.join(self.assets_path, "Bath Document Cover Page.png")
         if os.path.exists(cover_img):
             pdf.image(cover_img, x=0, y=0, w=215.9)
-            pdf.set_y(170) 
+            pdf.set_y(150) 
             
             pdf.set_font("helvetica", "I", 14)
             pdf.set_text_color(142, 142, 142) 

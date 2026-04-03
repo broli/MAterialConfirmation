@@ -47,6 +47,7 @@ class PKBApp(ctk.CTk):
     def setup_database_path(self):
         """Checks for a saved cloud path, or prompts the user to select one."""
         config_file = "config.yaml"
+        marker_file = "README_PKB_DATABASE.txt"
         
         # 1. Check if we already have a saved configuration
         if os.path.exists(config_file):
@@ -54,20 +55,28 @@ class PKBApp(ctk.CTk):
                 with open(config_file, 'r', encoding='utf-8') as f:
                     config = yaml.safe_load(f) or {}
                     saved_path = config.get("database_path", "")
-                    # Ensure the path still exists (e.g., OneDrive wasn't uninstalled)
                     if saved_path and os.path.exists(saved_path):
                         return saved_path
             except Exception:
                 pass
         
-        # 2. If no config exists, prompt the user for the Shared OneDrive folder
-        messagebox.showinfo("First Time Setup", "Welcome!\n\nPlease select the shared PKB database folder (e.g., located on your OneDrive) to connect to the master catalog.")
-        selected_path = filedialog.askdirectory(title="Select Shared PKB Database Folder")
+        # 2. Enhanced, Explicit Instructions for the Team
+        instructions = (
+            "Welcome to the PKB Material System!\n\n"
+            "To ensure everyone is synced, this application needs to connect to the shared company database on your OneDrive.\n\n"
+            "When you click OK, a file browser will open.\n"
+            "Please navigate to your OneDrive and select the main database folder.\n\n"
+            f"HINT: Look for the folder that contains the file named '{marker_file}'."
+        )
+        messagebox.showinfo("First Time Setup - Link Database", instructions)
         
-        # 3. Validate and save the selection
+        selected_path = filedialog.askdirectory(title="Select the PKB Shared Database Folder")
+        
+        # 3. Bulletproof Validation
         if selected_path:
-            # Check if it looks like the correct folder by ensuring categories and assets exist
-            if os.path.exists(os.path.join(selected_path, "categories")) and os.path.exists(os.path.join(selected_path, "assets")):
+            # Check for our explicit marker file first, fallback to checking for subfolders
+            if os.path.exists(os.path.join(selected_path, marker_file)) or \
+               (os.path.exists(os.path.join(selected_path, "categories")) and os.path.exists(os.path.join(selected_path, "assets"))):
                 try:
                     with open(config_file, 'w', encoding='utf-8') as f:
                         yaml.dump({"database_path": selected_path}, f)
@@ -75,11 +84,15 @@ class PKBApp(ctk.CTk):
                 except Exception as e:
                     messagebox.showerror("Error", f"Could not save configuration: {e}")
             else:
-                messagebox.showwarning("Invalid Folder", "The selected folder doesn't contain 'categories' and 'assets' subfolders. Defaulting to local 'database' folder.")
+                messagebox.showwarning(
+                    "Incorrect Folder", 
+                    f"That folder doesn't seem to be the correct PKB Database.\n\n"
+                    f"We couldn't find '{marker_file}' inside it.\n\n"
+                    "Defaulting to the local offline database for now. You can delete 'config.yaml' to try again."
+                )
         else:
-            messagebox.showwarning("No Folder Selected", "Defaulting to local 'database' folder.")
+            messagebox.showwarning("No Folder Selected", "Defaulting to the local offline database.")
             
-        # Fallback to local if they cancel or pick a bad folder
         return "database"
 
     # ==========================================
@@ -303,7 +316,6 @@ class PKBApp(ctk.CTk):
             session_mgr = SessionManager(self.db_loader)
             pdf_payload = session_mgr.process_client_session(session_filename)
             if pdf_payload:
-                # IMPORTANT: Pass the shared cloud path into the PDF engine!
                 pdf_maker = PDFGenerator(base_path=self.db_path)
                 output_file = pdf_maker.create_pdf(pdf_payload)
                 messagebox.showinfo("Success", f"PDF Generated!\nSaved to: {output_file}")
