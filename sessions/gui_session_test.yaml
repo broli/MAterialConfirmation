@@ -2,8 +2,8 @@ client_info:
   name: test
   project: test
 selected_items:
-- id: '82611'
-- id: 82611SRN
-- id: AGI-NICHE-MB
-- id: AGI-NICHE-SS
+- id: 220C4EPSRN
+  qty: 1
+- id: R8712D3GBN
+  qty: 3
 custom_pages: []

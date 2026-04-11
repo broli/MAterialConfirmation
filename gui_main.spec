@@ -29,7 +29,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='gui_main',
+    name='PKB Material Confirmation System_v1.1',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -42,4 +42,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='icon/app_icon.ico'
 )

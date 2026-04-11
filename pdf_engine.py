@@ -165,7 +165,9 @@ class PDFGenerator:
             
             pdf.set_font("helvetica", "B", 12)
             pdf.set_text_color(0, 51, 102)
-            pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}", ln=True)
+            qty = item.get("qty", 1)
+            qty_str = f" (Qty: {qty})" if qty > 1 else ""
+            pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}{qty_str}", ln=True)
             
             pdf.set_font("helvetica", "", 10)
             pdf.set_text_color(0, 0, 0)

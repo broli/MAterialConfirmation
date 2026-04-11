@@ -29,8 +29,8 @@ class PKBApp(ctk.CTk):
         self.db_loader = CatalogLoader(base_path=self.db_path)
         self.catalog = self.db_loader.load_all_categories()
         
-        self.selected_items = []
-        self.custom_pages = [] 
+        self.selected_items = {}
+        self.custom_pages = []
         
         self.editing_item_id = None
         self.editing_original_cat = None
@@ -257,20 +257,29 @@ class PKBApp(ctk.CTk):
                 btn.pack(pady=2, padx=15, fill="x") 
 
     def add_to_selection(self, item_id):
-        if item_id not in self.selected_items:
-            self.selected_items.append(item_id)
+        if item_id in self.selected_items:
+            self.selected_items[item_id] += 1
+        else:
+            self.selected_items[item_id] = 1
+        self.refresh_selection_ui()
+
+    def change_quantity(self, item_id, delta):
+        if item_id in self.selected_items:
+            self.selected_items[item_id] += delta
+            if self.selected_items[item_id] <= 0:
+                del self.selected_items[item_id]
             self.refresh_selection_ui()
 
     def remove_from_selection(self, item_id):
         if item_id in self.selected_items:
-            self.selected_items.remove(item_id)
+            del self.selected_items[item_id]
             self.refresh_selection_ui()
 
     def refresh_selection_ui(self):
         for widget in self.selection_frame.winfo_children():
             widget.destroy()
 
-        for item_id in self.selected_items:
+        for item_id, qty in self.selected_items.items():
             item_data = self.catalog.get(item_id, {})
             finish = item_data.get('finish', '')
             finish_str = f" - {finish}" if finish else ""
@@ -284,12 +293,23 @@ class PKBApp(ctk.CTk):
             frame = ctk.CTkFrame(self.selection_frame, fg_color="transparent")
             frame.pack(fill="x", pady=2)
             
-            lbl = ctk.CTkLabel(frame, text=short_name, width=150, anchor="w")
+            lbl = ctk.CTkLabel(frame, text=short_name, width=120, anchor="w")
             lbl.pack(side="left", padx=5)
-            lbl.configure(wraplength=150)
+            lbl.configure(wraplength=120)
             
-            ctk.CTkButton(frame, text="X", width=30, fg_color="red", hover_color="darkred",
-                          command=lambda idx=item_id: self.remove_from_selection(idx)).pack(side="right", padx=5)
+            btn_frame = ctk.CTkFrame(frame, fg_color="transparent")
+            btn_frame.pack(side="right", fill="y", padx=2)
+            
+            ctk.CTkButton(btn_frame, text="X", width=25, height=25, fg_color="red", hover_color="darkred",
+                          command=lambda idx=item_id: self.remove_from_selection(idx)).pack(side="top", pady=(0, 2))
+            
+            qty_frame = ctk.CTkFrame(btn_frame, fg_color="transparent")
+            qty_frame.pack(side="top")
+            ctk.CTkButton(qty_frame, text="-", width=20, height=20, font=ctk.CTkFont(size=14, weight="bold"),
+                          command=lambda idx=item_id: self.change_quantity(idx, -1)).pack(side="left", padx=1)
+            ctk.CTkLabel(qty_frame, text=str(qty), width=20).pack(side="left")
+            ctk.CTkButton(qty_frame, text="+", width=20, height=20, font=ctk.CTkFont(size=14, weight="bold"),
+                          command=lambda idx=item_id: self.change_quantity(idx, 1)).pack(side="left", padx=1)
 
     def generate_pdf(self):
         client_name = self.client_name_entry.get().strip()
@@ -302,7 +322,7 @@ class PKBApp(ctk.CTk):
                 "name": client_name,
                 "project": self.project_name_entry.get().strip()
             },
-            "selected_items": [{"id": i} for i in self.selected_items],
+            "selected_items": [{"id": i, "qty": q} for i, q in self.selected_items.items()],
             "custom_pages": self.custom_pages 
         }
         

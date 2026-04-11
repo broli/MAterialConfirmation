@@ -37,10 +37,13 @@ class SessionManager:
         missing_items = 0
         for item in session_data.get("selected_items", []):
             product_id = item.get("id")
+            quantity = item.get("qty", 1)
             
             if product_id in self.catalog:
-                ready_for_pdf["products"].append(self.catalog[product_id])
-                print(f"  ✅ Found: {product_id} ({self.catalog[product_id]['model']})")
+                product_copy = dict(self.catalog[product_id])
+                product_copy["qty"] = quantity
+                ready_for_pdf["products"].append(product_copy)
+                print(f"  ✅ Found: {product_id} ({product_copy['model']}) - Qty: {quantity}")
             else:
                 print(f"  ⚠️ WARNING: Product ID '{product_id}' not found in master catalog!")
                 missing_items += 1
