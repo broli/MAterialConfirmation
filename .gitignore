@@ -5,4 +5,5 @@ __pycache__/
 *.log
 *.csv
 *.xlsx
-.\database\assets\
+.\database\assets\*
+database/assets/
