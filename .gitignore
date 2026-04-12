@@ -6,4 +6,5 @@ __pycache__/
 *.csv
 *.xlsx
 .\database\assets\*
+.\dist\
 database/assets/
