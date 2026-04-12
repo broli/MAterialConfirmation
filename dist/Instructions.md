@@ -1,5 +1,5 @@
 # PKB Material Confirmation System - Setup Guide
-**Version 1.0**
+**Version 2.0**
 
 Welcome to the PKB Material Confirmation System! This application allows you to quickly generate professional, branded PDF documents for our clients based on our shared master catalog.
 
@@ -14,7 +14,7 @@ Before you run the application, you need to connect your computer to the PKB Sha
 4. Open your computer's File Explorer. You should now see the synced folder under your company's OneDrive section.
 
 ### Step 2: Link the Application
-1. Double-click the `PKB_Material_System_v1.0.exe` file to launch the app.
+1. Double-click the `PKB Material Confirmation System_v2.0.exe` file to launch the app.
    *(Note: If Windows Defender shows a blue "Windows protected your PC" screen, click **More info** and then **Run anyway**. This only happens the very first time).*
 2. A welcome prompt will appear asking you to link the database. Click **OK**.
 3. A file browser will open. Navigate to the synced SharePoint folder you created in Step 1.

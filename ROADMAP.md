@@ -1,15 +1,15 @@
-# 🛠️ Development Roadmap: Bathroom Materials Confirmation System
+# 🛠️ Development Roadmap: PKB Material Confirmation & ERP System
 **Project Owner:** Carlos (Project Manager)  
 **Company:** PKB (Payless Kitchen & Bath)
 
 ---
 
 ## 🎯 Project Objective
-Automate the generation of professional PDF documents for client material confirmation. This ensures all specs (measurements, colors, and photos) are approved by the client before moving to the 3D Design stage.
+Evolution from a standalone material confirmation tool to a **lightweight, robust ERP**. The system will automate the transition from contract data to operational reality, generating tailored outputs for Purchasing, Clients, and Warehouse teams.
 
 ---
 
-## 📅 Phase 1: Data Architecture & Catalog (Current)
+## 📅 Phase 1: Data Architecture & Catalog
 - [x] **Catalog Structure:** Define `catalog.yaml` to store master product data (ID, Name, Specs, Photos).
 - [x] **Validation Script:** Create a Python loader to verify that all image paths in the catalog exist on disk.
 - [x] **Client Selection Logic:** Implement a system to read a `client_selection.yaml` and map selected IDs to the Master Catalog.
@@ -27,20 +27,34 @@ Automate the generation of professional PDF documents for client material confir
 
 ## 📅 Phase 4: Database Management & Distribution
 - [x] **Basic Admin Panel:** Form to save and append new items to YAML with image copying.
-- [x] **Advanced Admin UI (Database Browser):** - Read all existing YAML files.
-    - Display a Tree/List view showing current items categorized by file (e.g., Faucets -> Kohler Purist).
+- [x] **Advanced Admin UI (Database Browser):** 
+    - [x] Read all existing YAML files.
+    - [x] Display a Tree/List view showing current items categorized by file.
 - [x] **Smart Data Entry Form:**
-    - "Add New Product" button that transitions the view from the Database Browser to the Entry Form.
-    - Dynamic Dropdowns (`Combobox`) for Category, Brand, Type, and Finish. These will auto-populate by reading existing database entries, but allow the user to type in a new value if needed.
+    - [x] "Add New Product" button that transitions the view from the Database Browser to the Entry Form.
+    - [x] Dynamic Dropdowns (`Combobox`) for Category, Brand, Type, and Finish. 
 
+## 📅 Phase 5: Initial Release & Polish
+- [x] **Custom "One-Off" Pages:** Allow users to upload a custom image directly into the Document Generator.
+- [x] **Grab bar size on selector:** distinguish items that only differ in size.
+- [x] **Collapse categories:** dynamic category management in the selector.
+- [x] **Add title to extra image:** add a text box before the image for the "one off". (Completed in v2.0)
+- [x] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path. (Completed in v2.0)
+- [x] **Packaging (v2.0):** Bundle the app into a standalone `.exe` with version 2.0 branding. (Completed)
 
-## 📅 Phase 5: Polish & Deployment
-- [x] **Custom "One-Off" Pages:** Allow users to upload a custom image directly into the Document Generator to be appended as a full-page attachment in the PDF, without saving it to the master catalog.
-- [x] **Grab bar size on selector:** to be able to distinguish items that only differ in size
-- [x] **Colapse categories:** add 1 grab bar. hide entire grab bar category 
-- [ ] **Add title to extra image:** add a text box before the image for the "one off"
-- [ ] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path.
-- [ ] **Packaging:** Bundle the app into a single `.exe` file using `PyInstaller` for easy team distribution.
+---
+
+## 📅 Phase 6: Road to Lightweight ERP (Current Evolution) 🚀
+- [ ] **Contract Data Engine:**
+    - [ ] Implement a system to read contract info (PDF/JSON/YAML).
+    - [ ] Create a "Review & Approve" UI for PMs to verify extracted contract data before processing.
+- [ ] **Modular Output System:**
+    - [ ] **Purchasing Logic:** Generate a "To Buy" list with model numbers and procurement specs.
+    - [ ] **Client Approval:** Enhanced material confirmation documents with signed placeholders.
+    - [ ] **Warehouse Dispatch:** Generate packing lists and pick-lists for logistics coordination.
+- [ ] **PM Workflow Automation:**
+    - [ ] Identification and extraction of repetitive tasks mentioned in contracts.
+    - [ ] Automated logging of project milestones based on material selection cycles.
 
 ---
 

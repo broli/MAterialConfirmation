@@ -17,7 +17,7 @@ class PKBApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("PKB Material Confirmation System")
+        self.title("PKB Material Confirmation System v2.0")
         self.geometry("1000x700")
 
         # --- Cloud/Shared Database Setup ---
