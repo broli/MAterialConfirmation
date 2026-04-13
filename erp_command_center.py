@@ -46,7 +46,7 @@ class ERPCommandCenter(ctk.CTk):
         ctk.CTkSwitch(self.header_frame, text="Debug Mode (Log Parsing)", variable=self.debug_var, command=self.toggle_debug).pack(side="right", padx=10)
 
         self.btn_load_dir = ctk.CTkButton(self.header_frame, text="📁 Pick Job Folder", command=self.load_directory)
-        self.btn_load_dir.pack(side="right", padx=10)
+        self.btn_load_dir.pack(side="left", padx=20)
 
         self.btn_manage_db = ctk.CTkButton(self.header_frame, text="⚙️ Manage Database", fg_color="#153E83", hover_color="#0d2b61", command=self.open_database_manager)
         self.btn_manage_db.pack(side="right", padx=10)
