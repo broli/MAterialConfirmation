@@ -62,7 +62,10 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ---
 ## 📅 Phase 7: refining🔮
-- [ ] **Database upgrade:** improve database structure.
+- [ ] **Database upgrade:** improve database.
+    - [ ] **Database upgrade:** review schema. Some fields are irrelevant, some are vague, and some are useless
+    - [ ] **Database upgrade:** review form to edit/add database items. (required fields, auto-fill, color fields (user visible, internal), etc.)
+    - [ ] **Database upgrade:** 
 - [ ] **line item to database item improvements:** reach 100% accuracy in matching line items to database items.
 - [ ] **test PDF material generator:** i believe the pdf output is broken. 
 - [ ] **test Excel injection:** i know the excel injection is broken. 
