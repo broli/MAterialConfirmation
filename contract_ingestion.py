@@ -12,14 +12,32 @@ class OneClickIngestor:
 
     def _setup_logger(self):
         logger = logging.getLogger("ContractIngestion")
-        logger.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
-        if not logger.handlers:
+        
+        # Clear existing handlers to allow redirection
+        for handler in logger.handlers[:]:
+            logger.removeHandler(handler)
+            
+        if self.debug_mode:
+            log_dir = os.path.join(self.target_dir, "Debug")
+            os.makedirs(log_dir, exist_ok=True)
+            log_path = os.path.join(log_dir, "ingestion_debug.log")
+            logger.setLevel(logging.DEBUG)
+        else:
             os.makedirs("logs", exist_ok=True)
-            fh = logging.FileHandler("logs/ingestion_debug.log")
-            formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-            fh.setFormatter(formatter)
-            logger.addHandler(fh)
+            log_path = "logs/ingestion_debug.log"
+            logger.setLevel(logging.INFO)
+
+        fh = logging.FileHandler(log_path)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
         return logger
+
+    def refresh_logger(self, debug_mode):
+        """Allows dynamic switching of log targets mid-session."""
+        self.debug_mode = debug_mode
+        self.logger = self._setup_logger()
+        self.logger.info(f"Logger refreshed. Debug mode: {self.debug_mode}")
 
     def extract_data(self):
         """Scans the target directory for Contract and Estimate PDFs and extracts data."""
@@ -39,18 +57,25 @@ class OneClickIngestor:
         if not estimate_pdf:
             self.logger.warning("No 'Estimate' PDF found. Extraction might be incomplete.")
             
-        return self._parse_estimate(estimate_pdf) if estimate_pdf else {}
+        return self._parse_estimate(estimate_pdf, contract_pdf) if estimate_pdf else {}
 
-    def _parse_estimate(self, pdf_path):
-        self.logger.info(f"Parsing Estimate PDF: {pdf_path}")
+    def _parse_estimate(self, estimate_pdf_path, contract_pdf_path=None):
+        self.logger.info(f"Parsing Estimate PDF: {estimate_pdf_path}")
         result = {
             "client_name": "",
             "project_po": "",
             "line_items": []
         }
         
+        debug_md = []
+        debug_md.append("# Ingestion Diagnostic Report\n")
+        debug_md.append(f"**Estimate File**: `{os.path.basename(estimate_pdf_path)}`\n")
+        if contract_pdf_path:
+            debug_md.append(f"**Contract File**: `{os.path.basename(contract_pdf_path)}`\n")
+        debug_md.append("---\n")
+        
         try:
-            with pdfplumber.open(pdf_path) as pdf:
+            with pdfplumber.open(estimate_pdf_path) as pdf:
                 full_text = []
                 for page in pdf.pages:
                     text = page.extract_text()
@@ -70,51 +95,77 @@ class OneClickIngestor:
                 if name_match:
                     result["client_name"] = name_match.group(1).strip()
                     
+                # Filename Fallback
+                if not result["project_po"] or not result["client_name"]:
+                    fb_file = contract_pdf_path if contract_pdf_path else estimate_pdf_path
+                    if fb_file:
+                        base = os.path.basename(fb_file)
+                        if not result["project_po"]:
+                            po_fb = re.search(r"(\d{5,})", base)
+                            if po_fb: result["project_po"] = po_fb.group(1)
+                            
+                        if not result["client_name"]:
+                            name_fb = re.split(r"[-_]", base)[0].strip()
+                            if name_fb: result["client_name"] = name_fb
+
+                debug_md.append(f"**Extracted PO**: `{result['project_po']}`\n")
+                debug_md.append(f"**Extracted Client**: `{result['client_name']}`\n")
+                debug_md.append("---\n## Line Parsing Analysis\n")
+                
                 # Parse Line Items
                 lines = combined_text.split("\n")
-                in_table = False
                 current_room = "Bath 1" # Default starting assumption
                 
                 for i, line in enumerate(lines):
-                    # We found the header row
-                    if "Product SKU Description Qty" in line:
-                        in_table = True
-                        continue
+                    lower_line = line.strip().lower()
                     
-                    if in_table:
-                        lower_line = line.strip().lower()
-                        # Ignore structural section dashed lines
-                        if "------" in lower_line:
+                    # Ignore structural section dashed lines
+                    if "------" in lower_line:
+                        continue
+                        
+                    # Rule 1: Room Detectors
+                    if lower_line.startswith("bath ") or lower_line.startswith("kitchen"):
+                        if len(line.strip()) < 15: # Short explicit header
+                            current_room = line.strip()
+                            debug_md.append(f"\n### 🚪 Room Changed to: {current_room}\n")
                             continue
-                            
-                        # If a line literally just says "Bath 2" or "Kitchen", update room state
-                        if lower_line.startswith("bath ") or lower_line.startswith("kitchen"):
-                            if len(line.strip()) < 15: # It's a short header, not a long "Bath Shower Component..." item
-                                current_room = line.strip()
+                        
+                    # Rule 2: Dynamic Quantity Matcher (e.g. "1 ea", "2ea", "10 ea")
+                    qty_match = re.search(r"(?i)(\d+)\s*ea", line)
+                    if qty_match:
+                        qty_val = int(qty_match.group(1))
+                        
+                        # Split by the dynamic match to get the description text
+                        parts = re.split(r"(?i)\d+\s*ea", line)
+                        desc = parts[0].strip()
+                        lower_desc = desc.lower()
+                        
+                        # Filter logic
+                        if "demo/install" in lower_desc:
+                            debug_md.append(f"- [Line {i}] ❌ `Discarded (Demo/Install)`: {desc}\n")
+                            continue
+                        if "labor" in lower_desc:
+                            material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
+                            if not any(kw in lower_desc for kw in material_keywords):
+                                debug_md.append(f"- [Line {i}] ❌ `Discarded (Labor only)`: {desc}\n")
                                 continue
-                            
-                        # Look for lines that look like specific products in standard format
-                        if "1 ea" in line:
-                            parts = line.split("1 ea")
-                            desc = parts[0].strip()
-                            
-                            lower_desc = desc.lower()
-                            
-                            # Filter logic
-                            if "demo/install" in lower_desc:
-                                continue
-                            if "labor" in lower_desc:
-                                # Fuzzy heuristic: err on the side of caution. 
-                                # Keep the line if it mentions anything indicating physical materials or kits.
-                                material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
-                                if not any(kw in lower_desc for kw in material_keywords):
-                                    continue
-                                    
-                            result["line_items"].append({
-                                "room": current_room,
-                                "raw_description": desc,
-                                "qty": 1
-                            })
+                                
+                        debug_md.append(f"- [Line {i}] ✅ **Accepted (Qty: {qty_val})**: {desc}\n")
+                        result["line_items"].append({
+                            "room": current_room,
+                            "raw_description": desc,
+                            "qty": qty_val
+                        })
+                    else:
+                        # Log unrecognized lines lightly (if they look like they hold substance)
+                        if len(lower_line) > 10 and not "product sku description" in lower_line:
+                            debug_md.append(f"- [Line {i}] ⏭️ _Ignored_: {line}\n")
+
+                if self.debug_mode:
+                    log_dir = os.path.join(self.target_dir, "Debug")
+                    os.makedirs(log_dir, exist_ok=True)
+                    with open(os.path.join(log_dir, "ingestion_result.md"), "w", encoding='utf-8') as f:
+                        f.writelines(debug_md)
 
                 self.logger.debug(f"Extracted {len(result['line_items'])} items.")
                 return result

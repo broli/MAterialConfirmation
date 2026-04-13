@@ -44,9 +44,9 @@ class MaterialConfirmationPDF(FPDF):
         self.cell(0, 10, f"Page {self.page_no() - 1} - Please review all materials carefully before final approval.", align="C")
 
 class PDFGenerator:
-    def __init__(self, base_path="database"):
+    def __init__(self, base_path="database", output_path="output"):
         self.assets_path = os.path.join(base_path, "assets")
-        self.output_path = "output"
+        self.output_path = output_path
         self.temp_path = "temp"
         
         os.makedirs(self.output_path, exist_ok=True)

@@ -44,19 +44,29 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ---
 
-## 📅 Phase 6: Road to Lightweight ERP (Current Evolution) 🚀
-- [ ] **Module Renaming & Refactoring:**
-    - [ ] Transition to `main.py` entry point and decouple GUI from legacy PDF engine.
-    - [ ] Expand database schema (`client_facing`, `routing_tag`, `provider`, `printable`).
-- [ ] **Session & Ingestion Management:**
-    - [ ] Build Session Persistence (load/save relative to local PDF directory).
-    - [ ] Parse "OneClick" PDF Contracts to extract Client Name, PO, and tabular items.
-- [ ] **ERP Verification Center:**
-    - [ ] Build real-time RapidFuzz matching GUI with Green/Yellow/Red traffic-light confidence metrics.
-    - [ ] Require mandatory PM manual confirmation on all matched lines.
-- [ ] **Modular Output Routing:**
-    - [ ] **Client PDF:** Filter non-client-facing items and limit visible parameters based on `printable` array.
-    - [ ] **Excel Injection:** Use `openpyxl` to strictly inject verified routing items into the existing "Materials Cart" template.
+## 📅 Phase 6: Road to Lightweight ERP (v2.0 Complete) ✅
+- [x] **Module Renaming & Refactoring:**
+    - [x] Transition to `main.py` entry point and decoupled GUI from legacy PDF engine.
+    - [x] Expand database schema (`client_facing`, `routing_tag`, `provider`, `sku`, `printable`).
+- [x] **Session & Ingestion Management:**
+    - [x] Build Session Persistence (load/save `session_data.json` relative to job directory).
+    - [x] Parse "OneClick" PDF Contracts/Estimates to extract Client Name, PO, and items.
+- [x] **ERP Verification Center:**
+    - [x] Build real-time RapidFuzz matching GUI with confidence traffic lights.
+    - [x] Item detail inspector (compare raw PDF vs DB side-by-side).
+    - [x] Integrated Catalog Manager for on-the-fly database edits.
+- [x] **Modular Output Routing:**
+    - [x] **Client PDF:** Grouped by Room (Bath 1, Kitchen, etc.) and filtered by `client_facing` rules.
+    - [x] **Excel Injection:** Multi-tab output (one tab per room) into the V7 Material Cart template.
+    - [x] **Job-Specific Debugging:** Auto-routing logs and outputs into `Debug/` and `ERP_Automated_Output/` within the job folder.
+
+---
+
+## 📅 Phase 7: Advanced Automation & Connectivity (Upcoming) 🔮
+- [ ] **Vendor Emailer:** Automated email drafting for "Material Line" items to specific providers.
+- [ ] **Job Calendaring:** Auto-generate installation schedules based on lead times from the database.
+- [ ] **Lead Gen Integration:** Connect to CRM APIs to auto-populate client details.
+- [ ] **Warehouse Receipts:** Generate simplified check-lists for incoming deliveries.
 
 ---
 

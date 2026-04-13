@@ -97,8 +97,8 @@ class ERPCommandCenter(ctk.CTk):
 
     def toggle_debug(self):
         if self.ingestor:
-            self.ingestor.debug_mode = self.debug_var.get()
-            self.ingestor.logger.setLevel(10 if self.debug_var.get() else 20)
+            self.ingestor.refresh_logger(self.debug_var.get())
+            self.status_bar.configure(text=f"Debug Logging: {'ON (Job Folder)' if self.debug_var.get() else 'OFF (Global)'}")
 
     def load_directory(self):
         dir_path = filedialog.askdirectory(title="Select Folder containing PDF contract & estimate")
@@ -282,15 +282,24 @@ class ERPCommandCenter(ctk.CTk):
             messagebox.showwarning("Warning", "No confirmed products to generate PDF.")
             return
             
-        generator = PDFGenerator()
+        # Target the specific job folder selected by the user
+        output_dir = os.path.join(self.target_pdf_dir, "ERP_Automated_Output")
+        os.makedirs(output_dir, exist_ok=True)
+            
+        generator = PDFGenerator(output_path=output_dir)
         out_file = generator.create_pdf(payload)
         messagebox.showinfo("Success", f"Client PDF Generated!\n{out_file}")
+        self.status_bar.configure(text=f"✅ PDF saved to: {os.path.basename(out_file)}")
 
     def generate_excel(self):
         payload = self._prepare_payload()
         if not payload["products"]:
             messagebox.showwarning("Warning", "No confirmed products to generate Excel.")
             return
+
+        # Target the specific job folder selected by the user
+        output_dir = os.path.join(self.target_pdf_dir, "ERP_Automated_Output")
+        os.makedirs(output_dir, exist_ok=True)
             
         # We emulate the verified_session_data structure expected by excel_routing_engine
         excel_payload = {
@@ -298,9 +307,10 @@ class ERPCommandCenter(ctk.CTk):
             "project_po": self.session_data.get("project_po", ""),
             "products": payload["products"]
         }
-        generator = ExcelRoutingEngine()
+        generator = ExcelRoutingEngine(output_dir=output_dir)
         out_file = generator.generate_excel(excel_payload)
         if out_file:
             messagebox.showinfo("Success", f"Material Cart Excel Generated!\n{out_file}")
+            self.status_bar.configure(text=f"✅ Excel saved to: {os.path.basename(out_file)}")
         else:
-            messagebox.showerror("Error", "Missing Excel Template file in /raw dir.")
+            messagebox.showerror("Error", "Missing Excel Template file in /database/templates dir.")
