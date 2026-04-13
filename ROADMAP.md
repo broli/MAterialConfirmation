@@ -61,12 +61,18 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
     - [x] **Job-Specific Debugging:** Auto-routing logs and outputs into `Debug/` and `ERP_Automated_Output/` within the job folder.
 
 ---
+## 📅 Phase 7: refining🔮
+- [ ] **Database upgrade:** improve database structure.
+- [ ] **line item to database item improvements:** reach 100% accuracy in matching line items to database items.
+- [ ] **test PDF material generator:** i believe the pdf output is broken. 
+- [ ] **test Excel injection:** i know the excel injection is broken. 
 
-## 📅 Phase 7: Advanced Automation & Connectivity (Upcoming) 🔮
-- [ ] **Vendor Emailer:** Automated email drafting for "Material Line" items to specific providers.
-- [ ] **Job Calendaring:** Auto-generate installation schedules based on lead times from the database.
-- [ ] **Lead Gen Integration:** Connect to CRM APIs to auto-populate client details.
-- [ ] **Warehouse Receipts:** Generate simplified check-lists for incoming deliveries.
+---
+
+## 📅 Phase 8: Advanced Automation & Connectivity (Upcoming) 🔮
+- [ ] **Payment schedule email text generator:** Automated text for BT invoices.
+- [ ] **TBD** 
+
 
 ---
 
