@@ -45,16 +45,18 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 ---
 
 ## 📅 Phase 6: Road to Lightweight ERP (Current Evolution) 🚀
-- [ ] **Contract Data Engine:**
-    - [ ] Implement a system to read contract info (PDF/JSON/YAML).
-    - [ ] Create a "Review & Approve" UI for PMs to verify extracted contract data before processing.
-- [ ] **Modular Output System:**
-    - [ ] **Purchasing Logic:** Generate a "To Buy" list with model numbers and procurement specs.
-    - [ ] **Client Approval:** Enhanced material confirmation documents with signed placeholders.
-    - [ ] **Warehouse Dispatch:** Generate packing lists and pick-lists for logistics coordination.
-- [ ] **PM Workflow Automation:**
-    - [ ] Identification and extraction of repetitive tasks mentioned in contracts.
-    - [ ] Automated logging of project milestones based on material selection cycles.
+- [ ] **Module Renaming & Refactoring:**
+    - [ ] Transition to `main.py` entry point and decouple GUI from legacy PDF engine.
+    - [ ] Expand database schema (`client_facing`, `routing_tag`, `provider`, `printable`).
+- [ ] **Session & Ingestion Management:**
+    - [ ] Build Session Persistence (load/save relative to local PDF directory).
+    - [ ] Parse "OneClick" PDF Contracts to extract Client Name, PO, and tabular items.
+- [ ] **ERP Verification Center:**
+    - [ ] Build real-time RapidFuzz matching GUI with Green/Yellow/Red traffic-light confidence metrics.
+    - [ ] Require mandatory PM manual confirmation on all matched lines.
+- [ ] **Modular Output Routing:**
+    - [ ] **Client PDF:** Filter non-client-facing items and limit visible parameters based on `printable` array.
+    - [ ] **Excel Injection:** Use `openpyxl` to strictly inject verified routing items into the existing "Materials Cart" template.
 
 ---
 

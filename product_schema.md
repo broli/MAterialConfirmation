@@ -25,6 +25,12 @@ This document defines the standard structure for all product data used in the **
 | `dimensions` | Dictionary | No | **Flexible field.** Contains specific measurements. |
 | `description` | String | Yes | Marketing text for the client to read. |
 | `image_file` | String | Yes | Filename located in the `/assets/` folder. |
+| `client_facing` | Boolean | Yes | (ERP) True if item should render on Client PDF. |
+| `provider` | String | Yes | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
+| `sku` | String | Yes | (ERP) Manufacturer or Vendor part number. |
+| `routing_tag` | String | Yes | (ERP) Used for Excel dispatch ("Warehouse", "Link", etc). |
+| `oneclick_description` | String | No | (ERP) Expected text output from OneClick PDF match. |
+| `printable` | List | Yes | (ERP) Specific fields to print internally. |
 
 ---
 

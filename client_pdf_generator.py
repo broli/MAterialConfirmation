@@ -134,6 +134,9 @@ class PDFGenerator:
         
         # --- PRODUCTS ---
         for item in products:
+            if not item.get("client_facing", True):
+                continue
+                
             target_w = 90
             target_h = 0
             opt_image_path = None
@@ -169,27 +172,40 @@ class PDFGenerator:
             qty_str = f" (Qty: {qty})" if qty > 1 else ""
             pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}{qty_str}", ln=True)
             
+            printable_fields = item.get("printable", ["type", "finish", "dimensions", "description", "image"])
+            
             pdf.set_font("helvetica", "", 10)
             pdf.set_text_color(0, 0, 0)
-            pdf.cell(0, 6, f"Type: {item.get('type', '')} | Finish: {item.get('finish', '')}", ln=True)
             
-            dims = item.get("dimensions", {})
-            if dims:
-                dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
-                pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
+            specs = []
+            if "type" in printable_fields and item.get("type"):
+                specs.append(f"Type: {item.get('type')}")
+            if "finish" in printable_fields and item.get("finish"):
+                specs.append(f"Finish: {item.get('finish')}")
+                
+            if specs:
+                pdf.cell(0, 6, " | ".join(specs), ln=True)
             
-            pdf.set_font("helvetica", "I", 9)
-            pdf.multi_cell(0, 5, item.get('description', ''))
-            pdf.ln(2)
+            if "dimensions" in printable_fields:
+                dims = item.get("dimensions", {})
+                if dims:
+                    dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
+                    pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
             
-            if opt_image_path:
-                pdf.image(opt_image_path, w=target_w, h=target_h)
-                pdf.ln(5)
-            else:
-                pdf.set_font("helvetica", "B", 10)
-                pdf.set_text_color(255, 0, 0)
-                pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
-                pdf.set_text_color(0, 0, 0)
+            if "description" in printable_fields and item.get("description"):
+                pdf.set_font("helvetica", "I", 9)
+                pdf.multi_cell(0, 5, item.get('description', ''))
+                pdf.ln(2)
+            
+            if "image" in printable_fields:
+                if opt_image_path:
+                    pdf.image(opt_image_path, w=target_w, h=target_h)
+                    pdf.ln(5)
+                else:
+                    pdf.set_font("helvetica", "B", 10)
+                    pdf.set_text_color(255, 0, 0)
+                    pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
+                    pdf.set_text_color(0, 0, 0)
             
             pdf.ln(3)
             pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())

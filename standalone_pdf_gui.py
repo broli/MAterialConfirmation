@@ -8,7 +8,7 @@ from PIL import Image
 
 from catalog_loader import CatalogLoader
 from session_manager import SessionManager
-from pdf_engine import PDFGenerator
+from client_pdf_generator import PDFGenerator
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")

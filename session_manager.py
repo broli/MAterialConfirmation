@@ -57,7 +57,7 @@ class SessionManager:
 
 # --- Test Execution ---
 if __name__ == "__main__":
-    from pdf_engine import PDFGenerator  # Import the PDF engine
+    from client_pdf_generator import PDFGenerator  # Import the PDF engine
     
     # 1. Boot up the Database (Module 1)
     print("--- 1. Loading Master Catalog ---")
