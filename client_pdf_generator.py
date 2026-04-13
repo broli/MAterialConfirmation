@@ -132,12 +132,29 @@ class PDFGenerator:
         
         pdf.set_text_color(0, 0, 0)
         
-        # --- PRODUCTS ---
+        # --- GROUP BY ROOM ---
+        from collections import defaultdict
+        rooms = defaultdict(list)
         for item in products:
             if not item.get("client_facing", True):
                 continue
+            rooms[item.get("room", "Misc")].append(item)
+            
+        # --- PRODUCTS ---
+        for room_name, room_products in rooms.items():
+            if not room_products:
+                continue
                 
-            target_w = 90
+            # Print Room Header
+            pdf.ln(5)
+            pdf.set_font("helvetica", "B", 16)
+            pdf.set_text_color(1, 161, 219)
+            pdf.cell(0, 10, room_name.upper(), ln=True, align="L")
+            pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
+            pdf.ln(5)
+            
+            for item in room_products:
+                target_w = 90
             target_h = 0
             opt_image_path = None
             

@@ -10,6 +10,7 @@ from contract_ingestion import OneClickIngestor
 from matching_engine import MatchingEngine
 from client_pdf_generator import PDFGenerator
 from excel_routing_engine import ExcelRoutingEngine
+from database_manager import DatabaseManager
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -47,6 +48,9 @@ class ERPCommandCenter(ctk.CTk):
         self.btn_load_dir = ctk.CTkButton(self.header_frame, text="📁 Pick Job Folder", command=self.load_directory)
         self.btn_load_dir.pack(side="right", padx=10)
 
+        self.btn_manage_db = ctk.CTkButton(self.header_frame, text="⚙️ Manage Database", fg_color="#153E83", hover_color="#0d2b61", command=self.open_database_manager)
+        self.btn_manage_db.pack(side="right", padx=10)
+
         # Main Workspace - Split Screen
         self.workspace = ctk.CTkFrame(self)
         self.workspace.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
@@ -78,7 +82,7 @@ class ERPCommandCenter(ctk.CTk):
         self.footer = ctk.CTkFrame(self, fg_color="transparent")
         self.footer.grid(row=2, column=0, sticky="ew", padx=20, pady=10)
         
-        self.btn_save_session = ctk.CTkButton(self.footer, text="💾 Save Session", fg_color="gray", command=self.save_session)
+        self.btn_save_session = ctk.CTkButton(self.footer, text="💾 Save Session", command=lambda: self.save_session(silent=False))
         self.btn_save_session.pack(side="left", padx=10)
         
         self.btn_gen_pdf = ctk.CTkButton(self.footer, text="📄 Generate Client PDF", fg_color="green", command=self.generate_pdf)
@@ -86,6 +90,10 @@ class ERPCommandCenter(ctk.CTk):
         
         self.btn_gen_excel = ctk.CTkButton(self.footer, text="📊 Generate Material Cart", fg_color="purple", command=self.generate_excel)
         self.btn_gen_excel.pack(side="right", padx=10)
+
+        # Status Bar
+        self.status_bar = ctk.CTkLabel(self, text="Ready.", anchor="w", text_color="gray", font=ctk.CTkFont(size=12))
+        self.status_bar.grid(row=3, column=0, sticky="ew", padx=20, pady=(0, 5))
 
     def toggle_debug(self):
         if self.ingestor:
@@ -121,6 +129,9 @@ class ERPCommandCenter(ctk.CTk):
         self.session_data = raw_data
         self.populate_verification_ui()
 
+    def open_database_manager(self):
+        DatabaseManager(self, self.db_loader)
+
     def populate_verification_ui(self):
         # Clear existing
         for w in self.left_panel.winfo_children(): w.destroy()
@@ -131,19 +142,30 @@ class ERPCommandCenter(ctk.CTk):
         for i, item in enumerate(items):
             desc = item.get("raw_description", "")
             qty = item.get("qty", 1)
+            room = item.get("room", "Misc")
+            confirmed = item.get("confirmed", False)
             
             # Left Panel
             left_f = ctk.CTkFrame(self.left_panel)
             left_f.pack(fill="x", pady=5)
-            ctk.CTkLabel(left_f, text=f"Qty: {qty} | {desc}", wraplength=400, justify="left").pack(anchor="w", padx=5, pady=5)
+            
+            lbl_text = f"[{room}] Qty: {qty} | {desc}"
+            # Make the left label a clickable flat button
+            btn_inspect = ctk.CTkButton(left_f, text=lbl_text, anchor="w", fg_color="transparent", text_color=("black","white"), hover_color=("gray70","gray30"), command=lambda val=item: self.inspect_item(val))
+            btn_inspect.pack(fill="x", padx=5, pady=5)
             
             # Right Panel Matching
             right_f = ctk.CTkFrame(self.right_panel)
             right_f.pack(fill="x", pady=5)
             
-            # Use match engine
-            match_id, match_str, conf = self.matcher.match_item(desc)
-            color = self.matcher.get_color_code(conf)
+            # If already confirmed, use the saved matched_id, else query engine
+            if confirmed and "matched_id" in item:
+                match_id = item["matched_id"]
+                conf = 100.0
+            else:
+                match_id, match_str, conf = self.matcher.match_item(desc)
+                
+            color = self.matcher.get_color_code(conf) if not confirmed else "green"
             
             # Visual indicator (Traffic light)
             color_hex = {"green": "#00FF00", "yellow": "#FFFF00", "red": "#FF0000"}
@@ -151,20 +173,62 @@ class ERPCommandCenter(ctk.CTk):
             indicator.pack(side="left", padx=5)
             
             info_str = f"Match: {match_id} ({conf:.1f}%)" if match_id else "No Match Found"
+            if confirmed:
+                info_str = f"CONFIRMED: {match_id}"
+                
             ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w").pack(side="left", padx=5)
             
-            btn_verify = ctk.CTkButton(right_f, text="Confirm", width=80, fg_color="#153E83", command=lambda idx=i: self.confirm_item(idx))
-            btn_verify.pack(side="right", padx=5)
+            btn_color = "green" if confirmed else "#153E83"
+            btn_text = "Confirmed" if confirmed else "Confirm"
+            btn_state = "disabled" if confirmed else "normal"
             
-            # Here we would add an Edit dropdown. For now just placeholder
-            btn_edit = ctk.CTkButton(right_f, text="Edit", width=60, fg_color="gray")
-            btn_edit.pack(side="right", padx=5)
+            btn_verify = ctk.CTkButton(right_f, text=btn_text, width=80, fg_color=btn_color, state=btn_state, command=lambda idx=i, mid=match_id: self.confirm_item(idx, mid))
+            btn_verify.pack(side="right", padx=5)
 
-    def confirm_item(self, idx):
-        # Placeholder for confirming item matched
-        pass
+    def confirm_item(self, idx, match_id):
+        if not match_id:
+            messagebox.showwarning("No Match", "Cannot confirm an item with no matched ID.")
+            return
+            
+        self.session_data["line_items"][idx]["matched_id"] = match_id
+        self.session_data["line_items"][idx]["confirmed"] = True
+        self.save_session(silent=True)
+        self.status_bar.configure(text=f"✅ Assigned: {match_id}")
+        self.populate_verification_ui()
 
-    def save_session(self):
+    def inspect_item(self, item):
+        top = ctk.CTkToplevel(self)
+        top.title("Inspect Item Match")
+        top.geometry("600x400")
+        top.attributes("-topmost", True)
+        
+        # Left side: PDF Extracted Raw
+        raw_f = ctk.CTkFrame(top)
+        raw_f.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        ctk.CTkLabel(raw_f, text="Extracted from Contract", font=ctk.CTkFont(weight="bold")).pack(pady=5)
+        raw_txt = f"Room: {item.get('room')}\nQty: {item.get('qty')}\n\nDescription:\n{item.get('raw_description')}"
+        lbl_raw = ctk.CTkLabel(raw_f, text=raw_txt, justify="left", wraplength=250)
+        lbl_raw.pack(padx=10, pady=10, anchor="nw")
+        
+        # Right side: DB Knowledge
+        db_f = ctk.CTkFrame(top)
+        db_f.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+        ctk.CTkLabel(db_f, text="Database Properties", font=ctk.CTkFont(weight="bold")).pack(pady=5)
+        
+        match_id = item.get("matched_id", None)
+        if not match_id:
+            # Predict it live
+            match_id, _, _ = self.matcher.match_item(item.get("raw_description", ""))
+            
+        if match_id and match_id in self.catalog:
+            db_item = self.catalog[match_id]
+            db_txt = f"ID: {db_item.get('id')}\nBrand: {db_item.get('brand')}\nModel: {db_item.get('model')}\nType: {db_item.get('type')}\nFinish: {db_item.get('finish')}\nRouting: {db_item.get('routing_tag', 'Standard')}"
+            lbl_db = ctk.CTkLabel(db_f, text=db_txt, justify="left", wraplength=250)
+            lbl_db.pack(padx=10, pady=10, anchor="nw")
+        else:
+            ctk.CTkLabel(db_f, text="No properties matched in database.", text_color="red").pack(pady=10)
+
+    def save_session(self, silent=True):
         if not self.target_pdf_dir:
             return
         # Save current client/po edits
@@ -172,9 +236,14 @@ class ERPCommandCenter(ctk.CTk):
         self.session_data["project_po"] = self.entry_po.get().strip()
         
         path = os.path.join(self.target_pdf_dir, "session_data.json")
-        with open(path, "w") as f:
-            json.dump(self.session_data, f, indent=4)
-        messagebox.showinfo("Saved", f"Session saved to:\n{path}")
+        try:
+            with open(path, "w") as f:
+                json.dump(self.session_data, f, indent=4)
+            self.status_bar.configure(text="💾 Session autosaved correctly.")
+            if not silent:
+                messagebox.showinfo("Saved", f"Session saved to:\n{path}")
+        except Exception as e:
+            self.status_bar.configure(text=f"Error saving session: {e}", text_color="red")
 
     def load_session(self, path):
         with open(path, "r") as f:
@@ -199,10 +268,11 @@ class ERPCommandCenter(ctk.CTk):
         }
         
         for item in self.session_data.get("line_items", []):
-            if "matched_id" in item and item["matched_id"]:
+            if item.get("confirmed") and item.get("matched_id"):
                 db_item = self.catalog.get(item["matched_id"], {}).copy()
                 if db_item:
                     db_item["qty"] = item.get("qty", 1)
+                    db_item["room"] = item.get("room", "General")
                     payload["products"].append(db_item)
         return payload
 

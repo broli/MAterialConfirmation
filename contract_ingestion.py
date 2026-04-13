@@ -73,6 +73,8 @@ class OneClickIngestor:
                 # Parse Line Items
                 lines = combined_text.split("\n")
                 in_table = False
+                current_room = "Bath 1" # Default starting assumption
+                
                 for i, line in enumerate(lines):
                     # We found the header row
                     if "Product SKU Description Qty" in line:
@@ -80,16 +82,36 @@ class OneClickIngestor:
                         continue
                     
                     if in_table:
-                        # Stop if we hit a dash separator or a subheader 
-                        if "------" in line or line.startswith("Bath 2"):
-                            break
+                        lower_line = line.strip().lower()
+                        # Ignore structural section dashed lines
+                        if "------" in lower_line:
+                            continue
+                            
+                        # If a line literally just says "Bath 2" or "Kitchen", update room state
+                        if lower_line.startswith("bath ") or lower_line.startswith("kitchen"):
+                            if len(line.strip()) < 15: # It's a short header, not a long "Bath Shower Component..." item
+                                current_room = line.strip()
+                                continue
                             
                         # Look for lines that look like specific products in standard format
-                        # Simplistic extraction checking for 1 ea 
                         if "1 ea" in line:
                             parts = line.split("1 ea")
                             desc = parts[0].strip()
+                            
+                            lower_desc = desc.lower()
+                            
+                            # Filter logic
+                            if "demo/install" in lower_desc:
+                                continue
+                            if "labor" in lower_desc:
+                                # Fuzzy heuristic: err on the side of caution. 
+                                # Keep the line if it mentions anything indicating physical materials or kits.
+                                material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
+                                if not any(kw in lower_desc for kw in material_keywords):
+                                    continue
+                                    
                             result["line_items"].append({
+                                "room": current_room,
                                 "raw_description": desc,
                                 "qty": 1
                             })

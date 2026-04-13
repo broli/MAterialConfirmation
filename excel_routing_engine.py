@@ -3,7 +3,7 @@ import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
 
 class ExcelRoutingEngine:
-    def __init__(self, template_path="raw/2. Order form V7.xlsx", output_dir="output"):
+    def __init__(self, template_path="database/templates/2. Order form V7.xlsx", output_dir="output"):
         self.template_path = template_path
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
@@ -19,62 +19,58 @@ class ExcelRoutingEngine:
 
         # Load Template
         wb = openpyxl.load_workbook(self.template_path)
-        sheet = wb.active
+        base_sheet = wb.active
+        base_sheet.title = "__TEMPLATE__" # Temporary name
 
-        # Inject Headers
-        sheet.cell(row=2, column=4, value=f"Costumer: {client_name}")
-        sheet.cell(row=3, column=4, value=f"PO #: {project_po}")
+        from collections import defaultdict
+        rooms = defaultdict(list)
+        for item in items:
+            rooms[item.get("room", "General")].append(item)
 
-        # The table headers are on Row 5. We will inject data starting at Row 20 to avoid 
-        # overwriting the template's standard items, or we can clear them.
-        # For this version, we will find the first empty row after row 5.
-        start_row = 6
-        while sheet.cell(row=start_row, column=4).value is not None:
-            start_row += 1
-
-        # Border styling for injected cells
         thin_border = Border(left=Side(style='thin'), right=Side(style='thin'), 
                              top=Side(style='thin'), bottom=Side(style='thin'))
 
-        for item in items:
-            # Map item data to columns
-            # Column Mapping based on Row 5 headers:
-            # C: Line Costing (Routing tag)
-            # D: Item (Type)
-            # E: Description
-            # F: Color/Finish
-            # G: Size (Dimensions)
-            # H: Item code (SKU)
-            # I: Brand
-            # J: Supplier (Provider)
-            # K: Qty
-            
-            # Skip if routing config prevents it
-            routing_tag = item.get("routing_tag", "Standard")
+        for room_idx, (room_name, room_products) in enumerate(rooms.items()):
+            # Create a true duplicate of the base sheet to retain all formatting
+            sheet = wb.copy_worksheet(base_sheet)
+            sheet.title = f"Tab {room_idx+1} - {room_name}"
 
-            # Prepare values
-            dims = item.get("dimensions", {})
-            dim_str = "x".join(str(v) for v in dims.values()) if dims else ""
+            # Inject Headers
+            sheet.cell(row=2, column=4, value=f"Costumer: {client_name}")
+            sheet.cell(row=3, column=4, value=f"PO #: {project_po}")
 
-            row_data = {
-                3: routing_tag,                   # C: Line Costing
-                4: item.get("type", ""),          # D: Item
-                5: item.get("description", ""),   # E: Description
-                6: item.get("finish", ""),        # F: Color/Finish
-                7: dim_str,                       # G: Size
-                8: item.get("sku", item.get("id", "")), # H: Item code
-                9: item.get("brand", ""),         # I: Brand
-                10: item.get("provider", ""),     # J: Supplier
-                11: item.get("qty", 1)            # K: Qty
-            }
+            # Find insertion point
+            start_row = 6
+            while sheet.cell(row=start_row, column=4).value is not None:
+                start_row += 1
 
-            for col_idx, value in row_data.items():
-                cell = sheet.cell(row=start_row, column=col_idx, value=value)
-                cell.border = thin_border
-                
-            start_row += 1
+            for item in room_products:
+                routing_tag = item.get("routing_tag", "Standard")
+                dims = item.get("dimensions", {})
+                dim_str = "x".join(str(v) for v in dims.values()) if dims else ""
+
+                row_data = {
+                    3: routing_tag,                   # C: Line Costing
+                    4: item.get("type", ""),          # D: Item
+                    5: item.get("description", ""),   # E: Description
+                    6: item.get("finish", ""),        # F: Color/Finish
+                    7: dim_str,                       # G: Size
+                    8: item.get("sku", item.get("id", "")), # H: Item code
+                    9: item.get("brand", ""),         # I: Brand
+                    10: item.get("provider", ""),     # J: Supplier
+                    11: item.get("qty", 1)            # K: Qty
+                }
+
+                for col_idx, value in row_data.items():
+                    cell = sheet.cell(row=start_row, column=col_idx, value=value)
+                    cell.border = thin_border
+                    
+                start_row += 1
+
+        # Remove the pristine template sheet before saving
+        wb.remove(base_sheet)
 
         output_path = os.path.join(self.output_dir, f"{client_name.replace(' ', '_')}_{project_po}_Materials_Cart.xlsx")
         wb.save(output_path)
-        print(f"✅ Excel generated at: {output_path}")
+        print(f"✅ Multi-tab Excel generated at: {output_path}")
         return output_path

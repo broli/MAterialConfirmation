@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "c:\\Users\\carlo\\Desktop\\Programing\\Python\\MAterialConfirmation\\.venv\\Scripts\\python.exe",
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
     "python.terminal.activateEnvironment": true,
     "terminal.integrated.profiles.windows": {
         "AutoVenv PowerShell": {
