@@ -1,13 +1,26 @@
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+.venv/
+
+# IDEs
+.vscode/
+
+# Project Specifics
+raw/
+build/
+dist/
+logs/
+temp/
+sessions/
+output/
+
+# Database Assets (images)
+database/assets/
+
+# Document files
 *.pdf
 *.log
 *.csv
 *.xlsx
-.\database\assets\*
-.\dist\
-database/assets/
-raw\
-build\
-logs\
