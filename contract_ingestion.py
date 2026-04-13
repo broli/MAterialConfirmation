@@ -115,6 +115,37 @@ class OneClickIngestor:
                 # Parse Line Items
                 lines = combined_text.split("\n")
                 current_room = "Bath 1" # Default starting assumption
+                current_item = None
+                
+                def flush_buffer():
+                    nonlocal current_item
+                    if not current_item:
+                        return
+                        
+                    desc = "\n".join(current_item["lines"]).strip()
+                    lower_desc = desc.lower()
+                    qty_val = current_item["qty"]
+                    room = current_item["room"]
+                    
+                    if "demo/install" in lower_desc:
+                        debug_md.append(f"- ❌ `Discarded (Demo/Install)`:\n  ```\n  {desc}\n  ```\n")
+                    else:
+                        is_labor_only = False
+                        if "labor" in lower_desc:
+                            material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
+                            if not any(kw in lower_desc for kw in material_keywords):
+                                is_labor_only = True
+                                
+                        if is_labor_only:
+                            debug_md.append(f"- ❌ `Discarded (Labor only)`:\n  ```\n  {desc}\n  ```\n")
+                        else:
+                            debug_md.append(f"- ✅ **Accepted (Qty: {qty_val})**:\n  ```\n  {desc}\n  ```\n")
+                            result["line_items"].append({
+                                "room": room,
+                                "raw_description": desc,
+                                "qty": qty_val
+                            })
+                    current_item = None
                 
                 for i, line in enumerate(lines):
                     lower_line = line.strip().lower()
@@ -123,9 +154,14 @@ class OneClickIngestor:
                     if "------" in lower_line:
                         continue
                         
+                    # Ignore isolated headers
+                    if lower_line in ["product", "quantity", "included"] or "product quantity" in lower_line or "product sku description" in lower_line:
+                        continue
+                        
                     # Rule 1: Room Detectors
                     if lower_line.startswith("bath ") or lower_line.startswith("kitchen"):
                         if len(line.strip()) < 15: # Short explicit header
+                            flush_buffer()
                             current_room = line.strip()
                             debug_md.append(f"\n### 🚪 Room Changed to: {current_room}\n")
                             continue
@@ -133,33 +169,30 @@ class OneClickIngestor:
                     # Rule 2: Dynamic Quantity Matcher (e.g. "1 ea", "2ea", "10 ea")
                     qty_match = re.search(r"(?i)(\d+)\s*ea", line)
                     if qty_match:
+                        flush_buffer() # Flush the previous item buffer!
                         qty_val = int(qty_match.group(1))
                         
-                        # Split by the dynamic match to get the description text
+                        # Split by the dynamic match to get the title chunk
                         parts = re.split(r"(?i)\d+\s*ea", line)
-                        desc = parts[0].strip()
-                        lower_desc = desc.lower()
+                        title_part = parts[0].strip()
                         
-                        # Filter logic
-                        if "demo/install" in lower_desc:
-                            debug_md.append(f"- [Line {i}] ❌ `Discarded (Demo/Install)`: {desc}\n")
-                            continue
-                        if "labor" in lower_desc:
-                            material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
-                            if not any(kw in lower_desc for kw in material_keywords):
-                                debug_md.append(f"- [Line {i}] ❌ `Discarded (Labor only)`: {desc}\n")
-                                continue
-                                
-                        debug_md.append(f"- [Line {i}] ✅ **Accepted (Qty: {qty_val})**: {desc}\n")
-                        result["line_items"].append({
+                        current_item = {
                             "room": current_room,
-                            "raw_description": desc,
-                            "qty": qty_val
-                        })
+                            "qty": qty_val,
+                            "lines": [title_part] if title_part else []
+                        }
                     else:
-                        # Log unrecognized lines lightly (if they look like they hold substance)
-                        if len(lower_line) > 10 and not "product sku description" in lower_line:
-                            debug_md.append(f"- [Line {i}] ⏭️ _Ignored_: {line}\n")
+                        # Append to the current item's buffer!
+                        if current_item is not None:
+                            if line.strip():
+                                current_item["lines"].append(line.strip())
+                        else:
+                            # Log unrecognized orphaned lines lightly
+                            if len(lower_line) > 10:
+                                debug_md.append(f"- [Line {i}] ⏭️ _Orphaned Ignored_: {line}\n")
+                
+                # Catch the very last item loaded into buffer
+                flush_buffer()
 
                 if self.debug_mode:
                     log_dir = os.path.join(self.target_dir, "Debug")
