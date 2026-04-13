@@ -9,3 +9,5 @@ __pycache__/
 .\dist\
 database/assets/
 raw\
+build\
+logs\
