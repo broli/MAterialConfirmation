@@ -11,16 +11,13 @@ class MatchingEngine:
         
         # Build lookup table mapping the expected oneclick_description to the item ID
         for item_id, item_data in self.catalog.items():
-            desc = item_data.get("oneclick_description", "")
+            desc = item_data.get("oneclick_description", "").strip()
             if desc:
-                # If multiple IDs share the same oneclick_description, this simplified
-                # implementation overwrites. In a production scenario, you might map 
-                # a unique key combining brand/model/finish to IDs.
                 self.reference_descriptions[item_id] = desc
             else:
-                # Fallback: Create a fuzzy string from brand, model, type, finish
-                fallback_desc = f"{item_data.get('brand', '')} {item_data.get('model', '')} {item_data.get('type', '')} {item_data.get('finish', '')}".strip()
-                self.reference_descriptions[item_id] = fallback_desc
+                # Based on new schema rules, oneclick_description is mandatory.
+                # If missing, we add a clear warning placeholder instead of building a weak fallback.
+                self.reference_descriptions[item_id] = "TBD_UPDATE_ME"
 
     def match_item(self, extracted_text):
         """

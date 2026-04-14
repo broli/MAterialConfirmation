@@ -58,12 +58,19 @@ class ExcelRoutingEngine:
                     8: item.get("sku", item.get("id", "")), # H: Item code
                     9: item.get("brand", ""),         # I: Brand
                     10: item.get("provider", ""),     # J: Supplier
-                    11: item.get("qty", 1)            # K: Qty
+                    11: item.get("qty", 1),           # K: Qty
+                    12: item.get("purchase_link", "") # L: Purchase Link / Action
                 }
 
                 for col_idx, value in row_data.items():
                     cell = sheet.cell(row=start_row, column=col_idx, value=value)
                     cell.border = thin_border
+                    
+                    # Apply hyperlink styling if column L is a true URL
+                    if col_idx == 12 and isinstance(value, str):
+                        if value.startswith("http://") or value.startswith("https://"):
+                            cell.hyperlink = value
+                            cell.font = Font(color="0000FF", underline="single")
                     
                 start_row += 1
 

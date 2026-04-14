@@ -11,11 +11,10 @@ class DatabaseManager(ctk.CTkToplevel):
         super().__init__(master)
         
         self.title("Catalog Manager")
-        self.geometry("1100x700")
+        self.geometry("1100x750")
         self.attributes("-topmost", True)
 
         self.db_loader = db_loader
-        # We assume the loader uses base_path directly. Re-extracting from base_path property.
         self.categories_path = os.path.join(self.db_loader.base_path, "categories")
         self.assets_path = os.path.join(self.db_loader.base_path, "assets")
 
@@ -36,7 +35,6 @@ class DatabaseManager(ctk.CTkToplevel):
         self.build_form_view()
         self.show_browser_view()
         
-        # After building UI, allow interacting safely.
         self.after(100, lambda: self.attributes("-topmost", False))
 
     def get_unique_values(self, key):
@@ -59,7 +57,7 @@ class DatabaseManager(ctk.CTkToplevel):
 
         header = ctk.CTkFrame(self.browser_frame, fg_color="transparent")
         header.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        ctk.CTkLabel(header, text="Database Browser (Click item to view/edit/delete)", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
+        ctk.CTkLabel(header, text="Database Browser", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
         ctk.CTkButton(header, text="+ Add New Product", command=self.show_form_view, fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
 
         self.tree_frame = ctk.CTkScrollableFrame(self.browser_frame)
@@ -85,7 +83,7 @@ class DatabaseManager(ctk.CTkToplevel):
                 with open(file_path, 'r', encoding='utf-8') as f:
                     items = yaml.safe_load(f) or []
                     for item in items:
-                        text = f"  ├─ [{item.get('id')}] : {item.get('brand')} {item.get('model')} - {item.get('finish')}"
+                        text = f"  ├─ [{item.get('id')}] : {item.get('sku')} | {item.get('oneclick_description')}"
                         
                         btn = ctk.CTkButton(self.tree_frame, text=text, font=ctk.CTkFont(family="Courier", size=12),
                                             fg_color="transparent", text_color=txt_color,
@@ -102,10 +100,12 @@ class DatabaseManager(ctk.CTkToplevel):
 
         top = ctk.CTkToplevel(self)
         top.title(f"Product Details - {item_id}")
-        top.geometry("500x680")
+        top.geometry("500x700")
         top.attributes("-topmost", True)
 
-        img_file = item.get("image_file")
+        printable = item.get("printable", {})
+        
+        img_file = printable.get("image_file")
         if img_file:
             img_path = os.path.join(self.assets_path, img_file)
             if os.path.exists(img_path):
@@ -120,21 +120,26 @@ class DatabaseManager(ctk.CTkToplevel):
         
         details = f"ID: {item_id}\n"
         details += f"Category File: {item.get('category_file', 'N/A')}.yaml\n\n"
+        details += f"SKU: {item.get('sku')}\n"
         details += f"Brand: {item.get('brand')}\n"
-        details += f"Model: {item.get('model')}\n"
-        details += f"Type: {item.get('type')}\n"
-        details += f"Finish: {item.get('finish')}\n"
+        details += f"Provider: {item.get('provider')}\n"
+        details += f"Routing: {item.get('routing_tag')}\n"
+        details += f"Purchase Link: {item.get('purchase_link', 'None')}\n"
+        details += f"OneClick Desc: {item.get('oneclick_description')}\n"
         
-        dims = item.get("dimensions", {})
-        if dims:
-            dim_str = ", ".join([f"{k}: {v}" for k, v in dims.items()])
-            details += f"Dimensions: {dim_str}\n"
+        if printable:
+            details += f"\n--- Client Printable ---\n"
+            details += f"Finish: {printable.get('finish')}\n"
+            dims = printable.get("dimensions", {})
+            if dims:
+                dim_str = ", ".join([f"{k}: {v}" for k, v in dims.items()])
+                details += f"Dimensions: {dim_str}\n"
 
         lbl_details = ctk.CTkLabel(top, text=details, justify="left", font=ctk.CTkFont(size=14))
         lbl_details.pack(pady=5, padx=20, anchor="w")
 
         desc = ctk.CTkTextbox(top, height=80, width=460)
-        desc.insert("0.0", item.get("description", ""))
+        desc.insert("0.0", printable.get("description", "No description (or hidden)"))
         desc.configure(state="disabled")
         desc.pack(pady=10, padx=20)
 
@@ -161,23 +166,31 @@ class DatabaseManager(ctk.CTkToplevel):
 
         self.cat_combobox.set(self.editing_original_cat)
         self.id_entry.insert(0, item.get('id', ''))
+        self.sku_entry.insert(0, item.get('sku', ''))
         self.brand_combobox.set(item.get('brand', ''))
-        self.model_entry.insert(0, item.get('model', ''))
-        self.type_combobox.set(item.get('type', ''))
-        self.finish_combobox.set(item.get('finish', ''))
+        self.provider_combobox.set(item.get('provider', ''))
+        self.routing_combobox.set(item.get('routing_tag', ''))
+        self.purchase_link_entry.insert(0, item.get('purchase_link', ''))
+        self.oneclick_entry.insert(0, item.get('oneclick_description', ''))
         
-        dims = item.get('dimensions', {})
-        self.w_entry.insert(0, dims.get('width', ''))
-        self.h_entry.insert(0, dims.get('height', ''))
-        self.d_entry.insert(0, dims.get('depth', ''))
-
-        self.desc_entry.delete("0.0", "end")
-        self.desc_entry.insert("0.0", item.get('description', ''))
-
-        if item.get('image_file'):
-            abs_img_path = os.path.abspath(os.path.join(self.assets_path, item.get('image_file')))
-            if os.path.exists(abs_img_path):
-                self.image_path_var.set(abs_img_path)
+        printable = item.get("printable", {})
+        if printable:
+            self.printable_checkbox_var.set(True)
+            self.finish_combobox.set(printable.get('finish', ''))
+            dims = printable.get('dimensions', {})
+            self.w_entry.insert(0, dims.get('width', ''))
+            self.h_entry.insert(0, dims.get('height', ''))
+            self.d_entry.insert(0, dims.get('depth', ''))
+            
+            self.desc_entry.delete("0.0", "end")
+            self.desc_entry.insert("0.0", printable.get('description', ''))
+            
+            if printable.get('image_file'):
+                abs_img_path = os.path.abspath(os.path.join(self.assets_path, printable.get('image_file')))
+                if os.path.exists(abs_img_path):
+                    self.image_path_var.set(abs_img_path)
+        else:
+            self.printable_checkbox_var.set(False)
 
     def delete_product(self, item_id, window=None):
         confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to permanently delete ID: {item_id}?")
@@ -197,7 +210,7 @@ class DatabaseManager(ctk.CTkToplevel):
                 yaml.dump(new_data, f, sort_keys=False, allow_unicode=True)
 
         self.catalog = self.db_loader.load_all_categories()
-        # Ensure changes propagate back to parent implicitly by sharing db object, or just reloading here.
+        # Ensure changes propagate
         self.master.catalog = self.db_loader.load_all_categories()
         
         self.refresh_browser_list()  
@@ -208,7 +221,7 @@ class DatabaseManager(ctk.CTkToplevel):
 
     # --- View 2: Add / Edit Form ---
     def build_form_view(self):
-        self.form_frame = ctk.CTkFrame(self.admin_container, fg_color="transparent")
+        self.form_frame = ctk.CTkScrollableFrame(self.admin_container, fg_color="transparent")
         self.form_frame.grid_columnconfigure((0, 1), weight=1)
 
         header = ctk.CTkFrame(self.form_frame, fg_color="transparent")
@@ -218,36 +231,54 @@ class DatabaseManager(ctk.CTkToplevel):
         self.form_header_label = ctk.CTkLabel(header, text="Add New Product", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_header_label.pack(side="left", padx=20)
 
-        ctk.CTkLabel(self.form_frame, text="Category File", anchor="w").grid(row=1, column=0, padx=10, pady=(10, 0), sticky="ew")
-        ctk.CTkLabel(self.form_frame, text="Unique ID", anchor="w").grid(row=1, column=1, padx=10, pady=(10, 0), sticky="ew")
-        
+        # Basic Info
+        ctk.CTkLabel(self.form_frame, text="Category File", anchor="w").grid(row=1, column=0, padx=10, sticky="ew")
         self.cat_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_existing_categories())
         self.cat_combobox.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="ew")
 
+        ctk.CTkLabel(self.form_frame, text="Unique ID", anchor="w").grid(row=1, column=1, padx=10, sticky="ew")
         self.id_entry = ctk.CTkEntry(self.form_frame)
         self.id_entry.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew")
+        
+        ctk.CTkLabel(self.form_frame, text="SKU", anchor="w").grid(row=3, column=0, padx=10, sticky="ew")
+        self.sku_entry = ctk.CTkEntry(self.form_frame)
+        self.sku_entry.grid(row=4, column=0, padx=10, pady=(0, 10), sticky="ew")
 
-        ctk.CTkLabel(self.form_frame, text="Brand", anchor="w").grid(row=3, column=0, padx=10, pady=(10, 0), sticky="ew")
-        ctk.CTkLabel(self.form_frame, text="Model", anchor="w").grid(row=3, column=1, padx=10, pady=(10, 0), sticky="ew")
-
+        ctk.CTkLabel(self.form_frame, text="Brand", anchor="w").grid(row=3, column=1, padx=10, sticky="ew")
         self.brand_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('brand'))
-        self.brand_combobox.grid(row=4, column=0, padx=10, pady=(0, 10), sticky="ew")
+        self.brand_combobox.grid(row=4, column=1, padx=10, pady=(0, 10), sticky="ew")
 
-        self.model_entry = ctk.CTkEntry(self.form_frame)
-        self.model_entry.grid(row=4, column=1, padx=10, pady=(0, 10), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Provider", anchor="w").grid(row=5, column=0, padx=10, sticky="ew")
+        self.provider_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('provider'))
+        self.provider_combobox.grid(row=6, column=0, padx=10, pady=(0, 10), sticky="ew")
 
-        ctk.CTkLabel(self.form_frame, text="Type", anchor="w").grid(row=5, column=0, padx=10, pady=(10, 0), sticky="ew")
-        ctk.CTkLabel(self.form_frame, text="Finish", anchor="w").grid(row=5, column=1, padx=10, pady=(10, 0), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Routing Tag", anchor="w").grid(row=5, column=1, padx=10, sticky="ew")
+        self.routing_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('routing_tag'))
+        self.routing_combobox.grid(row=6, column=1, padx=10, pady=(0, 10), sticky="ew")
 
-        self.type_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('type'))
-        self.type_combobox.grid(row=6, column=0, padx=10, pady=(0, 10), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Purchase Link / Action", anchor="w").grid(row=7, column=0, columnspan=2, padx=10, sticky="ew")
+        self.purchase_link_entry = ctk.CTkEntry(self.form_frame)
+        self.purchase_link_entry.grid(row=8, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
 
-        self.finish_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('finish'))
-        self.finish_combobox.grid(row=6, column=1, padx=10, pady=(0, 10), sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="OneClick Description (REQUIRED FOR MATCHING)", anchor="w", text_color="yellow").grid(row=9, column=0, columnspan=2, padx=10, sticky="ew")
+        self.oneclick_entry = ctk.CTkEntry(self.form_frame)
+        self.oneclick_entry.grid(row=10, column=0, columnspan=2, padx=10, pady=(0, 15), sticky="ew")
 
-        dim_frame = ctk.CTkFrame(self.form_frame)
-        dim_frame.grid(row=7, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
-        ctk.CTkLabel(dim_frame, text="Dimensions (Optional - use inches like 48\")").pack(side="left", padx=10)
+        # Printable Section
+        self.printable_checkbox_var = ctk.BooleanVar(value=True)
+        self.printable_checkbox = ctk.CTkCheckBox(self.form_frame, text="Is Client Facing (Will generate printable block)", variable=self.printable_checkbox_var)
+        self.printable_checkbox.grid(row=11, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="w")
+
+        self.printable_frame = ctk.CTkFrame(self.form_frame)
+        self.printable_frame.grid(row=12, column=0, columnspan=2, sticky="nsew", padx=10, pady=5)
+        
+        ctk.CTkLabel(self.printable_frame, text="Finish", anchor="w").grid(row=0, column=0, padx=10, pady=5, sticky="ew")
+        self.finish_combobox = ctk.CTkComboBox(self.printable_frame, values=["Chrome", "Matte Black", "Brushed Nickel", "White"])
+        self.finish_combobox.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="ew")
+
+        dim_frame = ctk.CTkFrame(self.printable_frame)
+        dim_frame.grid(row=2, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
+        ctk.CTkLabel(dim_frame, text="Dimensions (use inches like 48\")").pack(side="left", padx=10)
         
         self.w_entry = ctk.CTkEntry(dim_frame, placeholder_text="Width", width=80)
         self.w_entry.pack(side="left", padx=5)
@@ -256,15 +287,13 @@ class DatabaseManager(ctk.CTkToplevel):
         self.d_entry = ctk.CTkEntry(dim_frame, placeholder_text="Depth", width=80)
         self.d_entry.pack(side="left", padx=5)
 
-        ctk.CTkLabel(self.form_frame, text="Marketing Description", anchor="w").grid(row=8, column=0, columnspan=2, padx=10, pady=(10, 0), sticky="ew")
-        
-        self.desc_entry = ctk.CTkTextbox(self.form_frame, height=60)
-        self.desc_entry.grid(row=9, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
+        ctk.CTkLabel(self.printable_frame, text="Marketing Description", anchor="w").grid(row=3, column=0, columnspan=2, padx=10, sticky="ew")
+        self.desc_entry = ctk.CTkTextbox(self.printable_frame, height=60)
+        self.desc_entry.grid(row=4, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
 
         self.image_path_var = ctk.StringVar(value="")
-        img_frame = ctk.CTkFrame(self.form_frame, fg_color="transparent")
-        img_frame.grid(row=10, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
-        
+        img_frame = ctk.CTkFrame(self.printable_frame, fg_color="transparent")
+        img_frame.grid(row=5, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
         ctk.CTkButton(img_frame, text="Browse Image...", command=self.browse_image).pack(side="left", padx=10)
         ctk.CTkLabel(img_frame, textvariable=self.image_path_var).pack(side="left")
 
@@ -285,20 +314,23 @@ class DatabaseManager(ctk.CTkToplevel):
         self.form_header_label.configure(text="Add New Product")
 
         self.brand_combobox.configure(values=self.get_unique_values('brand'))
-        self.type_combobox.configure(values=self.get_unique_values('type'))
-        self.finish_combobox.configure(values=self.get_unique_values('finish'))
+        self.provider_combobox.configure(values=self.get_unique_values('provider'))
+        self.routing_combobox.configure(values=self.get_unique_values('routing_tag'))
         self.cat_combobox.configure(values=self.get_existing_categories())
 
         if self.get_existing_categories():
             self.cat_combobox.set(self.get_existing_categories()[0]) 
             
         self.id_entry.delete(0, 'end')
-        self.model_entry.delete(0, 'end')
+        self.sku_entry.delete(0, 'end')
+        self.purchase_link_entry.delete(0, 'end')
+        self.oneclick_entry.delete(0, 'end')
         self.w_entry.delete(0, 'end')
         self.h_entry.delete(0, 'end')
         self.d_entry.delete(0, 'end')
         self.desc_entry.delete("0.0", "end")
         self.image_path_var.set("")
+        self.printable_checkbox_var.set(True)
 
     # --- Form Actions ---
     def browse_image(self):
@@ -313,34 +345,41 @@ class DatabaseManager(ctk.CTkToplevel):
 
         product = {
             "id": self.id_entry.get().strip(),
+            "sku": self.sku_entry.get().strip(),
             "brand": self.brand_combobox.get().strip(),
-            "model": self.model_entry.get().strip(),
-            "type": self.type_combobox.get().strip(),
-            "finish": self.finish_combobox.get().strip(),
-            "description": self.desc_entry.get("0.0", "end").strip(),
-            "dimensions": {}
+            "provider": self.provider_combobox.get().strip(),
+            "routing_tag": self.routing_combobox.get().strip(),
+            "purchase_link": self.purchase_link_entry.get().strip(),
+            "oneclick_description": self.oneclick_entry.get().strip(),
         }
 
-        if self.w_entry.get().strip(): product["dimensions"]["width"] = self.w_entry.get().strip()
-        if self.h_entry.get().strip(): product["dimensions"]["height"] = self.h_entry.get().strip()
-        if self.d_entry.get().strip(): product["dimensions"]["depth"] = self.d_entry.get().strip()
-
-        if not product["id"] or not product["brand"]:
-            messagebox.showwarning("Incomplete Data", "ID and Brand are required.")
+        if not product["id"] or not product["sku"] or not product["oneclick_description"]:
+            messagebox.showwarning("Incomplete Data", "ID, SKU, and OneClick Description are required.")
             return
+
+        if self.printable_checkbox_var.get():
+            printable = {
+                "finish": self.finish_combobox.get().strip(),
+                "description": self.desc_entry.get("0.0", "end").strip(),
+                "dimensions": {}
+            }
+            if self.w_entry.get().strip(): printable["dimensions"]["width"] = self.w_entry.get().strip()
+            if self.h_entry.get().strip(): printable["dimensions"]["height"] = self.h_entry.get().strip()
+            if self.d_entry.get().strip(): printable["dimensions"]["depth"] = self.d_entry.get().strip()
+
+            source_image_path = self.image_path_var.get()
+            if source_image_path:
+                filename = os.path.basename(source_image_path)
+                dest_image_path = os.path.join(self.assets_path, filename)
+                
+                if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
+                    shutil.copy(source_image_path, dest_image_path)
+                printable["image_file"] = filename
+            product["printable"] = printable
 
         if product["id"] in self.catalog and product["id"] != self.editing_item_id:
             messagebox.showerror("Duplicate ID", f"The ID '{product['id']}' already exists in the catalog.")
             return
-
-        source_image_path = self.image_path_var.get()
-        if source_image_path:
-            filename = os.path.basename(source_image_path)
-            dest_image_path = os.path.join(self.assets_path, filename)
-            
-            if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
-                shutil.copy(source_image_path, dest_image_path)
-            product["image_file"] = filename
 
         target_yaml_path = os.path.join(self.categories_path, cat_file)
 

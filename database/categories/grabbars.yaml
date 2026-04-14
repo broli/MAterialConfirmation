@@ -1,170 +1,295 @@
 - id: R8712D3GCH
+  sku: R8712D3GCH
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '12'
-  image_file: Moen_R8712D3GCH.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Grab Bars Traditional 12\" Traditional Grab\
+    \ Bar \nChrome"
+  printable:
+    finish: Chrome
+    description: Traditional
+    dimensions:
+      width: '12'
+    image_file: Moen_R8712D3GCH.jpg
+  verified_oneclick: true
 - id: LR8724D3GCH
+  sku: LR8724D3GCH
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '24'
-  image_file: Moen_R8712D3GCH.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Grab Bars Traditional 24\" Traditional Grab\
+    \ Bar \nChrome"
+  printable:
+    finish: Chrome
+    description: Traditional
+    dimensions:
+      width: '24'
+    image_file: Moen_R8712D3GCH.jpg
+  verified_oneclick: true
 - id: R8736D3GCH
+  sku: R8736D3GCH
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '36'
-  image_file: Moen_R8712D3GCH.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Grab Bars Traditional 36\" Traditional Grab\
+    \ Bar \nChrome"
+  printable:
+    finish: Chrome
+    description: Traditional
+    dimensions:
+      width: '36'
+    image_file: Moen_R8712D3GCH.jpg
+  verified_oneclick: true
 - id: R8718D3GCH
+  sku: R8718D3GCH
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '18'
-  image_file: Moen_R8712D3GCH.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Grab Bars Traditional 18\" Traditional Grab\
+    \ Bar \nChrome"
+  printable:
+    finish: Chrome
+    description: Traditional
+    dimensions:
+      width: '18'
+    image_file: Moen_R8712D3GCH.jpg
+  verified_oneclick: true
 - id: R8712D3GBN
+  sku: R8712D3GBN
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '12'
-  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Traditional 12" Traditional Grab
+    Bar
+
+    Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Traditional
+    dimensions:
+      width: '12'
+    image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8718D3GBN
+  sku: R8718D3GBN
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '18'
-  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Traditional 18" Traditional Grab
+    Bar
+
+    Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Traditional
+    dimensions:
+      width: '18'
+    image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8736D3GBN
+  sku: R8736D3GBN
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '36'
-  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Traditional 36" Traditional Grab
+    Bar
+
+    Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Traditional
+    dimensions:
+      width: '36'
+    image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8724PS
+  sku: R8724PS
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '24'
-  image_file: Contemporary grab bar chrome.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 24" Contemporary
+    Grab
+
+    Bar Chrome'
+  printable:
+    finish: Chrome
+    description: Contemporary
+    dimensions:
+      width: '24'
+    image_file: Contemporary grab bar chrome.png
+  verified_oneclick: true
 - id: R8712PS
+  sku: R8712PS
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '12'
-  image_file: Contemporary grab bar chrome.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 12" Contemporary
+    Grab
+
+    Bar Chrome'
+  printable:
+    finish: Chrome
+    description: Contemporary
+    dimensions:
+      width: '12'
+    image_file: Contemporary grab bar chrome.png
+  verified_oneclick: true
 - id: LR8724D3GBN
+  sku: LR8724D3GBN
   brand: Moen
-  model: Traditional
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '24'
-  image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Traditional 24" Traditional Grab
+    Bar
+
+    Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Traditional
+    dimensions:
+      width: '24'
+    image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8718PS
+  sku: R8718PS
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions:
-    width: '18'
-  image_file: Contemporary grab bar chrome.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
+    Grab
+
+    Bar Chrome'
+  printable:
+    finish: Chrome
+    description: Contemporary
+    dimensions:
+      width: '18'
+    image_file: Contemporary grab bar chrome.png
+  verified_oneclick: true
 - id: R8736PS
+  sku: R8736PS
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Chrome
-  description: ''
-  dimensions: {}
-  image_file: Contemporary grab bar chrome.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary XX" Contemporary
+    Grab
+
+    Bar Chrome'
+  printable:
+    finish: Chrome
+    description: Contemporary
+    dimensions: {}
+    image_file: Contemporary grab bar chrome.png
+  verified_oneclick: true
 - id: R8712P
+  sku: R8712P
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '12'
-  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 12" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '12'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  verified_oneclick: true
 - id: R8736P
+  sku: R8736P
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '36'
-  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 36" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '36'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  verified_oneclick: true
 - id: R8712BL
+  sku: R8712BL
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Matte Black
-  description: ''
-  dimensions:
-    width: '12'
-  image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 12" Contemporary
+    Grab
+
+    Bar Matte Black'
+  printable:
+    finish: Matte Black
+    description: Contemporary
+    dimensions:
+      width: '12'
+    image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8718BL
+  sku: R8718BL
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Matte Black
-  description: ''
-  dimensions:
-    width: '18'
-  image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
+    Grab
+
+    Bar Matte Black'
+  printable:
+    finish: Matte Black
+    description: Contemporary
+    dimensions:
+      width: '18'
+    image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  verified_oneclick: true
 - id: R8724P
+  sku: R8724P
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '24'
-  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 24" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '24'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  verified_oneclick: true
 - id: R8718P
+  sku: R8718P
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Brushed Nickel
-  description: ''
-  dimensions:
-    width: '18'
-  image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '18'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  verified_oneclick: true
 - id: R8724BL
+  sku: R8724BL
   brand: Moen
-  model: Contemporary
-  type: Grab Bar
-  finish: Matte Black
-  description: ''
-  dimensions:
-    width: '24'
-  image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 24" Contemporary
+    Grab
+
+    Bar Matte Black'
+  printable:
+    finish: Matte Black
+    description: Contemporary
+    dimensions:
+      width: '24'
+    image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  verified_oneclick: true

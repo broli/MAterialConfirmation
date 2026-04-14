@@ -136,7 +136,7 @@ class PDFGenerator:
         from collections import defaultdict
         rooms = defaultdict(list)
         for item in products:
-            if not item.get("client_facing", True):
+            if "printable" not in item or not item["printable"]:
                 continue
             rooms[item.get("room", "Misc")].append(item)
             
@@ -154,67 +154,59 @@ class PDFGenerator:
             pdf.ln(5)
             
             for item in room_products:
+                printable = item.get("printable", {})
                 target_w = 90
-            target_h = 0
-            opt_image_path = None
-            
-            image_file = item.get("image_file")
-            if image_file:
-                opt_image_path = self.optimize_image(image_file)
-                if opt_image_path:
-                    with Image.open(opt_image_path) as img:
-                        img_w, img_h = img.size
-                    ratio = img_h / img_w
-                    target_h = target_w * ratio
-                    
-                    if target_h > 100:
-                        target_h = 100
-                        target_w = target_h / ratio
-            
-            block_height = 8 + 6 + 15  
-            if item.get("dimensions", {}):
-                block_height += 6
-            if opt_image_path:
-                block_height += target_h + 5
-            else:
-                block_height += 10
-            block_height += 10 
-            
-            if pdf.get_y() + block_height > 260:
-                pdf.add_page()
-            
-            pdf.set_font("helvetica", "B", 12)
-            pdf.set_text_color(0, 51, 102)
-            qty = item.get("qty", 1)
-            qty_str = f" (Qty: {qty})" if qty > 1 else ""
-            pdf.cell(0, 8, f"{item.get('brand', '')} - {item.get('model', '')}{qty_str}", ln=True)
-            
-            printable_fields = item.get("printable", ["type", "finish", "dimensions", "description", "image"])
-            
-            pdf.set_font("helvetica", "", 10)
-            pdf.set_text_color(0, 0, 0)
-            
-            specs = []
-            if "type" in printable_fields and item.get("type"):
-                specs.append(f"Type: {item.get('type')}")
-            if "finish" in printable_fields and item.get("finish"):
-                specs.append(f"Finish: {item.get('finish')}")
+                target_h = 0
+                opt_image_path = None
                 
-            if specs:
-                pdf.cell(0, 6, " | ".join(specs), ln=True)
-            
-            if "dimensions" in printable_fields:
-                dims = item.get("dimensions", {})
+                image_file = printable.get("image_file")
+                if image_file:
+                    opt_image_path = self.optimize_image(image_file)
+                    if opt_image_path:
+                        with Image.open(opt_image_path) as img:
+                            img_w, img_h = img.size
+                        ratio = img_h / img_w
+                        target_h = target_w * ratio
+                        
+                        if target_h > 100:
+                            target_h = 100
+                            target_w = target_h / ratio
+                
+                block_height = 8 + 6 + 15  
+                if printable.get("dimensions", {}):
+                    block_height += 6
+                if opt_image_path:
+                    block_height += target_h + 5
+                else:
+                    block_height += 10
+                block_height += 10 
+                
+                if pdf.get_y() + block_height > 260:
+                    pdf.add_page()
+                
+                pdf.set_font("helvetica", "B", 12)
+                pdf.set_text_color(0, 51, 102)
+                qty = item.get("quantity", item.get("qty", 1))
+                qty_str = f" (Qty: {qty})" if qty > 1 else ""
+                
+                title = printable.get('description', 'Item Description')
+                pdf.multi_cell(0, 8, f"{title}{qty_str}")
+                
+                pdf.set_font("helvetica", "", 10)
+                pdf.set_text_color(0, 0, 0)
+                
+                specs = []
+                if printable.get("finish"):
+                    specs.append(f"Finish: {printable.get('finish')}")
+                    
+                if specs:
+                    pdf.cell(0, 6, " | ".join(specs), ln=True)
+                
+                dims = printable.get("dimensions", {})
                 if dims:
                     dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
                     pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
-            
-            if "description" in printable_fields and item.get("description"):
-                pdf.set_font("helvetica", "I", 9)
-                pdf.multi_cell(0, 5, item.get('description', ''))
-                pdf.ln(2)
-            
-            if "image" in printable_fields:
+                
                 if opt_image_path:
                     pdf.image(opt_image_path, w=target_w, h=target_h)
                     pdf.ln(5)
@@ -223,10 +215,10 @@ class PDFGenerator:
                     pdf.set_text_color(255, 0, 0)
                     pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
                     pdf.set_text_color(0, 0, 0)
-            
-            pdf.ln(3)
-            pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
-            pdf.ln(3) 
+                
+                pdf.ln(3)
+                pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
+                pdf.ln(3) 
                 
         # --- CUSTOM PAGES ---
         for page_data in custom_pages:

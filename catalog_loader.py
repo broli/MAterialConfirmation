@@ -54,18 +54,18 @@ class CatalogLoader:
 
     def _validate_item(self, item, filename):
         """Internal check for required fields and image existence."""
-        required_fields = ['id', 'brand', 'model', 'type', 'finish', 'image_file']
+        required_fields = ['id', 'sku', 'brand', 'provider', 'routing_tag', 'oneclick_description']
         
         # 1. Check required fields
         for field in required_fields:
             if field not in item:
                 self.errors.append(f"MISSING FIELD [{field}] in {filename} (ID: {item.get('id', 'Unknown')})")
 
-        # 2. Check if image exists in assets
-        if 'image_file' in item:
-            img_path = os.path.join(self.assets_path, item['image_file'])
+        # 2. Check if image exists in assets (if it is a printable item)
+        if 'printable' in item and 'image_file' in item['printable']:
+            img_path = os.path.join(self.assets_path, item['printable']['image_file'])
             if not os.path.exists(img_path):
-                self.errors.append(f"MISSING IMAGE: '{item['image_file']}' referenced in {filename} (ID: {item['id']})")
+                self.errors.append(f"MISSING IMAGE: '{item['printable']['image_file']}' referenced in {filename} (ID: {item.get('id', 'Unknown')})")
 
     def report(self):
         """Prints a summary of the validation."""
@@ -86,4 +86,4 @@ if __name__ == "__main__":
     if catalog:
         first_id = list(catalog.keys())[0]
         print(f"\nSample Product (ID: {first_id}):")
-        print(f"Brand: {catalog[first_id]['brand']} | Model: {catalog[first_id]['model']}")
+        print(f"Brand: {catalog[first_id].get('brand')} | SKU: {catalog[first_id].get('sku')}")

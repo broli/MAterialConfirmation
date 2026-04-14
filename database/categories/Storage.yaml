@@ -1,46 +1,150 @@
 - id: AGI-NICHE-MB
+  sku: AGI-NICHE-MB
   brand: PKB
-  model: Niche
-  type: Niche
-  finish: Matte Black
-  description: ''
-  dimensions:
-    width: '12'
-    height: '24'
-  image_file: la-niche-mb_l.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-MB: Liquid
+    Accents
+
+    12 X 24 Inch Niche, Matte Black'
+  printable:
+    finish: Matte Black
+    description: Niche
+    dimensions:
+      width: '12'
+      height: '24'
+    image_file: la-niche-mb_l.jpg
+  verified_oneclick: true
 - id: AGI-NICHE-SS
+  sku: AGI-NICHE-SS
   brand: PKB
-  model: Niche
-  type: Niche
-  finish: Stainless Steel
-  description: ''
-  dimensions:
-    width: '12'
-    height: '24'
-  image_file: LA-NICHE-SS.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-SS: Liquid
+    Accents
+
+    12 X 24 Inch Niche, Stainless Steel'
+  printable:
+    finish: Stainless Steel
+    description: Niche
+    dimensions:
+      width: '12'
+      height: '24'
+    image_file: LA-NICHE-SS.jpg
+  verified_oneclick: true
 - id: AGI-NICHE-W
+  sku: AGI-NICHE-W
   brand: PKB
-  model: Niche
-  type: Niche
-  finish: white
-  description: ''
-  dimensions:
-    width: '12'
-    height: '24'
-  image_file: la-niche-w.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid
+    Accents
+
+    12 X 24 Inch Niche, White'
+  printable:
+    finish: white
+    description: Niche
+    dimensions:
+      width: '12'
+      height: '24'
+    image_file: la-niche-w.jpg
+  verified_oneclick: true
 - id: CC-4-W
+  sku: CC-4-W
   brand: BCI
-  model: Corner Caddy
-  type: 4-Shelf Corner Caddy
-  finish: white
-  description: ''
-  dimensions: {}
-  image_file: cc-4-w_l.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Storage Shelving BCI 4 Shelf Corner Caddy\n\
+    \ White"
+  printable:
+    finish: white
+    description: Corner Caddy
+    dimensions: {}
+    image_file: cc-4-w_l.jpg
+  verified_oneclick: true
 - id: CC-ST-W
+  sku: CC-ST-W
   brand: PKB
-  model: Single Tier Corner Shelf
-  type: Corner Shelf
-  finish: white
-  description: ''
-  dimensions: {}
-  image_file: cc-st-w_l.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Storage Shelving BCI Single Tier Corner\
+    \ Shelf\n White"
+  printable:
+    finish: white
+    description: Single Tier Corner Shelf
+    dimensions: {}
+    image_file: cc-st-w_l.jpg
+  verified_oneclick: true
+- id: CC-4-SAN
+  sku: CC-4-SAN
+  brand: BCI
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: "Bath Accessories Storage Shelving BCI 4 Shelf Corner Caddy\n\
+    \ Santorini White"
+  printable:
+    finish: Santorini White
+    description: 4-Shelf Corner Caddy
+    dimensions: {}
+    image_file: cc-4-san_l.jpg
+  verified_oneclick: true
+- id: CC-4S-SAN
+  sku: CC-4S-SAN
+  brand: BCI
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath Accessories Storage Shelving BCI 4 Shelf Corner Tower
+    with
+
+    Shave Shelf Santorini White'
+  printable:
+    finish: Santorini White
+    description: Tower Caddy, 4 Shelf w/Shaving Stand
+    dimensions: {}
+    image_file: cc-4s-san_l.jpg
+  verified_oneclick: true
+- id: CC-4S-W
+  sku: CC-4S-W
+  brand: BCI
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Santorini WhiteBath Accessories Storage Shelving BCI 4 Shelf
+    Corner Tower with
+
+    Shave Shelf White'
+  printable:
+    finish: white
+    description: Tower Caddy, 4 Shelf w/Shaving Stand
+    dimensions: {}
+    image_file: cc-4s-w_l.jpg
+  verified_oneclick: true
+- id: SD-FM-W
+  sku: SD-FM-W
+  brand: BCI
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: 'Bath BCI Accessories Shelves White Flush Mount Soap Dish
+    One Size
+
+    SD-FM-W: Flush Mount Soap Dish, WhiTE'
+  printable:
+    finish: white
+    description: Surface Mount Soap Dish
+    dimensions:
+      width: 6 7/8
+      height: 5 1/8
+    image_file: sd-fm-w_l.jpg
+  verified_oneclick: true
+- id: CC-ST-SAN
+  sku: CC-ST-SAN
+  brand: BCI
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Bath Accessories Storage Shelving BCI Single Tier Corner Shelf
+    Santorini White
+  printable:
+    finish: Santorini White
+    description: Single Tier Corner Shelf
+    dimensions: {}
+    image_file: cc-st-san_l.jpg
+  verified_oneclick: true

@@ -1,62 +1,88 @@
 - id: DLT-1130602
+  sku: DLT-1130602
   brand: PKB HV
-  model: DLT-1130602
-  type: Single Treshold, Right drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '30'
-  image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
+    x 30"
+  printable:
+    finish: white
+    description: DLT-1130602
+    dimensions:
+      width: '60'
+      height: '30'
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
+  verified_oneclick: true
 - id: DLT-1130601
+  sku: DLT-1130601
   brand: PKB HV
-  model: DLT-1130601
-  type: Single Treshold, Left  drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '30'
-  image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
+    x 30"
+  printable:
+    finish: white
+    description: DLT-1130601
+    dimensions:
+      width: '60'
+      height: '30'
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
+  verified_oneclick: true
 - id: DLT-1132601
+  sku: DLT-1132601
   brand: PKB HV
-  model: DLT-1132601
-  type: Single Treshold, Left  drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '32'
-  image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
-- id: DLT-1132602
-  brand: PKB HV
-  model: DLT-1132602
-  type: Single Treshold, Right  drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '30'
-  image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
+    x 32"
+  printable:
+    finish: white
+    description: DLT-1132601
+    dimensions:
+      width: '60'
+      height: '32'
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
+  verified_oneclick: true
 - id: K-26109-LA-0
+  sku: K-26109-LA-0
   brand: Kohler
-  model: Entity
-  type: Bathtub left drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '30'
-    depth: '15'
-  image_file: K-26109-LA-0 GBH_SQTemplate.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Kohler Entity Bathtub left drain white
+  printable:
+    finish: white
+    description: Entity
+    dimensions:
+      width: '60'
+      height: '30'
+      depth: '15'
+    image_file: K-26109-LA-0 GBH_SQTemplate.png
 - id: K-26109-RA-0
+  sku: K-26109-RA-0
   brand: Kohler
-  model: Entity
-  type: Bathtub right drain
-  finish: white
-  description: ''
-  dimensions:
-    width: '60'
-    height: '30'
-    depth: '15'
-  image_file: K-26109-RA-0 download.png
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  oneclick_description: Kohler Entity Bathtub right drain white
+  printable:
+    finish: white
+    description: Entity
+    dimensions:
+      width: '60'
+      height: '30'
+      depth: '15'
+    image_file: K-26109-RA-0 download.png
+- id: DLT-1132602
+  sku: DLT-1132602
+  brand: PKB HV
+  provider: MISSING_PROVIDER
+  routing_tag: MISSING_ROUTING
+  purchase_link: ''
+  oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
+    x 32"
+  printable:
+    finish: white
+    description: DLT-1132602
+    dimensions:
+      width: '60'
+      height: '32'
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
