@@ -149,7 +149,7 @@ class ERPCommandCenter(ctk.CTk):
             left_f = ctk.CTkFrame(self.left_panel)
             left_f.pack(fill="x", pady=5)
             
-            lbl_text = f"[{room}] Qty: {qty} | {desc}"
+            lbl_text = f"{i+1}. [{room}] Qty: {qty} | {desc}"
             # Make the left label a clickable flat button
             btn_inspect = ctk.CTkButton(left_f, text=lbl_text, anchor="w", fg_color="transparent", text_color=("black","white"), hover_color=("gray70","gray30"), command=lambda val=item: self.inspect_item(val))
             btn_inspect.pack(fill="x", padx=5, pady=5)
@@ -172,9 +172,9 @@ class ERPCommandCenter(ctk.CTk):
             indicator = ctk.CTkLabel(right_f, text="●", text_color=color_hex.get(color, "gray"), font=ctk.CTkFont(size=20))
             indicator.pack(side="left", padx=5)
             
-            info_str = f"Match: {match_id} ({conf:.1f}%)" if match_id else "No Match Found"
+            info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
             if confirmed:
-                info_str = f"CONFIRMED: {match_id}"
+                info_str = f"{i+1}. CONFIRMED: {match_id}"
                 
             ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w").pack(side="left", padx=5)
             
@@ -222,7 +222,20 @@ class ERPCommandCenter(ctk.CTk):
             
         if match_id and match_id in self.catalog:
             db_item = self.catalog[match_id]
-            db_txt = f"ID: {db_item.get('id')}\nBrand: {db_item.get('brand')}\nModel: {db_item.get('model')}\nType: {db_item.get('type')}\nFinish: {db_item.get('finish')}\nRouting: {db_item.get('routing_tag', 'Standard')}"
+            printable = db_item.get("printable", {})
+            
+            db_txt = f"ID: {db_item.get('id')}\nSKU: {db_item.get('sku')}\nProvider: {db_item.get('provider')}\nRouting: {db_item.get('routing_tag')}\n"
+            db_txt += f"OneClick Desc: {db_item.get('oneclick_description')}\n\n--- Printable ---\n"
+            if printable:
+                db_txt += f"Finish: {printable.get('finish', 'N/A')}\n"
+                dims = printable.get('dimensions', {})
+                if dims:
+                    dim_str = " | ".join([f"{k}: {v}" for k, v in dims.items()])
+                    db_txt += f"Dims: {dim_str}\n"
+                db_txt += f"Desc: {printable.get('description', '')}\n"
+            else:
+                db_txt += "No printable properties. (Internal use only)"
+            
             lbl_db = ctk.CTkLabel(db_f, text=db_txt, justify="left", wraplength=250)
             lbl_db.pack(padx=10, pady=10, anchor="nw")
         else:
