@@ -122,29 +122,19 @@ class OneClickIngestor:
                     if not current_item:
                         return
                         
-                    desc = "\n".join(current_item["lines"]).strip()
+                    # Normalize whitespace: join with spaces instead of newlines to utilize horizontal space
+                    raw_desc = " ".join(current_item["lines"]).strip()
+                    desc = re.sub(r'\s+', ' ', raw_desc)
                     lower_desc = desc.lower()
                     qty_val = current_item["qty"]
                     room = current_item["room"]
                     
-                    if "demo/install" in lower_desc:
-                        debug_md.append(f"- ❌ `Discarded (Demo/Install)`:\n  ```\n  {desc}\n  ```\n")
-                    else:
-                        is_labor_only = False
-                        if "labor" in lower_desc:
-                            material_keywords = ["kit", "system", "bundle", "fixture", "faucet", "vanity", "tub", "sink", "countertop", "door", "glass", "hardware", "material", "including"]
-                            if not any(kw in lower_desc for kw in material_keywords):
-                                is_labor_only = True
-                                
-                        if is_labor_only:
-                            debug_md.append(f"- ❌ `Discarded (Labor only)`:\n  ```\n  {desc}\n  ```\n")
-                        else:
-                            debug_md.append(f"- ✅ **Accepted (Qty: {qty_val})**:\n  ```\n  {desc}\n  ```\n")
-                            result["line_items"].append({
-                                "room": room,
-                                "raw_description": desc,
-                                "qty": qty_val
-                            })
+                    debug_md.append(f"- ✅ **Extracted (Qty: {qty_val})**:\n  ```\n  {desc}\n  ```\n")
+                    result["line_items"].append({
+                        "room": room,
+                        "raw_description": desc,
+                        "qty": qty_val
+                    })
                     current_item = None
                 
                 for i, line in enumerate(lines):

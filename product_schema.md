@@ -21,10 +21,16 @@ This document defines the standard structure for all product data used in the **
 | `sku` | String | Yes | (ERP) Manufacturer or Vendor part number. |
 | `brand` | String | Yes | (ERP) Manufacturer (e.g., Kohler). Not shown to client. |
 | `provider` | String | Yes | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
-| `routing_tag` | String | Yes | (ERP) Used for Excel dispatch ("Warehouse", "Link", etc). |
+| `routing_tag` | String | Yes | (ERP) Excel dispatch ("Warehouse", "Link", etc). Set to `"IGNORE"` to drop from all outputs. |
 | `purchase_link` | String | No | URL string or action code ("CRM", "email") for purchasing. |
 | `oneclick_description` | String | Yes | **REQUIRED.** The exact target string the Matching Engine expects. |
-| `printable` | Object | No | Client-facing data. (If omitted, item is strictly hidden). |
+| `printable` | Object | No | Client-facing data. Determines output behavior (see below). |
+
+### 🛠️ Output Behaviors
+The system relies entirely on the database schema to classify how a matched item is exported:
+1. **PDF + Excel**: Material has a `printable` dictionary. (Shown to client, sent to purchasing).
+2. **Excel Only**: Material omits the `printable` dictionary. (Hidden from client, sent to purchasing).
+3. **Ignore (No Export)**: The `routing_tag` is exactly `"IGNORE"`. (Used purely to account for labor/tear-out lines without exporting them).
 
 ### The `printable` Object
 If an item should appear on the Client PDF, it must include a `printable` dictionary:

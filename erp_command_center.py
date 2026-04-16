@@ -4,6 +4,7 @@ from tkinter import filedialog
 import os
 import json
 import yaml
+from PIL import Image
 
 from catalog_loader import CatalogLoader
 from contract_ingestion import OneClickIngestor
@@ -145,14 +146,34 @@ class ERPCommandCenter(ctk.CTk):
             room = item.get("room", "Misc")
             confirmed = item.get("confirmed", False)
             
-            # Left Panel
-            left_f = ctk.CTkFrame(self.left_panel)
-            left_f.pack(fill="x", pady=5)
+            # Left Panel: Extracted Line Item Row
+            row_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
+            row_frame.pack(fill="x", pady=2)
             
-            lbl_text = f"{i+1}. [{room}] Qty: {qty} | {desc}"
-            # Make the left label a clickable flat button
-            btn_inspect = ctk.CTkButton(left_f, text=lbl_text, anchor="w", fg_color="transparent", text_color=("black","white"), hover_color=("gray70","gray30"), command=lambda val=item: self.inspect_item(val))
-            btn_inspect.pack(fill="x", padx=5, pady=5)
+            # Clickable button as background to handle hover and selection
+            btn_row = ctk.CTkButton(
+                row_frame, 
+                text="", 
+                fg_color="transparent", 
+                hover_color=("gray70", "gray30"), 
+                height=35,
+                anchor="w",
+                command=lambda val=item: self.inspect_item(val)
+            )
+            btn_row.pack(fill="x", padx=5)
+            
+            # Prefix Label (Fixed position)
+            prefix_txt = f"{i+1}. [{room}] Qty: {qty}"
+            lbl_prefix = ctk.CTkLabel(btn_row, text=prefix_txt, font=ctk.CTkFont(weight="bold"), anchor="w")
+            lbl_prefix.place(relx=0, rely=0.5, anchor="w", x=10)
+            
+            # Description Label (Starts after prefix, will be clipped if too long)
+            lbl_desc = ctk.CTkLabel(btn_row, text=f"| {desc}", anchor="w")
+            lbl_desc.place(relx=0, rely=0.5, anchor="w", x=160)
+            
+            # Bind clicks on child labels to the same command
+            lbl_prefix.bind("<Button-1>", lambda e, v=item: self.inspect_item(v))
+            lbl_desc.bind("<Button-1>", lambda e, v=item: self.inspect_item(v))
             
             # Right Panel Matching
             right_f = ctk.CTkFrame(self.right_panel)
@@ -165,22 +186,35 @@ class ERPCommandCenter(ctk.CTk):
             else:
                 match_id, match_str, conf = self.matcher.match_item(desc)
                 
+            # Check if this match refers to an ignored line
+            is_ignored = False
+            if confirmed and match_id in self.catalog:
+                if self.catalog[match_id].get("routing_tag", "").strip().upper() == "IGNORE":
+                    is_ignored = True
+
             color = self.matcher.get_color_code(conf) if not confirmed else "green"
+            if is_ignored:
+                color = "gray"
             
             # Visual indicator (Traffic light)
-            color_hex = {"green": "#00FF00", "yellow": "#FFFF00", "red": "#FF0000"}
+            color_hex = {"green": "#00FF00", "yellow": "#FFFF00", "red": "#FF0000", "gray": "gray50"}
             indicator = ctk.CTkLabel(right_f, text="●", text_color=color_hex.get(color, "gray"), font=ctk.CTkFont(size=20))
             indicator.pack(side="left", padx=5)
             
             info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
             if confirmed:
-                info_str = f"{i+1}. CONFIRMED: {match_id}"
+                info_str = f"{i+1}. IGNORED: {match_id}" if is_ignored else f"{i+1}. CONFIRMED: {match_id}"
                 
             ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w").pack(side="left", padx=5)
             
-            btn_color = "green" if confirmed else "#153E83"
-            btn_text = "Confirmed" if confirmed else "Confirm"
-            btn_state = "disabled" if confirmed else "normal"
+            if confirmed:
+                btn_color = "gray50" if is_ignored else "green"
+                btn_text = "Ignored" if is_ignored else "Confirmed"
+                btn_state = "disabled"
+            else:
+                btn_color = "#153E83"
+                btn_text = "Confirm"
+                btn_state = "normal"
             
             btn_verify = ctk.CTkButton(right_f, text=btn_text, width=80, fg_color=btn_color, state=btn_state, command=lambda idx=i, mid=match_id: self.confirm_item(idx, mid))
             btn_verify.pack(side="right", padx=5)
@@ -199,47 +233,117 @@ class ERPCommandCenter(ctk.CTk):
     def inspect_item(self, item):
         top = ctk.CTkToplevel(self)
         top.title("Inspect Item Match")
-        top.geometry("600x400")
+        top.geometry("900x650")
         top.attributes("-topmost", True)
+        
+        # Grid layout for top level
+        top.grid_columnconfigure(0, weight=1)
+        top.grid_columnconfigure(1, weight=2)
+        top.grid_rowconfigure(0, weight=1)
         
         # Left side: PDF Extracted Raw
         raw_f = ctk.CTkFrame(top)
-        raw_f.pack(side="left", fill="both", expand=True, padx=10, pady=10)
-        ctk.CTkLabel(raw_f, text="Extracted from Contract", font=ctk.CTkFont(weight="bold")).pack(pady=5)
-        raw_txt = f"Room: {item.get('room')}\nQty: {item.get('qty')}\n\nDescription:\n{item.get('raw_description')}"
-        lbl_raw = ctk.CTkLabel(raw_f, text=raw_txt, justify="left", wraplength=250)
-        lbl_raw.pack(padx=10, pady=10, anchor="nw")
+        raw_f.grid(row=0, column=0, sticky="nsew", padx=15, pady=15)
+        ctk.CTkLabel(raw_f, text="Extracted from Contract", font=ctk.CTkFont(weight="bold", size=16)).pack(pady=10)
         
-        # Right side: DB Knowledge
-        db_f = ctk.CTkFrame(top)
-        db_f.pack(side="right", fill="both", expand=True, padx=10, pady=10)
-        ctk.CTkLabel(db_f, text="Database Properties", font=ctk.CTkFont(weight="bold")).pack(pady=5)
+        raw_info_container = ctk.CTkScrollableFrame(raw_f, fg_color="transparent")
+        raw_info_container.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        raw_txt = f"Room: {item.get('room')}\nQty: {item.get('qty')}\n\nDescription:\n{item.get('raw_description')}"
+        lbl_raw = ctk.CTkLabel(raw_info_container, text=raw_txt, justify="left", wraplength=450, anchor="nw")
+        lbl_raw.pack(padx=10, pady=10, fill="both", expand=True)
+        
+        # Right side: DB Knowledge center
+        db_panel = ctk.CTkFrame(top)
+        db_panel.grid(row=0, column=1, sticky="nsew", padx=15, pady=15)
+        db_panel.grid_columnconfigure(0, weight=1)
+        db_panel.grid_rowconfigure(1, weight=1)
+        
+        ctk.CTkLabel(db_panel, text="Database Entry Details", font=ctk.CTkFont(weight="bold", size=16)).grid(row=0, column=0, pady=10)
+        
+        # Scrollable area for all fields
+        scroll_f = ctk.CTkScrollableFrame(db_panel)
+        scroll_f.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
         match_id = item.get("matched_id", None)
         if not match_id:
-            # Predict it live
             match_id, _, _ = self.matcher.match_item(item.get("raw_description", ""))
             
         if match_id and match_id in self.catalog:
             db_item = self.catalog[match_id]
+            
+            # 1. Product Image Display
+            image_file = db_item.get("printable", {}).get("image_file")
+            if image_file:
+                img_path = os.path.join(self.db_loader.assets_path, image_file)
+                if os.path.exists(img_path):
+                    try:
+                        pil_img = Image.open(img_path)
+                        # Maintain aspect ratio for preview
+                        w, h = pil_img.size
+                        max_size = 300
+                        if w > h:
+                            new_w = max_size
+                            new_h = int(h * (max_size / w))
+                        else:
+                            new_h = max_size
+                            new_w = int(w * (max_size / h))
+                        
+                        ctk_img = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(new_w, new_h))
+                        img_lbl = ctk.CTkLabel(scroll_f, image=ctk_img, text="")
+                        img_lbl.pack(pady=15)
+                    except Exception as e:
+                        ctk.CTkLabel(scroll_f, text=f"Error loading image: {e}", text_color="red").pack()
+                else:
+                    ctk.CTkLabel(scroll_f, text=f"Image not found: {image_file}", text_color="orange").pack(pady=5)
+            
+            # Formatting helpers
+            def add_header(txt):
+                header_f = ctk.CTkFrame(scroll_f, fg_color="transparent")
+                header_f.pack(fill="x", pady=(20, 5))
+                ctk.CTkLabel(header_f, text=txt, font=ctk.CTkFont(weight="bold", size=14), text_color="#1F6AA5").pack(side="left")
+                ctk.CTkFrame(scroll_f, height=2, fg_color=("gray80", "gray30")).pack(fill="x", pady=(0, 10))
+
+            def add_field(key, val):
+                f = ctk.CTkFrame(scroll_f, fg_color="transparent")
+                f.pack(fill="x", pady=2)
+                ctk.CTkLabel(f, text=f"{key}:", font=ctk.CTkFont(weight="bold"), width=130, anchor="w").pack(side="left", padx=(5, 0))
+                
+                if isinstance(val, dict):
+                    val_str = ", ".join([f"{k}: {v}" for k, v in val.items()])
+                else:
+                    val_str = str(val) if val is not None else "N/A"
+                    
+                ctk.CTkLabel(f, text=val_str, wraplength=400, justify="left", anchor="w").pack(side="left", fill="x", expand=True, padx=5)
+
+            # 2. Core ERP Section
+            add_header("CORE ERP / PURCHASING INFO")
+            core_fields = ['id', 'sku', 'brand', 'provider', 'routing_tag', 'purchase_link', 'category_file', 'verified_oneclick']
+            for field in core_fields:
+                if field in db_item:
+                    add_field(field.replace('_', ' ').title(), db_item[field])
+            
+            # Show any extra fields at top level
+            for k, v in db_item.items():
+                if k not in core_fields and k not in ['printable', 'oneclick_description']:
+                    add_field(k.replace('_', ' ').title(), v)
+            
+            # Match String (Tech details)
+            add_header("MATCHING ENGINE METADATA")
+            add_field("Target String", db_item.get("oneclick_description"))
+
+            # 3. Printable Section
+            add_header("PRINTABLE / CLIENT-FACING INFO")
             printable = db_item.get("printable", {})
-            
-            db_txt = f"ID: {db_item.get('id')}\nSKU: {db_item.get('sku')}\nProvider: {db_item.get('provider')}\nRouting: {db_item.get('routing_tag')}\n"
-            db_txt += f"OneClick Desc: {db_item.get('oneclick_description')}\n\n--- Printable ---\n"
             if printable:
-                db_txt += f"Finish: {printable.get('finish', 'N/A')}\n"
-                dims = printable.get('dimensions', {})
-                if dims:
-                    dim_str = " | ".join([f"{k}: {v}" for k, v in dims.items()])
-                    db_txt += f"Dims: {dim_str}\n"
-                db_txt += f"Desc: {printable.get('description', '')}\n"
+                for k, v in printable.items():
+                    if k != 'image_file': 
+                        add_field(k.replace('_', ' ').title(), v)
             else:
-                db_txt += "No printable properties. (Internal use only)"
-            
-            lbl_db = ctk.CTkLabel(db_f, text=db_txt, justify="left", wraplength=250)
-            lbl_db.pack(padx=10, pady=10, anchor="nw")
+                ctk.CTkLabel(scroll_f, text="Item is hidden from PDF (No printable block).", text_color="gray").pack(anchor="w", padx=20)
+                
         else:
-            ctk.CTkLabel(db_f, text="No properties matched in database.", text_color="red").pack(pady=10)
+            ctk.CTkLabel(scroll_f, text="No properties matched in database.", text_color="red", font=ctk.CTkFont(size=14, weight="bold")).pack(pady=100)
 
     def save_session(self, silent=True):
         if not self.target_pdf_dir:
@@ -284,6 +388,10 @@ class ERPCommandCenter(ctk.CTk):
             if item.get("confirmed") and item.get("matched_id"):
                 db_item = self.catalog.get(item["matched_id"], {}).copy()
                 if db_item:
+                    # Database-driven classification: skip items flagged as IGNORE
+                    if db_item.get("routing_tag", "").strip().upper() == "IGNORE":
+                        continue
+                        
                     db_item["qty"] = item.get("qty", 1)
                     db_item["room"] = item.get("room", "General")
                     payload["products"].append(db_item)
