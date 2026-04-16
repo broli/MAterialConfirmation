@@ -4,6 +4,7 @@ from tkinter import filedialog
 import os
 import yaml
 import shutil
+import csv
 from PIL import Image
 
 class DatabaseManager(ctk.CTkToplevel):
@@ -59,6 +60,7 @@ class DatabaseManager(ctk.CTkToplevel):
         header.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         ctk.CTkLabel(header, text="Database Browser", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
         ctk.CTkButton(header, text="+ Add New Product", command=self.show_form_view, fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
+        ctk.CTkButton(header, text="Bulk Load (CSV)", command=self.show_bulk_load_ui, fg_color="#153E83", hover_color="#0d2b61").pack(side="right", padx=10)
 
         self.tree_frame = ctk.CTkScrollableFrame(self.browser_frame)
         self.tree_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
@@ -83,7 +85,9 @@ class DatabaseManager(ctk.CTkToplevel):
                 with open(file_path, 'r', encoding='utf-8') as f:
                     items = yaml.safe_load(f) or []
                     for item in items:
-                        text = f"  ├─ [{item.get('id')}] : {item.get('sku')} | {item.get('oneclick_description')}"
+                        desc = item.get('oneclick_description', '')
+                        if len(desc) > 80: desc = desc[:77] + "..."
+                        text = f"  ├─ [{item.get('id')}] : {item.get('sku')} | {desc}"
                         
                         btn = ctk.CTkButton(self.tree_frame, text=text, font=ctk.CTkFont(family="Courier", size=12),
                                             fg_color="transparent", text_color=txt_color,
@@ -124,8 +128,14 @@ class DatabaseManager(ctk.CTkToplevel):
         details += f"Brand: {item.get('brand')}\n"
         details += f"Provider: {item.get('provider')}\n"
         details += f"Routing: {item.get('routing_tag')}\n"
-        details += f"Purchase Link: {item.get('purchase_link', 'None')}\n"
-        details += f"OneClick Desc: {item.get('oneclick_description')}\n"
+        
+        link_preview = item.get('purchase_link', 'None')
+        if len(link_preview) > 80: link_preview = link_preview[:77] + "..."
+        details += f"Purchase Link: {link_preview}\n"
+        
+        desc_preview = item.get('oneclick_description', '')
+        if len(desc_preview) > 80: desc_preview = desc_preview[:77] + "..."
+        details += f"OneClick Desc: {desc_preview}\n"
         
         if printable:
             details += f"\n--- Client Printable ---\n"
@@ -135,7 +145,7 @@ class DatabaseManager(ctk.CTkToplevel):
                 dim_str = ", ".join([f"{k}: {v}" for k, v in dims.items()])
                 details += f"Dimensions: {dim_str}\n"
 
-        lbl_details = ctk.CTkLabel(top, text=details, justify="left", font=ctk.CTkFont(size=14))
+        lbl_details = ctk.CTkLabel(top, text=details, justify="left", font=ctk.CTkFont(size=14), wraplength=460)
         lbl_details.pack(pady=5, padx=20, anchor="w")
 
         desc = ctk.CTkTextbox(top, height=80, width=460)
@@ -148,11 +158,53 @@ class DatabaseManager(ctk.CTkToplevel):
 
         btn_edit = ctk.CTkButton(btn_frame, text="Edit Product", fg_color="#153E83", hover_color="#0d2b61",
                                  command=lambda: self.load_for_edit(item_id, top))
-        btn_edit.pack(side="left", expand=True, padx=10)
+        btn_edit.pack(side="left", expand=True, padx=5)
+
+        btn_duplicate = ctk.CTkButton(btn_frame, text="Duplicate Product", fg_color="gray20", hover_color="gray30",
+                                      command=lambda: self.duplicate_product(item_id, top))
+        btn_duplicate.pack(side="left", expand=True, padx=5)
 
         btn_delete = ctk.CTkButton(btn_frame, text="Delete Product", fg_color="red", hover_color="darkred",
                                    command=lambda: self.delete_product(item_id, top))
-        btn_delete.pack(side="right", expand=True, padx=10)
+        btn_delete.pack(side="right", expand=True, padx=5)
+
+    def duplicate_product(self, item_id, window):
+        window.destroy()
+        item = self.catalog.get(item_id)
+        if not item: return
+
+        self.show_form_view()
+        self.editing_item_id = None
+        self.editing_original_cat = None
+        self.form_header_label.configure(text=f"Duplicating Product: {item_id}")
+
+        self.cat_combobox.set(item.get('category_file') + '.yaml')
+        self.id_entry.delete(0, 'end')
+        self.sku_entry.insert(0, item.get('sku', ''))
+        self.brand_combobox.set(item.get('brand', ''))
+        self.provider_combobox.set(item.get('provider', ''))
+        self.routing_combobox.set(item.get('routing_tag', ''))
+        self.purchase_link_entry.insert(0, item.get('purchase_link', ''))
+        self.oneclick_entry.insert(0, item.get('oneclick_description', ''))
+        
+        printable = item.get("printable", {})
+        if printable:
+            self.printable_checkbox_var.set(True)
+            self.finish_combobox.set(printable.get('finish', ''))
+            dims = printable.get('dimensions', {})
+            self.w_entry.insert(0, dims.get('width', ''))
+            self.h_entry.insert(0, dims.get('height', ''))
+            self.d_entry.insert(0, dims.get('depth', ''))
+            
+            self.desc_entry.delete("0.0", "end")
+            self.desc_entry.insert("0.0", printable.get('description', ''))
+            
+            if printable.get('image_file'):
+                abs_img_path = os.path.abspath(os.path.join(self.assets_path, printable.get('image_file')))
+                if os.path.exists(abs_img_path):
+                    self.image_path_var.set(abs_img_path)
+        else:
+            self.printable_checkbox_var.set(False)
 
     def load_for_edit(self, item_id, window):
         window.destroy()
@@ -408,9 +460,216 @@ class DatabaseManager(ctk.CTkToplevel):
         messagebox.showinfo("Success", f"Product '{product['id']}' saved successfully!")
         
         self.catalog = self.db_loader.load_all_categories()
-        # Propagate changes visually
+
+        # Push the refreshed catalog to the parent window and tell it to rebuild
+        # the MatchService index so newly saved items are immediately findable.
         self.master.catalog = self.catalog
+        if hasattr(self.master, 'refresh_match_service'):
+            self.master.refresh_match_service()
         if hasattr(self.master, 'populate_verification_ui'):
             self.master.populate_verification_ui()
             
         self.show_browser_view()
+
+    def show_bulk_load_ui(self):
+        BulkLoadWindow(self, self.db_loader, self.categories_path, self.assets_path, self.refresh_browser_list)
+
+class BulkLoadWindow(ctk.CTkToplevel):
+    def __init__(self, master, db_loader, categories_path, assets_path, refresh_callback):
+        super().__init__(master)
+        
+        self.title("Bulk Load Products (CSV)")
+        self.geometry("700x600")
+        self.attributes("-topmost", True)
+        
+        self.categories_path = categories_path
+        self.assets_path = assets_path
+        self.refresh_callback = refresh_callback
+        
+        self.csv_path = None
+        self.image_dir = None
+        
+        self.build_ui()
+        self.after(100, lambda: self.attributes("-topmost", False))
+
+    def build_ui(self):
+        self.grid_columnconfigure(0, weight=1)
+        
+        header_lbl = ctk.CTkLabel(self, text="Bulk Import Products via CSV", font=ctk.CTkFont(size=20, weight="bold"))
+        header_lbl.grid(row=0, column=0, pady=(20, 10), padx=20, sticky="w")
+        
+        info_text = (
+            "1. Generate a CSV Template below.\n"
+            "2. Fill it out in Excel (each row = 1 product).\n"
+            "3. Place all your new image files in a separate folder.\n"
+            "4. Select the filled CSV, the image folder, and run the import."
+        )
+        info_lbl = ctk.CTkLabel(self, text=info_text, justify="left", font=ctk.CTkFont(size=14))
+        info_lbl.grid(row=1, column=0, pady=(0, 20), padx=20, sticky="w")
+        
+        btn_template = ctk.CTkButton(self, text="⬇️ Generate CSV Template", command=self.generate_template, fg_color="green", hover_color="darkgreen")
+        btn_template.grid(row=2, column=0, pady=(0, 30), padx=20, sticky="w")
+        
+        # File Selectors
+        sel_frame = ctk.CTkFrame(self)
+        sel_frame.grid(row=3, column=0, sticky="ew", padx=20, pady=10)
+        sel_frame.grid_columnconfigure(1, weight=1)
+        
+        ctk.CTkButton(sel_frame, text="1. Select Filled CSV", command=self.select_csv).grid(row=0, column=0, padx=10, pady=10)
+        self.lbl_csv = ctk.CTkLabel(sel_frame, text="No file selected...", text_color="gray")
+        self.lbl_csv.grid(row=0, column=1, sticky="w", padx=10)
+        
+        ctk.CTkButton(sel_frame, text="2. Select Image Folder", command=self.select_image_dir).grid(row=1, column=0, padx=10, pady=10)
+        self.lbl_image_dir = ctk.CTkLabel(sel_frame, text="(Optional) Select folder containing new images...", text_color="gray")
+        self.lbl_image_dir.grid(row=1, column=1, sticky="w", padx=10)
+        
+        self.btn_run = ctk.CTkButton(self, text="🚀 Run Import", command=self.run_import, height=50, font=ctk.CTkFont(size=16, weight="bold"), state="disabled")
+        self.btn_run.grid(row=4, column=0, pady=30, padx=20, sticky="ew")
+
+    def generate_template(self):
+        filepath = filedialog.asksaveasfilename(defaultextension=".csv", initialfile="bulk_import_template.csv", title="Save CSV Template", filetypes=[("CSV File", "*.csv")])
+        if not filepath: return
+        
+        headers = ["category_file", "id", "sku", "brand", "provider", "routing_tag", "purchase_link", "oneclick_description", 
+                   "is_printable", "finish", "description", "dim_width", "dim_height", "dim_depth", "image_file"]
+                   
+        try:
+            with open(filepath, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow(headers)
+                # Write an example row
+                writer.writerow(["vanities.yaml", "PKB-VAN-EXAMPLE", "SKU123", "Kohler", "Kohler Direct", "Warehouse", "", "Modern Vanity 48", 
+                                 "yes", "Matte Black", "A beautiful vanity.", "48\"", "34\"", "22\"", "vanity_pic.jpg"])
+            messagebox.showinfo("Success", f"Template generated successfully at:\n{filepath}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to create template: {e}")
+
+    def select_csv(self):
+        filepath = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        if filepath:
+            self.csv_path = filepath
+            self.lbl_csv.configure(text=os.path.basename(filepath), text_color="white")
+            self.check_ready()
+
+    def select_image_dir(self):
+        dirpath = filedialog.askdirectory(title="Select Folder with New Images")
+        if dirpath:
+            self.image_dir = dirpath
+            self.lbl_image_dir.configure(text=os.path.basename(dirpath), text_color="white")
+
+    def check_ready(self):
+        if self.csv_path:
+            self.btn_run.configure(state="normal")
+        else:
+            self.btn_run.configure(state="disabled")
+
+    def run_import(self):
+        if not self.csv_path: return
+        
+        success_count = 0
+        error_count = 0
+        errors = []
+        
+        # Load existing DB to check for duplicate IDs
+        db_loader = self.master.db_loader
+        catalog_cache = db_loader.load_all_categories()
+        existing_ids = set()
+        for item in catalog_cache.values():
+            existing_ids.add(str(item.get('id', '')))
+
+        try:
+            with open(self.csv_path, 'r', encoding='utf-8', errors='replace') as f:
+                reader = csv.DictReader(f)
+                # Normalize keys
+                reader.fieldnames = [k.strip() for k in reader.fieldnames]
+                
+                required_cols = ["category_file", "id", "sku", "oneclick_description"]
+                for col in required_cols:
+                    if col not in reader.fieldnames:
+                        messagebox.showerror("Error", f"CSV is missing required column: {col}. Generated template has exact column names.")
+                        return
+
+                for row_num, row in enumerate(reader, start=2):
+                    cat_file = row.get("category_file", "").strip()
+                    item_id = row.get("id", "").strip()
+                    
+                    if not item_id or not cat_file:
+                        continue # Skip empty rows
+                        
+                    if not cat_file.endswith(".yaml"):
+                        cat_file += ".yaml"
+                        
+                    if str(item_id) in existing_ids:
+                        errors.append(f"Row {row_num}: Duplicate ID '{item_id}'")
+                        error_count += 1
+                        continue
+                        
+                    product = {
+                        "id": item_id,
+                        "sku": row.get("sku", "").strip(),
+                        "brand": row.get("brand", "").strip(),
+                        "provider": row.get("provider", "").strip(),
+                        "routing_tag": row.get("routing_tag", "").strip(),
+                        "purchase_link": row.get("purchase_link", "").strip(),
+                        "oneclick_description": row.get("oneclick_description", "").strip(),
+                    }
+                    
+                    is_printable = str(row.get("is_printable", "")).strip().lower() in ['yes', 'y', '1', 'true']
+                    
+                    if is_printable:
+                        printable = {
+                            "finish": row.get("finish", "").strip(),
+                            "description": row.get("description", "").strip(),
+                            "dimensions": {}
+                        }
+                        
+                        if row.get("dim_width", "").strip(): printable["dimensions"]["width"] = row.get("dim_width", "").strip()
+                        if row.get("dim_height", "").strip(): printable["dimensions"]["height"] = row.get("dim_height", "").strip()
+                        if row.get("dim_depth", "").strip(): printable["dimensions"]["depth"] = row.get("dim_depth", "").strip()
+                        
+                        img_name = row.get("image_file", "").strip()
+                        if img_name:
+                            printable["image_file"] = img_name
+                            
+                            # Try to copy it over if image dir provided
+                            if self.image_dir:
+                                source_path = os.path.join(self.image_dir, img_name)
+                                dest_path = os.path.join(self.assets_path, img_name)
+                                if os.path.exists(source_path) and os.path.abspath(source_path) != os.path.abspath(dest_path):
+                                    try:
+                                        shutil.copy(source_path, dest_path)
+                                    except Exception as copy_e:
+                                        errors.append(f"Row {row_num}: Failed to copy image {img_name}: {copy_e}")
+                                else:
+                                    if not os.path.exists(dest_path) and not os.path.exists(source_path):
+                                        errors.append(f"Row {row_num}: Image {img_name} not found in source dir.")
+                                        
+                        product["printable"] = printable
+                    
+                    # Append to YAML
+                    target_yaml_path = os.path.join(self.categories_path, cat_file)
+                    existing_data = []
+                    if os.path.exists(target_yaml_path):
+                        with open(target_yaml_path, 'r', encoding='utf-8') as yf:
+                            existing_data = yaml.safe_load(yf) or []
+                            
+                    existing_data.append(product)
+                    
+                    with open(target_yaml_path, 'w', encoding='utf-8') as yf:
+                        yaml.dump(existing_data, yf, sort_keys=False, allow_unicode=True)
+                        
+                    existing_ids.add(str(item_id)) # Add to cache
+                    success_count += 1
+                    
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to read CSV: {e}")
+            return
+            
+        self.refresh_callback()
+        
+        msg = f"Import Finished!\nSuccessfully imported: {success_count} items.\nFailed: {error_count} items."
+        if errors:
+            msg += "\n\nFirst 5 Warnings/Errors:\n" + "\n".join(errors[:5])
+            
+        messagebox.showinfo("Import Complete", msg)
+        self.destroy()

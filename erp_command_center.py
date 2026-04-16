@@ -8,7 +8,7 @@ from PIL import Image
 
 from catalog_loader import CatalogLoader
 from contract_ingestion import OneClickIngestor
-from matching_engine import MatchingEngine
+from matching_engine import MatchService
 from client_pdf_generator import PDFGenerator
 from excel_routing_engine import ExcelRoutingEngine
 from database_manager import DatabaseManager
@@ -30,7 +30,9 @@ class ERPCommandCenter(ctk.CTk):
         self.db_loader = CatalogLoader(base_path="database")
         self.catalog = self.db_loader.load_all_categories()
         
-        self.matcher = MatchingEngine(self.catalog)
+        # MatchService is the single backend entry point for all DB-lookup logic.
+        # The UI never calls MatchingEngine directly.
+        self.match_service = MatchService(self.catalog)
         self.ingestor = None
         
         # UI layout
@@ -133,90 +135,107 @@ class ERPCommandCenter(ctk.CTk):
     def open_database_manager(self):
         DatabaseManager(self, self.db_loader)
 
+    def refresh_match_service(self):
+        """
+        Reinitialise the MatchService after the catalog changes.
+
+        Called by DatabaseManager whenever a product is saved or deleted so
+        that the match index stays in sync with the on-disk YAML files.
+        The UI does not need to know how the service is built — it just
+        triggers this method and the backend handles the rest.
+        """
+        self.match_service = MatchService(self.catalog)
+
     def populate_verification_ui(self):
-        # Clear existing
+        """
+        Rebuild the two-panel verification UI from the current session data.
+
+        This method is *display-only*: it asks MatchService for match metadata
+        and renders it.  No matching logic lives here.
+        """
+        # Clear existing widgets from both panels.
         for w in self.left_panel.winfo_children(): w.destroy()
         for w in self.right_panel.winfo_children(): w.destroy()
-        
+
         items = self.session_data.get("line_items", [])
-        
+
+        # Enrich every item with match metadata in one batch call.
+        # This attaches a '_match' dict to each item (in-place) without touching
+        # the session fields that are persisted to disk.
+        self.match_service.enrich_items(items)
+
         for i, item in enumerate(items):
-            desc = item.get("raw_description", "")
-            qty = item.get("qty", 1)
-            room = item.get("room", "Misc")
-            confirmed = item.get("confirmed", False)
-            
-            # Left Panel: Extracted Line Item Row
+            desc  = item.get("raw_description", "")
+            qty   = item.get("qty", 1)
+            room  = item.get("room", "Misc")
+
+            # Unpack pre-resolved match metadata from the service.
+            meta       = item["_match"]
+            match_id   = meta["match_id"]
+            conf       = meta["confidence"]
+            color_hex  = meta["color_hex"]
+            is_ignored = meta["is_ignored"]
+            confirmed  = item.get("confirmed", False)
+
+            # --- Left Panel: Extracted Line Item Row ---
             row_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")
             row_frame.pack(fill="x", pady=2)
-            
-            # Clickable button as background to handle hover and selection
+
+            # Full-width clickable button used as a hover-able row background.
             btn_row = ctk.CTkButton(
-                row_frame, 
-                text="", 
-                fg_color="transparent", 
-                hover_color=("gray70", "gray30"), 
+                row_frame,
+                text="",
+                fg_color="transparent",
+                hover_color=("gray70", "gray30"),
                 height=35,
                 anchor="w",
                 command=lambda val=item: self.inspect_item(val)
             )
             btn_row.pack(fill="x", padx=5)
-            
-            # Prefix Label (Fixed position)
+
+            # Fixed-position prefix label (item number, room, qty).
             prefix_txt = f"{i+1}. [{room}] Qty: {qty}"
             lbl_prefix = ctk.CTkLabel(btn_row, text=prefix_txt, font=ctk.CTkFont(weight="bold"), anchor="w")
             lbl_prefix.place(relx=0, rely=0.5, anchor="w", x=10)
-            
-            # Description Label (Starts after prefix, will be clipped if too long)
+
+            # Scrolling description label — will be clipped by the button boundary.
             lbl_desc = ctk.CTkLabel(btn_row, text=f"| {desc}", anchor="w")
             lbl_desc.place(relx=0, rely=0.5, anchor="w", x=160)
-            
-            # Bind clicks on child labels to the same command
+
+            # Propagate click events from child labels to the parent command.
             lbl_prefix.bind("<Button-1>", lambda e, v=item: self.inspect_item(v))
-            lbl_desc.bind("<Button-1>", lambda e, v=item: self.inspect_item(v))
-            
-            # Right Panel Matching
+            lbl_desc.bind("<Button-1>",   lambda e, v=item: self.inspect_item(v))
+
+            # --- Right Panel: Match Result ---
             right_f = ctk.CTkFrame(self.right_panel)
             right_f.pack(fill="x", pady=5)
-            
-            # If already confirmed, use the saved matched_id, else query engine
-            if confirmed and "matched_id" in item:
-                match_id = item["matched_id"]
-                conf = 100.0
-            else:
-                match_id, match_str, conf = self.matcher.match_item(desc)
-                
-            # Check if this match refers to an ignored line
-            is_ignored = False
-            if confirmed and match_id in self.catalog:
-                if self.catalog[match_id].get("routing_tag", "").strip().upper() == "IGNORE":
-                    is_ignored = True
 
-            color = self.matcher.get_color_code(conf) if not confirmed else "green"
-            if is_ignored:
-                color = "gray"
-            
-            # Visual indicator (Traffic light)
-            color_hex = {"green": "#00FF00", "yellow": "#FFFF00", "red": "#FF0000", "gray": "gray50"}
-            indicator = ctk.CTkLabel(right_f, text="●", text_color=color_hex.get(color, "gray"), font=ctk.CTkFont(size=20))
+            # Traffic-light confidence indicator — colour resolved entirely by the service.
+            indicator = ctk.CTkLabel(right_f, text="●", text_color=color_hex, font=ctk.CTkFont(size=20))
             indicator.pack(side="left", padx=5)
-            
-            info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
+
+            # Human-readable status string.
             if confirmed:
                 info_str = f"{i+1}. IGNORED: {match_id}" if is_ignored else f"{i+1}. CONFIRMED: {match_id}"
-                
+            else:
+                info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
+
             ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w").pack(side="left", padx=5)
-            
+
+            # Confirm button — disabled once the user has already confirmed the item.
             if confirmed:
                 btn_color = "gray50" if is_ignored else "green"
-                btn_text = "Ignored" if is_ignored else "Confirmed"
+                btn_text  = "Ignored" if is_ignored else "Confirmed"
                 btn_state = "disabled"
             else:
                 btn_color = "#153E83"
-                btn_text = "Confirm"
+                btn_text  = "Confirm"
                 btn_state = "normal"
-            
-            btn_verify = ctk.CTkButton(right_f, text=btn_text, width=80, fg_color=btn_color, state=btn_state, command=lambda idx=i, mid=match_id: self.confirm_item(idx, mid))
+
+            btn_verify = ctk.CTkButton(
+                right_f, text=btn_text, width=80, fg_color=btn_color, state=btn_state,
+                command=lambda idx=i, mid=match_id: self.confirm_item(idx, mid)
+            )
             btn_verify.pack(side="right", padx=5)
 
     def confirm_item(self, idx, match_id):
@@ -265,9 +284,11 @@ class ERPCommandCenter(ctk.CTk):
         scroll_f = ctk.CTkScrollableFrame(db_panel)
         scroll_f.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
-        match_id = item.get("matched_id", None)
-        if not match_id:
-            match_id, _, _ = self.matcher.match_item(item.get("raw_description", ""))
+        # Delegate match resolution to the service.
+        # resolve_match() honours confirmed items and runs the fuzzy engine
+        # for unconfirmed ones — the UI does not need to know which path is taken.
+        meta     = self.match_service.resolve_match(item)
+        match_id = meta["match_id"]
             
         if match_id and match_id in self.catalog:
             db_item = self.catalog[match_id]
@@ -330,7 +351,10 @@ class ERPCommandCenter(ctk.CTk):
             
             # Match String (Tech details)
             add_header("MATCHING ENGINE METADATA")
-            add_field("Target String", db_item.get("oneclick_description"))
+            target_desc = db_item.get("oneclick_description", "N/A")
+            if target_desc and len(target_desc) > 100:
+                target_desc = target_desc[:97] + "..."
+            add_field("Target String", target_desc)
 
             # 3. Printable Section
             add_header("PRINTABLE / CLIENT-FACING INFO")
