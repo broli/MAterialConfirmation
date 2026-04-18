@@ -2,55 +2,51 @@
   sku: 220C4EPSRN
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Arcade Bundle (NEW) Brushed Nickel (BN)
   printable:
     finish: Brushed Nickel
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade Brushed Nickel.png
-  verified_oneclick: true
 - id: 220C4EP
   sku: 220C4EP
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Tub Bundles Arcade Bundle (NEW) Chrome (CH)
   printable:
     finish: Chrome
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade chrome.png
-  verified_oneclick: true
 - id: 220C4EPBL
   sku: 220C4EPBL
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Arcade Bundle (NEW) Matte Black (MB)
   printable:
     finish: Matte Black
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade matte black .png
-  verified_oneclick: true
 - id: '82611'
   sku: '82611'
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Horizon Bundle (NEW) Chrome (CH)
   printable:
     finish: Chrome
     description: Horizon Bundle
     dimensions: {}
     image_file: BN 82611SRN.tif. final.png
-  verified_oneclick: true
 - id: 82611SRN
   sku: 82611SRN
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Horizon Bundle (NEW) Brushed Nickel
     (BN)
   printable:
@@ -58,60 +54,55 @@
     description: Horizon Bundle
     dimensions: {}
     image_file: BN 82611SRN.tif. final.png
-  verified_oneclick: true
 - id: 82611BL
   sku: 82611BL
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Horizon Bundle (NEW) Matte Black (MB)
   printable:
     finish: Matte Black
     description: Horizon Bundle
     dimensions: {}
     image_file: Matte black 82611BL.final.png
-  verified_oneclick: true
 - id: 1011-BN-1.8GPM
   sku: 1011-BN-1.8GPM
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Melody Bundle Brushed Nickel
   printable:
     finish: Brushed Nickel
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-BN_1.Final.png
-  verified_oneclick: true
 - id: 1011-CH-1.8GPM
   sku: 1011-CH-1.8GPM
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Melody Bundle Chrome
   printable:
     finish: Chrome
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-CH_1.final.png
-  verified_oneclick: true
 - id: 011-MB-1.8GPM
   sku: 011-MB-1.8GPM
   brand: PKB
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Fixtures Bundles Melody Bundle Matte Black
   printable:
     finish: Matte Black
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-MB_1.final.png
-  verified_oneclick: true
 - id: LCNR-SS-SAN
   sku: LCNR-SS-SAN
   brand: BCI
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: 'Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat
     (900
 
@@ -124,4 +115,3 @@
       height: '20.25'
       depth: '1.75'
     image_file: lcnr-ss-san_l.jpg
-  verified_oneclick: true

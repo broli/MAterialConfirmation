@@ -2,7 +2,7 @@
   sku: W-SS-SAN
   brand: BCI
   provider: BCI
-  routing_tag: warehouse;bci
+  routing_tag: WAREHOUSE
   purchase_link: N/A
   oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
     Santorini White Smooth Standard - Shower W-SS-SAN: Standard Shower System Santorini
@@ -16,7 +16,7 @@
   sku: W-SS-TN
   brand: BCI
   provider: BCI
-  routing_tag: warehouse;bci
+  routing_tag: WAREHOUSE
   purchase_link: N/A
   oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
     Tuscany Smooth Standard - Shower W-SS-TN: Shower System Tuscany'
@@ -29,7 +29,7 @@
   sku: W-SS-VS
   brand: BCI
   provider: BCI
-  routing_tag: warehouse;bci
+  routing_tag: WAREHOUSE
   purchase_link: N/A
   oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
     Versailles Smooth Standard - Shower W-SS-VS: Shower System Versailles'
@@ -42,7 +42,7 @@
   sku: W-SS-W
   brand: BCI
   provider: BCI
-  routing_tag: warehouse;bci
+  routing_tag: WAREHOUSE
   purchase_link: N/A
   oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
     White Smooth Standard - Shower W-SS-W: Shower System White'

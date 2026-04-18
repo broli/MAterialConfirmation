@@ -2,7 +2,7 @@
   sku: DLT-1130602
   brand: PKB HV
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
     x 30"
   printable:
@@ -12,12 +12,11 @@
       width: '60'
       height: '30'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
-  verified_oneclick: true
 - id: DLT-1130601
   sku: DLT-1130601
   brand: PKB HV
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
     x 30"
   printable:
@@ -27,12 +26,11 @@
       width: '60'
       height: '30'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
-  verified_oneclick: true
 - id: DLT-1132601
   sku: DLT-1132601
   brand: PKB HV
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
     x 32"
   printable:
@@ -42,12 +40,11 @@
       width: '60'
       height: '32'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
-  verified_oneclick: true
 - id: K-26109-LA-0
   sku: K-26109-LA-0
   brand: Kohler
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Kohler Entity Bathtub left drain white
   printable:
     finish: white
@@ -61,7 +58,7 @@
   sku: K-26109-RA-0
   brand: Kohler
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: Kohler Entity Bathtub right drain white
   printable:
     finish: white
@@ -75,7 +72,7 @@
   sku: DLT-1132602
   brand: PKB HV
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   purchase_link: ''
   oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
     x 32"

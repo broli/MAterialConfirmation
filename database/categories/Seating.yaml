@@ -2,7 +2,7 @@
   sku: LCNR-SS-W
   brand: BCI
   provider: MISSING_PROVIDER
-  routing_tag: MISSING_ROUTING
+  routing_tag: WAREHOUSE
   oneclick_description: 'Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat
     (900
 
@@ -15,4 +15,3 @@
       height: '20.5'
       depth: '1.75'
     image_file: lcnr-ss-w_l.jpg
-  verified_oneclick: true

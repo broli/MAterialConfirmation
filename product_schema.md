@@ -20,10 +20,10 @@ This document defines the standard structure for all product data used in the **
 | `id` | String | Yes | Unique internal PKB Identifier. Used to link selections. |
 | `sku` | String | Yes | (ERP) Manufacturer or Vendor part number. |
 | `brand` | String | Yes | (ERP) Manufacturer (e.g., Kohler). Not shown to client. |
-| `provider` | String | Yes | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
-| `routing_tag` | String | Yes | (ERP) Excel dispatch ("Warehouse", "Link", etc). Set to `"IGNORE"` to drop from all outputs. |
+| `provider` | String | No | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
+| `routing_tag` | String | Yes | (ERP) Export logic. Must be one of: `IGNORE`, `WAREHOUSE`, `PROCURE`, or `WH_OR_PROCURE`. |
 | `purchase_link` | String | No | URL string or action code ("CRM", "email") for purchasing. |
-| `oneclick_description` | String | Yes | **REQUIRED.** The exact target string the Matching Engine expects. |
+| `oneclick_description` | String | Yes | **REQUIRED.** The exact target string the Matching Engine expects. **This field ALONE controls item matching.** |
 | `printable` | Object | No | Client-facing data. Determines output behavior (see below). |
 
 ### 🛠️ Output Behaviors
@@ -36,7 +36,7 @@ The system relies entirely on the database schema to classify how a matched item
 If an item should appear on the Client PDF, it must include a `printable` dictionary:
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `finish` | String | Color or Texture (e.g., Matte Black, Brushed Gold). |
+| `finish` | String | Color or Texture presentation (e.g., Matte Black, Brushed Gold). *Note: This is strictly for Output generation, not internal matching.* |
 | `description` | String | Marketing text for the client. Replaces `model`/`brand`. |
 | `dimensions` | Dictionary | **Flexible field.** Contains specific measurements. |
 | `image_file` | String | Filename located in the `/assets/` folder. |

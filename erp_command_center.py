@@ -72,6 +72,10 @@ class ERPCommandCenter(ctk.CTk):
         ctk.CTkLabel(info_frame, text="Project PO:").pack(side="left", padx=(20, 5))
         self.entry_po = ctk.CTkEntry(info_frame, width=150)
         self.entry_po.pack(side="left", padx=5)
+
+        self.hide_ignored_var = ctk.BooleanVar(value=True)
+        self.switch_hide_ignored = ctk.CTkSwitch(info_frame, text="Hide Ignored Items", variable=self.hide_ignored_var, command=self.populate_verification_ui)
+        self.switch_hide_ignored.pack(side="right", padx=10)
         
         # Left Panel - Extracted Data
         self.left_panel = ctk.CTkScrollableFrame(self.workspace, label_text="Extracted Contract Lines")
@@ -176,6 +180,10 @@ class ERPCommandCenter(ctk.CTk):
             color_hex  = meta["color_hex"]
             is_ignored = meta["is_ignored"]
             confirmed  = item.get("confirmed", False)
+
+            # Skip rendering if this item is marked to be ignored and the user has toggled the hide switch
+            if is_ignored and self.hide_ignored_var.get():
+                continue
 
             # --- Left Panel: Extracted Line Item Row ---
             row_frame = ctk.CTkFrame(self.left_panel, fg_color="transparent")

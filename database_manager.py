@@ -41,8 +41,13 @@ class DatabaseManager(ctk.CTkToplevel):
     def get_unique_values(self, key):
         values = set()
         for item in self.catalog.values():
-            if key in item and item[key]:
-                values.add(item[key])
+            if key == 'finish':
+                if 'printable' in item and 'finish' in item['printable']:
+                    val = item['printable']['finish']
+                    if val: values.add(val)
+            else:
+                if key in item and item[key]:
+                    values.add(item[key])
         return sorted(list(values))
 
     def get_existing_categories(self):
@@ -283,49 +288,58 @@ class DatabaseManager(ctk.CTkToplevel):
         self.form_header_label = ctk.CTkLabel(header, text="Add New Product", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_header_label.pack(side="left", padx=20)
 
-        # Basic Info
-        ctk.CTkLabel(self.form_frame, text="Category File", anchor="w").grid(row=1, column=0, padx=10, sticky="ew")
+        # Identity & Matching (Internal)
+        ctk.CTkLabel(self.form_frame, text="INTERNAL MATCHING LOGIC", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF").grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="w")
+        
+        ctk.CTkLabel(self.form_frame, text="Category File *", anchor="w").grid(row=2, column=0, padx=10, sticky="ew")
         self.cat_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_existing_categories())
         self.cat_combobox.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="ew")
 
-        ctk.CTkLabel(self.form_frame, text="Unique ID", anchor="w").grid(row=1, column=1, padx=10, sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="Unique ID *", text_color="yellow", anchor="w").grid(row=2, column=1, padx=10, sticky="ew")
         self.id_entry = ctk.CTkEntry(self.form_frame)
-        self.id_entry.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="ew")
+        self.id_entry.grid(row=3, column=1, padx=10, pady=(0, 10), sticky="ew")
         
-        ctk.CTkLabel(self.form_frame, text="SKU", anchor="w").grid(row=3, column=0, padx=10, sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="SKU *", text_color="yellow", anchor="w").grid(row=4, column=0, padx=10, sticky="ew")
         self.sku_entry = ctk.CTkEntry(self.form_frame)
-        self.sku_entry.grid(row=4, column=0, padx=10, pady=(0, 10), sticky="ew")
+        self.sku_entry.grid(row=5, column=0, padx=10, pady=(0, 10), sticky="ew")
 
-        ctk.CTkLabel(self.form_frame, text="Brand", anchor="w").grid(row=3, column=1, padx=10, sticky="ew")
-        self.brand_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('brand'))
-        self.brand_combobox.grid(row=4, column=1, padx=10, pady=(0, 10), sticky="ew")
-
-        ctk.CTkLabel(self.form_frame, text="Provider", anchor="w").grid(row=5, column=0, padx=10, sticky="ew")
-        self.provider_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('provider'))
-        self.provider_combobox.grid(row=6, column=0, padx=10, pady=(0, 10), sticky="ew")
-
-        ctk.CTkLabel(self.form_frame, text="Routing Tag", anchor="w").grid(row=5, column=1, padx=10, sticky="ew")
-        self.routing_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('routing_tag'))
-        self.routing_combobox.grid(row=6, column=1, padx=10, pady=(0, 10), sticky="ew")
-
-        ctk.CTkLabel(self.form_frame, text="Purchase Link / Action", anchor="w").grid(row=7, column=0, columnspan=2, padx=10, sticky="ew")
-        self.purchase_link_entry = ctk.CTkEntry(self.form_frame)
-        self.purchase_link_entry.grid(row=8, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
-
-        ctk.CTkLabel(self.form_frame, text="OneClick Description (REQUIRED FOR MATCHING)", anchor="w", text_color="yellow").grid(row=9, column=0, columnspan=2, padx=10, sticky="ew")
+        ctk.CTkLabel(self.form_frame, text="OneClick Description * (REQUIRED FOR MATCHING)", anchor="w", text_color="yellow").grid(row=4, column=1, padx=10, sticky="ew")
         self.oneclick_entry = ctk.CTkEntry(self.form_frame)
-        self.oneclick_entry.grid(row=10, column=0, columnspan=2, padx=10, pady=(0, 15), sticky="ew")
+        self.oneclick_entry.grid(row=5, column=1, padx=10, pady=(0, 10), sticky="ew")
+
+        # ERP Routing Ops
+        ctk.CTkLabel(self.form_frame, text="ERP ROUTING & DISPATCH", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF").grid(row=6, column=0, columnspan=2, padx=10, pady=(20, 5), sticky="w")
+
+        ctk.CTkLabel(self.form_frame, text="Brand", anchor="w").grid(row=7, column=0, padx=10, sticky="ew")
+        self.brand_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('brand'))
+        self.brand_combobox.grid(row=8, column=0, padx=10, pady=(0, 10), sticky="ew")
+
+        ctk.CTkLabel(self.form_frame, text="Routing Tag *", text_color="yellow", anchor="w").grid(row=7, column=1, padx=10, sticky="ew")
+        self.routing_combobox = ctk.CTkComboBox(self.form_frame, values=["IGNORE", "WAREHOUSE", "PROCURE", "WH_OR_PROCURE"])
+        self.routing_combobox.grid(row=8, column=1, padx=10, pady=(0, 10), sticky="ew")
+
+        ctk.CTkLabel(self.form_frame, text="Provider", anchor="w").grid(row=9, column=0, padx=10, sticky="ew")
+        self.provider_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_unique_values('provider'))
+        self.provider_combobox.grid(row=10, column=0, padx=10, pady=(0, 10), sticky="ew")
+
+        ctk.CTkLabel(self.form_frame, text="Purchase Link / Action", anchor="w").grid(row=9, column=1, padx=10, sticky="ew")
+        self.purchase_link_entry = ctk.CTkEntry(self.form_frame)
+        self.purchase_link_entry.grid(row=10, column=1, padx=10, pady=(0, 10), sticky="ew")
 
         # Printable Section
+        ctk.CTkLabel(self.form_frame, text="CLIENT DISPLAY BLOCK", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF").grid(row=11, column=0, columnspan=2, padx=10, pady=(20, 5), sticky="w")
         self.printable_checkbox_var = ctk.BooleanVar(value=True)
         self.printable_checkbox = ctk.CTkCheckBox(self.form_frame, text="Is Client Facing (Will generate printable block)", variable=self.printable_checkbox_var)
-        self.printable_checkbox.grid(row=11, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="w")
+        self.printable_checkbox.grid(row=12, column=0, columnspan=2, padx=10, pady=(5, 5), sticky="w")
 
         self.printable_frame = ctk.CTkFrame(self.form_frame)
-        self.printable_frame.grid(row=12, column=0, columnspan=2, sticky="nsew", padx=10, pady=5)
+        self.printable_frame.grid(row=13, column=0, columnspan=2, sticky="nsew", padx=10, pady=5)
         
         ctk.CTkLabel(self.printable_frame, text="Finish", anchor="w").grid(row=0, column=0, padx=10, pady=5, sticky="ew")
-        self.finish_combobox = ctk.CTkComboBox(self.printable_frame, values=["Chrome", "Matte Black", "Brushed Nickel", "White"])
+        
+        existing_finishes = self.get_unique_values('finish')
+        if not existing_finishes: existing_finishes = ["Chrome", "Matte Black", "Brushed Nickel", "White"]
+        self.finish_combobox = ctk.CTkComboBox(self.printable_frame, values=existing_finishes)
         self.finish_combobox.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="ew")
 
         dim_frame = ctk.CTkFrame(self.printable_frame)
@@ -349,7 +363,7 @@ class DatabaseManager(ctk.CTkToplevel):
         ctk.CTkButton(img_frame, text="Browse Image...", command=self.browse_image).pack(side="left", padx=10)
         ctk.CTkLabel(img_frame, textvariable=self.image_path_var).pack(side="left")
 
-        ctk.CTkButton(self.form_frame, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=11, column=0, columnspan=2, pady=20)
+        ctk.CTkButton(self.form_frame, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=14, column=0, columnspan=2, pady=20)
 
     # --- View Switchers ---
     def show_browser_view(self):
@@ -367,7 +381,11 @@ class DatabaseManager(ctk.CTkToplevel):
 
         self.brand_combobox.configure(values=self.get_unique_values('brand'))
         self.provider_combobox.configure(values=self.get_unique_values('provider'))
-        self.routing_combobox.configure(values=self.get_unique_values('routing_tag'))
+        
+        existing_finishes = self.get_unique_values('finish')
+        if not existing_finishes: existing_finishes = ["Chrome", "Matte Black", "Brushed Nickel", "White"]
+        self.finish_combobox.configure(values=existing_finishes)
+        
         self.cat_combobox.configure(values=self.get_existing_categories())
 
         if self.get_existing_categories():
