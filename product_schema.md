@@ -23,7 +23,8 @@ This document defines the standard structure for all product data used in the **
 | `provider` | String | No | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
 | `routing_tag` | String | Yes | (ERP) Export logic. Must be one of: `IGNORE`, `WAREHOUSE`, `PROCURE`, or `WH_OR_PROCURE`. |
 | `purchase_link` | String | No | URL string or action code ("CRM", "email") for purchasing. |
-| `oneclick_description` | String | Yes | **REQUIRED.** The exact target string the Matching Engine expects. **This field ALONE controls item matching.** |
+| `oneclick_description` | String | Yes | The target string the Matching Engine expects. *Note: As we migrate to the LLM-matcher, this will slowly be replaced by matching_rules.* |
+| `matching_rules` | Object | No | **(New System)** Contains `must_contain_regex`, `must_not_contain_regex`, and `keywords` for exact PDF line matching. |
 | `printable` | Object | No | Client-facing data. Determines output behavior (see below). |
 
 ### 🛠️ Output Behaviors

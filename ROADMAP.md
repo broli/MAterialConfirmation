@@ -61,20 +61,24 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
     - [x] **Job-Specific Debugging:** Auto-routing logs and outputs into `Debug/` and `ERP_Automated_Output/` within the job folder.
 
 ---
-## 📅 Phase 7: refining🔮
-- [ ] **Database upgrade:** improve database.
-    - [ ] **Database upgrade:** review schema. Some fields are irrelevant, some are vague, and some are useless
-    - [ ] **Database upgrade:** review form to edit/add database items. (required fields, auto-fill, color fields (user visible, internal), etc.)
-    - [ ] **Database upgrade:** 
-- [ ] **line item to database item improvements:** reach 100% accuracy in matching line items to database items.
-- [ ] **test PDF material generator:** i believe the pdf output is broken. 
-- [ ] **test Excel injection:** i know the excel injection is broken. 
+## 📅 Phase 7: Hybrid LLM Matching Engine (Current Sprint) 🔮
+- [ ] **line item to database item improvements:** Reach 100% accuracy in matching by migrating to a Hybrid LLM approach.
+    - [ ] Build `llm_service.py` to interface with Local Ollama.
+    - [ ] Update `MatchingEngine` to parse and obey strictly generated Regex matching and exclusion rules.
+- [ ] **Database Manager / Add Item Upgrade:**
+    - [ ] Remove manual "Add Blank Item" form (move old code to backup).
+    - [ ] Create "Batch Add from PDF" UI queue to automatically surface unmatched items.
+    - [ ] Auto-fill the new item form using local LLM inference.
+    - [ ] Add explicit "Confirm LLM Rules" window before saving a new item to DB.
+- [ ] **test PDF material generator:** verify the pdf output generator behaviour. 
+- [ ] **test Excel injection:** verify the excel injection functionality. 
 
 ---
 
-## 📅 Phase 8: Advanced Automation & Connectivity (Upcoming) 🔮
+## 📅 Phase 8: Database & Advanced Automation (Upcoming) 🔮
+- [ ] **Migration Script:** Backfill all legacy catalog `.yaml` items with LLM-generated matching rules.
+- [ ] **Ollama Process Manager:** Add UI scripts to Python to automatically launch and stop the system-installed Ollama backend, standardizing the installation process for users.
 - [ ] **Payment schedule email text generator:** Automated text for BT invoices.
-- [ ] **TBD** 
 
 
 ---

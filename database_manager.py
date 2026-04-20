@@ -13,6 +13,9 @@ class DatabaseManager(ctk.CTkToplevel):
         
         self.title("Catalog Manager")
         self.geometry("1100x750")
+        self.transient(master)
+        self.grab_set()
+        self.focus_set()
         self.attributes("-topmost", True)
 
         self.db_loader = db_loader
@@ -64,7 +67,10 @@ class DatabaseManager(ctk.CTkToplevel):
         header = ctk.CTkFrame(self.browser_frame, fg_color="transparent")
         header.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         ctk.CTkLabel(header, text="Database Browser", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
-        ctk.CTkButton(header, text="+ Add New Product", command=self.show_form_view, fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
+        
+        from batch_pdf_ui import BatchPdfIngestWindow
+        ctk.CTkButton(header, text="Batch Add (PDF)", command=lambda: BatchPdfIngestWindow(self, self.db_loader, self.categories_path, self.assets_path, self.refresh_browser_list), fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
+        
         ctk.CTkButton(header, text="Bulk Load (CSV)", command=self.show_bulk_load_ui, fg_color="#153E83", hover_color="#0d2b61").pack(side="right", padx=10)
 
         self.tree_frame = ctk.CTkScrollableFrame(self.browser_frame)
@@ -110,6 +116,9 @@ class DatabaseManager(ctk.CTkToplevel):
         top = ctk.CTkToplevel(self)
         top.title(f"Product Details - {item_id}")
         top.geometry("500x700")
+        top.transient(self)
+        top.grab_set()
+        top.focus_set()
         top.attributes("-topmost", True)
 
         printable = item.get("printable", {})
@@ -498,6 +507,9 @@ class BulkLoadWindow(ctk.CTkToplevel):
         
         self.title("Bulk Load Products (CSV)")
         self.geometry("700x600")
+        self.transient(master)
+        self.grab_set()
+        self.focus_set()
         self.attributes("-topmost", True)
         
         self.categories_path = categories_path

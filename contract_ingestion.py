@@ -40,27 +40,30 @@ class OneClickIngestor:
         self.logger.info(f"Logger refreshed. Debug mode: {self.debug_mode}")
 
     def extract_data(self):
-        """Scans the target directory for Contract and Estimate PDFs and extracts data."""
+        """Scans the target directory for the primary project PDF and extracts data."""
         self.logger.info(f"Starting extraction in directory: {self.target_dir}")
         pdf_files = glob.glob(os.path.join(self.target_dir, "*.pdf"))
         
-        estimate_pdf = None
-        contract_pdf = None
-        
-        for p in pdf_files:
-            lower_name = os.path.basename(p).lower()
-            if "estimate" in lower_name:
-                estimate_pdf = p
-            elif "contract" in lower_name:
-                contract_pdf = p
-                
-        if not estimate_pdf:
-            self.logger.warning("No 'Estimate' PDF found. Extraction might be incomplete.")
-            
-        return self._parse_estimate(estimate_pdf, contract_pdf) if estimate_pdf else {}
+        if not pdf_files:
+            self.logger.error("No PDF files found in target directory.")
+            return {}
 
-    def _parse_estimate(self, estimate_pdf_path, contract_pdf_path=None):
-        self.logger.info(f"Parsing Estimate PDF: {estimate_pdf_path}")
+        # Prioritize files containing 'estimate'
+        primary_pdf = None
+        for p in pdf_files:
+            if "estimate" in os.path.basename(p).lower():
+                primary_pdf = p
+                break
+        
+        # Fallback to the first PDF found if no 'estimate' keyword
+        if not primary_pdf:
+            primary_pdf = pdf_files[0]
+            self.logger.info(f"Using fallback PDF as primary source: {os.path.basename(primary_pdf)}")
+            
+        return self._parse_pdf(primary_pdf)
+
+    def _parse_pdf(self, pdf_path):
+        self.logger.info(f"Parsing PDF: {pdf_path}")
         result = {
             "client_name": "",
             "project_po": "",
@@ -69,13 +72,11 @@ class OneClickIngestor:
         
         debug_md = []
         debug_md.append("# Ingestion Diagnostic Report\n")
-        debug_md.append(f"**Estimate File**: `{os.path.basename(estimate_pdf_path)}`\n")
-        if contract_pdf_path:
-            debug_md.append(f"**Contract File**: `{os.path.basename(contract_pdf_path)}`\n")
+        debug_md.append(f"**Primary Source File**: `{os.path.basename(pdf_path)}`\n")
         debug_md.append("---\n")
         
         try:
-            with pdfplumber.open(estimate_pdf_path) as pdf:
+            with pdfplumber.open(pdf_path) as pdf:
                 full_text = []
                 for page in pdf.pages:
                     text = page.extract_text()
@@ -97,16 +98,14 @@ class OneClickIngestor:
                     
                 # Filename Fallback
                 if not result["project_po"] or not result["client_name"]:
-                    fb_file = contract_pdf_path if contract_pdf_path else estimate_pdf_path
-                    if fb_file:
-                        base = os.path.basename(fb_file)
-                        if not result["project_po"]:
-                            po_fb = re.search(r"(\d{5,})", base)
-                            if po_fb: result["project_po"] = po_fb.group(1)
-                            
-                        if not result["client_name"]:
-                            name_fb = re.split(r"[-_]", base)[0].strip()
-                            if name_fb: result["client_name"] = name_fb
+                    base = os.path.basename(pdf_path)
+                    if not result["project_po"]:
+                        po_fb = re.search(r"(\d{5,})", base)
+                        if po_fb: result["project_po"] = po_fb.group(1)
+                        
+                    if not result["client_name"]:
+                        name_fb = re.split(r"[-_]", base)[0].strip()
+                        if name_fb: result["client_name"] = name_fb
 
                 debug_md.append(f"**Extracted PO**: `{result['project_po']}`\n")
                 debug_md.append(f"**Extracted Client**: `{result['client_name']}`\n")

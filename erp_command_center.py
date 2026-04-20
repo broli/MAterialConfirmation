@@ -261,6 +261,9 @@ class ERPCommandCenter(ctk.CTk):
         top = ctk.CTkToplevel(self)
         top.title("Inspect Item Match")
         top.geometry("900x650")
+        top.transient(self)
+        top.grab_set()
+        top.focus_set()
         top.attributes("-topmost", True)
         
         # Grid layout for top level
