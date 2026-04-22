@@ -15,3 +15,17 @@
       height: '20.5'
       depth: '1.75'
     image_file: lcnr-ss-w_l.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)white
+    - (?i)\b28\s*(in|inch|\"|'')
+    - (?i)\b20.5\s*(in|inch|\"|'')
+    - (?i)\b1.75\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - bci
+    - white
+    - corner
+    - hexagon
+    - seating

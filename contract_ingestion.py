@@ -5,8 +5,9 @@ import re
 import logging
 
 class OneClickIngestor:
-    def __init__(self, target_directory, debug_mode=False):
-        self.target_dir = target_directory
+    def __init__(self, pdf_path, debug_mode=False):
+        self.pdf_path = pdf_path
+        self.target_dir = os.path.dirname(pdf_path) if pdf_path else "."
         self.debug_mode = debug_mode
         self.logger = self._setup_logger()
 
@@ -40,27 +41,12 @@ class OneClickIngestor:
         self.logger.info(f"Logger refreshed. Debug mode: {self.debug_mode}")
 
     def extract_data(self):
-        """Scans the target directory for the primary project PDF and extracts data."""
-        self.logger.info(f"Starting extraction in directory: {self.target_dir}")
-        pdf_files = glob.glob(os.path.join(self.target_dir, "*.pdf"))
-        
-        if not pdf_files:
-            self.logger.error("No PDF files found in target directory.")
+        """Extracts data from the specifically provided PDF file."""
+        if not self.pdf_path or not os.path.exists(self.pdf_path):
+            self.logger.error("Invalid or missing PDF file path.")
             return {}
-
-        # Prioritize files containing 'estimate'
-        primary_pdf = None
-        for p in pdf_files:
-            if "estimate" in os.path.basename(p).lower():
-                primary_pdf = p
-                break
-        
-        # Fallback to the first PDF found if no 'estimate' keyword
-        if not primary_pdf:
-            primary_pdf = pdf_files[0]
-            self.logger.info(f"Using fallback PDF as primary source: {os.path.basename(primary_pdf)}")
             
-        return self._parse_pdf(primary_pdf)
+        return self._parse_pdf(self.pdf_path)
 
     def _parse_pdf(self, pdf_path):
         self.logger.info(f"Parsing PDF: {pdf_path}")
@@ -86,13 +72,14 @@ class OneClickIngestor:
                 combined_text = "\n".join(full_text)
                 
                 # Try to find PO
-                po_match = re.search(r"Copy of (\d+)", combined_text)
+                po_match = re.search(r"(?i)(?:Copy of\s+)?(\d{6,})", combined_text)
                 if po_match:
                     result["project_po"] = po_match.group(1)
                     
                 # Try to extract Name & Address block
-                # Usually follows "Estimate Details\n"
-                name_match = re.search(r"Estimate Details\n([A-Za-z\s,-]+)\n(\d+\s[A-Za-z\s]+)\n", combined_text)
+                name_match = re.search(r"Prepared for:\n([A-Za-z\s,-]+)\n(\d+\s[A-Za-z\s]+)", combined_text)
+                if not name_match:
+                    name_match = re.search(r"Estimate Details\n([A-Za-z\s,-]+)\n(\d+\s[A-Za-z\s]+)\n", combined_text)
                 if name_match:
                     result["client_name"] = name_match.group(1).strip()
                     
@@ -139,6 +126,10 @@ class OneClickIngestor:
                 for i, line in enumerate(lines):
                     lower_line = line.strip().lower()
                     
+                    if lower_line.startswith("customer information"):
+                        debug_md.append("\n🛑 **End of materials list detected (Customer Information).**\n")
+                        break
+                        
                     # Ignore structural section dashed lines
                     if "------" in lower_line:
                         continue
@@ -155,14 +146,14 @@ class OneClickIngestor:
                             debug_md.append(f"\n### 🚪 Room Changed to: {current_room}\n")
                             continue
                         
-                    # Rule 2: Dynamic Quantity Matcher (e.g. "1 ea", "2ea", "10 ea")
-                    qty_match = re.search(r"(?i)(\d+)\s*ea", line)
+                    # Rule 2: Dynamic Quantity Matcher (e.g. "1 ea", "2ea", "10 sqft")
+                    qty_match = re.search(r"(?i)(\d+)\s*(ea|sqft|lft|lf)(?:\s|$)", line)
                     if qty_match:
                         flush_buffer() # Flush the previous item buffer!
                         qty_val = int(qty_match.group(1))
                         
                         # Split by the dynamic match to get the title chunk
-                        parts = re.split(r"(?i)\d+\s*ea", line)
+                        parts = re.split(r"(?i)\d+\s*(?:ea|sqft|lft|lf)(?:\s|$)", line)
                         title_part = parts[0].strip()
                         
                         current_item = {

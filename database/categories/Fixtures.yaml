@@ -9,6 +9,16 @@
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade Brushed Nickel.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    keywords:
+    - arcade
+    - bundle
+    - pkb
+    - fixtures
 - id: 220C4EP
   sku: 220C4EP
   brand: PKB
@@ -20,6 +30,16 @@
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade chrome.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    keywords:
+    - arcade
+    - bundle
+    - pkb
+    - fixtures
 - id: 220C4EPBL
   sku: 220C4EPBL
   brand: PKB
@@ -31,6 +51,16 @@
     description: Arcade Bundle
     dimensions: {}
     image_file: Arcade matte black .png
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - arcade
+    - bundle
+    - pkb
+    - fixtures
 - id: '82611'
   sku: '82611'
   brand: PKB
@@ -42,6 +72,16 @@
     description: Horizon Bundle
     dimensions: {}
     image_file: BN 82611SRN.tif. final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    keywords:
+    - horizon
+    - bundle
+    - pkb
+    - fixtures
 - id: 82611SRN
   sku: 82611SRN
   brand: PKB
@@ -54,6 +94,16 @@
     description: Horizon Bundle
     dimensions: {}
     image_file: BN 82611SRN.tif. final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    keywords:
+    - horizon
+    - bundle
+    - pkb
+    - fixtures
 - id: 82611BL
   sku: 82611BL
   brand: PKB
@@ -65,6 +115,16 @@
     description: Horizon Bundle
     dimensions: {}
     image_file: Matte black 82611BL.final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - horizon
+    - bundle
+    - pkb
+    - fixtures
 - id: 1011-BN-1.8GPM
   sku: 1011-BN-1.8GPM
   brand: PKB
@@ -76,6 +136,15 @@
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-BN_1.Final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    keywords:
+    - hydrorail
+    - pkb
+    - fixtures
 - id: 1011-CH-1.8GPM
   sku: 1011-CH-1.8GPM
   brand: PKB
@@ -87,6 +156,15 @@
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-CH_1.final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    keywords:
+    - hydrorail
+    - pkb
+    - fixtures
 - id: 011-MB-1.8GPM
   sku: 011-MB-1.8GPM
   brand: PKB
@@ -98,6 +176,15 @@
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-MB_1.final.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - hydrorail
+    - pkb
+    - fixtures
 - id: LCNR-SS-SAN
   sku: LCNR-SS-SAN
   brand: BCI
@@ -115,3 +202,48 @@
       height: '20.25'
       depth: '1.75'
     image_file: lcnr-ss-san_l.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)santorini\s*white
+    - (?i)\b28\s*(in|inch|\"|'')
+    - (?i)\b20.25\s*(in|inch|\"|'')
+    - (?i)\b1.75\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - bci
+    - corner
+    - fixtures
+    - hexagon
+    - shower
+- id: UKD08
+  sku: MISSING_SKU
+  brand: UNIKOO
+  provider: MISSING_PROVIDER
+  routing_tag: WAREHOUSE
+  oneclick_description: Bath Shower Doors Bypass Shower Doors Clear Glass Venice 56"
+    - 60"W x 76"H Matte Black 56" - 60"W x 76"H Exposed Roller Bypass Framed Shower
+    Door with Handles and 5/16" Clear Glass and Towel Bar & Handle Carpet Wagon Glendale_
+    Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2574701
+    - Page 3 of 27
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    - (?i)\b56\s*(in|inch|\"|'')
+    - (?i)\b76\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - fixtures
+    - unikoo
+    - roller
+    - exposed
+    - bypass
+  printable:
+    finish: Matte Black
+    description: Exposed Roller Bypass Framed Shower Door with Handles and 5/16 inch
+      Clear Glass and Towel Bar & Handle
+    dimensions:
+      Width: 56 inch - 60 inch
+      Height: 76 inch
+    image_file: venice udk08-Allcolors.png

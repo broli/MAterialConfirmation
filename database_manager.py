@@ -206,9 +206,8 @@ class DatabaseManager(ctk.CTkToplevel):
             self.printable_checkbox_var.set(True)
             self.finish_combobox.set(printable.get('finish', ''))
             dims = printable.get('dimensions', {})
-            self.w_entry.insert(0, dims.get('width', ''))
-            self.h_entry.insert(0, dims.get('height', ''))
-            self.d_entry.insert(0, dims.get('depth', ''))
+            for k, v in dims.items():
+                self.add_dimension_row(k, v)
             
             self.desc_entry.delete("0.0", "end")
             self.desc_entry.insert("0.0", printable.get('description', ''))
@@ -244,9 +243,8 @@ class DatabaseManager(ctk.CTkToplevel):
             self.printable_checkbox_var.set(True)
             self.finish_combobox.set(printable.get('finish', ''))
             dims = printable.get('dimensions', {})
-            self.w_entry.insert(0, dims.get('width', ''))
-            self.h_entry.insert(0, dims.get('height', ''))
-            self.d_entry.insert(0, dims.get('depth', ''))
+            for k, v in dims.items():
+                self.add_dimension_row(k, v)
             
             self.desc_entry.delete("0.0", "end")
             self.desc_entry.insert("0.0", printable.get('description', ''))
@@ -351,28 +349,57 @@ class DatabaseManager(ctk.CTkToplevel):
         self.finish_combobox = ctk.CTkComboBox(self.printable_frame, values=existing_finishes)
         self.finish_combobox.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="ew")
 
-        dim_frame = ctk.CTkFrame(self.printable_frame)
-        dim_frame.grid(row=2, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
-        ctk.CTkLabel(dim_frame, text="Dimensions (use inches like 48\")").pack(side="left", padx=10)
+        # Dynamic Dimensions Frame
+        self.dimension_rows = []
         
-        self.w_entry = ctk.CTkEntry(dim_frame, placeholder_text="Width", width=80)
-        self.w_entry.pack(side="left", padx=5)
-        self.h_entry = ctk.CTkEntry(dim_frame, placeholder_text="Height", width=80)
-        self.h_entry.pack(side="left", padx=5)
-        self.d_entry = ctk.CTkEntry(dim_frame, placeholder_text="Depth", width=80)
-        self.d_entry.pack(side="left", padx=5)
+        dim_header_frame = ctk.CTkFrame(self.printable_frame, fg_color="transparent")
+        dim_header_frame.grid(row=2, column=0, columnspan=2, pady=(10, 0), sticky="ew", padx=10)
+        ctk.CTkLabel(dim_header_frame, text="Dimensions", font=ctk.CTkFont(weight="bold")).pack(side="left", padx=10)
+        ctk.CTkButton(dim_header_frame, text="+ Add Measurement", width=120, command=self.add_dimension_row).pack(side="right", padx=10)
 
-        ctk.CTkLabel(self.printable_frame, text="Marketing Description", anchor="w").grid(row=3, column=0, columnspan=2, padx=10, sticky="ew")
+        self.dimensions_frame = ctk.CTkFrame(self.printable_frame)
+        self.dimensions_frame.grid(row=3, column=0, columnspan=2, pady=(5, 10), sticky="ew", padx=10)
+
+        ctk.CTkLabel(self.printable_frame, text="Marketing Description", anchor="w").grid(row=4, column=0, columnspan=2, padx=10, sticky="ew")
         self.desc_entry = ctk.CTkTextbox(self.printable_frame, height=60)
-        self.desc_entry.grid(row=4, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
+        self.desc_entry.grid(row=5, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
 
         self.image_path_var = ctk.StringVar(value="")
         img_frame = ctk.CTkFrame(self.printable_frame, fg_color="transparent")
-        img_frame.grid(row=5, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
+        img_frame.grid(row=6, column=0, columnspan=2, pady=10, sticky="ew", padx=10)
         ctk.CTkButton(img_frame, text="Browse Image...", command=self.browse_image).pack(side="left", padx=10)
         ctk.CTkLabel(img_frame, textvariable=self.image_path_var).pack(side="left")
 
         ctk.CTkButton(self.form_frame, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=14, column=0, columnspan=2, pady=20)
+
+    def add_dimension_row(self, key="", value=""):
+        row_frame = ctk.CTkFrame(self.dimensions_frame, fg_color="transparent")
+        row_frame.pack(fill="x", pady=2, padx=5)
+        
+        options = ["Width", "Length", "Height", "Depth", "Thickness", "Diameter", "Size"]
+        if key and key not in options:
+            options.append(key)
+            
+        combo = ctk.CTkComboBox(row_frame, values=options, width=120, state="readonly")
+        if key:
+            combo.set(key)
+        else:
+            combo.set(options[0])
+        combo.pack(side="left", padx=5)
+        
+        entry = ctk.CTkEntry(row_frame, placeholder_text='e.g. 60 sqft or 3"', width=150)
+        if value:
+            entry.insert(0, str(value))
+        entry.pack(side="left", padx=5, expand=True, fill="x")
+        
+        def remove_row():
+            row_frame.destroy()
+            self.dimension_rows = [r for r in self.dimension_rows if r[0] != combo]
+            
+        btn_remove = ctk.CTkButton(row_frame, text="X", width=30, fg_color="red", hover_color="darkred", command=remove_row)
+        btn_remove.pack(side="right", padx=5)
+        
+        self.dimension_rows.append((combo, entry))
 
     # --- View Switchers ---
     def show_browser_view(self):
@@ -404,9 +431,9 @@ class DatabaseManager(ctk.CTkToplevel):
         self.sku_entry.delete(0, 'end')
         self.purchase_link_entry.delete(0, 'end')
         self.oneclick_entry.delete(0, 'end')
-        self.w_entry.delete(0, 'end')
-        self.h_entry.delete(0, 'end')
-        self.d_entry.delete(0, 'end')
+        for w in self.dimensions_frame.winfo_children():
+            w.destroy()
+        self.dimension_rows = []
         self.desc_entry.delete("0.0", "end")
         self.image_path_var.set("")
         self.printable_checkbox_var.set(True)
@@ -442,9 +469,11 @@ class DatabaseManager(ctk.CTkToplevel):
                 "description": self.desc_entry.get("0.0", "end").strip(),
                 "dimensions": {}
             }
-            if self.w_entry.get().strip(): printable["dimensions"]["width"] = self.w_entry.get().strip()
-            if self.h_entry.get().strip(): printable["dimensions"]["height"] = self.h_entry.get().strip()
-            if self.d_entry.get().strip(): printable["dimensions"]["depth"] = self.d_entry.get().strip()
+            for combo, entry in self.dimension_rows:
+                k = combo.get().strip()
+                v = entry.get().strip()
+                if k and v:
+                    printable["dimensions"][k] = v
 
             source_image_path = self.image_path_var.get()
             if source_image_path:

@@ -108,12 +108,12 @@ class ERPCommandCenter(ctk.CTk):
             self.status_bar.configure(text=f"Debug Logging: {'ON (Job Folder)' if self.debug_var.get() else 'OFF (Global)'}")
 
     def load_directory(self):
-        dir_path = filedialog.askdirectory(title="Select Folder containing PDF contract & estimate")
-        if not dir_path:
+        pdf_path = filedialog.askopenfilename(title="Select Contract PDF", filetypes=[("PDF Files", "*.pdf")])
+        if not pdf_path:
             return
             
-        self.target_pdf_dir = dir_path
-        session_file = os.path.join(dir_path, "session_data.json")
+        self.target_pdf_dir = os.path.dirname(pdf_path)
+        session_file = os.path.join(self.target_pdf_dir, "session_data.json")
         
         if os.path.exists(session_file):
             if messagebox.askyesno("Session Found", "A previous session exists in this folder. Do you want to resume?"):
@@ -121,7 +121,7 @@ class ERPCommandCenter(ctk.CTk):
                 return
         
         # New Ingestion
-        self.ingestor = OneClickIngestor(dir_path, self.debug_var.get())
+        self.ingestor = OneClickIngestor(pdf_path, self.debug_var.get())
         raw_data = self.ingestor.extract_data()
         
         if not raw_data.get("line_items"):

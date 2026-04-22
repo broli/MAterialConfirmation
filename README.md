@@ -1,7 +1,7 @@
-# 🛠️ PKB Material Confirmation & Management System (v2.0)
+# 🛠️ PKB Material Confirmation & Management System (v2.1)
 **From Simple PDF Generation to a Lightweight ERP Ecosystem**
 
-![Version](https://img.shields.io/badge/version-2.0-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.1-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-Phase%202-orange?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.14%2B-green?style=for-the-badge)
 
@@ -24,13 +24,23 @@ In its initial form, the application focused on solving the "Communication Gap" 
 
 ### Phase 2: The Lightweight ERP (In Progress) 🚀
 We are now transforming this tool into a **Modular ERP System**. Instead of just generating a document, we are building a data-driven engine that powers the entire material lifecycle.
+* **AI-Powered Matching Engine:** A two-step deterministic pipeline using local LLMs to parse raw contract text into structured data, followed by strict attribute-based filtering for 100% accuracy.
 * **Contract Intelligence:** Extracting vital project data from contracts (with human-in-the-loop approval) to populate the system.
 * **Workstream Automation:** Transforming a single data entry into multiple tailored outputs.
 
 ---
 
+## 🧠 The Matching Pipeline
+The system uses a sophisticated matching logic to link messy PDF contract strings to our master catalog:
+
+1. **LLM Sanitization Layer:** Uses **Ollama (Llama 3)** and **Instructor** to parse raw text into a validated **Pydantic** model (`ContractItem`).
+2. **Deterministic Filter:** Strictly filters the catalog by extracted attributes (Finish, Size, etc.). If an item contradicts these fields, it is discarded.
+3. **Fuzzy Fallback:** Applies a final fuzzy string match (RapidFuzz) on the remaining candidates to find the most accurate product link.
+
+---
+
 ## 🧩 Modular Output System
-The core of Version 2.0 is the **Modular Output Engine**, which generates specific documentation for every stakeholder in the process:
+The core of the system is the **Modular Output Engine**, which generates specific documentation for every stakeholder in the process:
 
 | Output Type | Purpose | Key Content |
 | :--- | :--- | :--- |
@@ -42,11 +52,11 @@ The core of Version 2.0 is the **Modular Output Engine**, which generates specif
 ---
 
 ## 🛠️ Tech Stack
-* **GUI:** [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) (Modern, high-DPI Windows 11 aesthetics)
-* **Engine:** Python 3.14+
-* **Data:** PyYAML (Human-readable, git-friendly database)
-* **PDF Core:** fpdf2 & Pillow (Image optimization and precise layout management)
-* **Packaging:** PyInstaller (Standalone `.exe` distribution)
+* **GUI:** [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) (Modern Windows 11 aesthetics)
+* **AI Engine:** [Ollama](https://ollama.com/) (Local Llama 3) + [Instructor](https://github.com/jxnl/instructor) + [Pydantic](https://docs.pydantic.dev/)
+* **Matching:** RapidFuzz (String similarity)
+* **Data:** PyYAML (Git-friendly database)
+* **PDF Core:** fpdf2 & Pillow
 
 ---
 
@@ -54,7 +64,8 @@ The core of Version 2.0 is the **Modular Output Engine**, which generates specif
 
 ### Prerequisites
 * Python 3.14+
-* OneDrive/SharePoint access for the Shared Master Database.
+* **Ollama Installed & Running** (Download from [ollama.com](https://ollama.com/))
+* **Llama 3 Model Pulled:** Run `ollama run llama3` in your terminal.
 
 ### Installation
 1. Clone the repository.
@@ -69,7 +80,7 @@ The core of Version 2.0 is the **Modular Output Engine**, which generates specif
    ```
 4. Run the application:
    ```powershell
-   python gui_main.py
+   python main.py
    ```
 
 ---

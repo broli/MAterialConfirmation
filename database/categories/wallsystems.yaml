@@ -12,6 +12,14 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem santorini white.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)santorini\s*white
+    must_not_contain_regex:
+    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - wallsystems
+    - bci
 - id: W-SS-TN
   sku: W-SS-TN
   brand: BCI
@@ -25,6 +33,13 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem tuscany.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)tuscany
+    must_not_contain_regex: []
+    keywords:
+    - wallsystems
+    - bci
 - id: W-SS-VS
   sku: W-SS-VS
   brand: BCI
@@ -38,6 +53,13 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem versailles.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)versailles
+    must_not_contain_regex: []
+    keywords:
+    - wallsystems
+    - bci
 - id: W-SS-W
   sku: W-SS-W
   brand: BCI
@@ -51,3 +73,11 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem white.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)white
+    must_not_contain_regex:
+    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
+    keywords:
+    - wallsystems
+    - bci

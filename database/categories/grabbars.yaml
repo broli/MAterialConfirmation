@@ -11,6 +11,17 @@
     dimensions:
       width: '12'
     image_file: Moen_R8712D3GCH.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b12\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(24|60|18|10|42|30|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: LR8724D3GCH
   sku: LR8724D3GCH
   brand: Moen
@@ -24,6 +35,17 @@
     dimensions:
       width: '24'
     image_file: Moen_R8712D3GCH.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b24\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(60|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8736D3GCH
   sku: R8736D3GCH
   brand: Moen
@@ -37,6 +59,17 @@
     dimensions:
       width: '36'
     image_file: Moen_R8712D3GCH.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b36\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(24|60|18|10|42|30|12|72|8|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8718D3GCH
   sku: R8718D3GCH
   brand: Moen
@@ -50,6 +83,17 @@
     dimensions:
       width: '18'
     image_file: Moen_R8712D3GCH.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b18\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(24|60|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8712D3GBN
   sku: R8712D3GBN
   brand: Moen
@@ -65,6 +109,17 @@
     dimensions:
       width: '12'
     image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b12\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|18|10|42|30|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8718D3GBN
   sku: R8718D3GBN
   brand: Moen
@@ -80,6 +135,17 @@
     dimensions:
       width: '18'
     image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b18\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8736D3GBN
   sku: R8736D3GBN
   brand: Moen
@@ -95,6 +161,17 @@
     dimensions:
       width: '36'
     image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b36\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|18|10|42|30|12|72|8|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8724PS
   sku: R8724PS
   brand: Moen
@@ -110,6 +187,17 @@
     dimensions:
       width: '24'
     image_file: Contemporary grab bar chrome.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b24\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(60|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8712PS
   sku: R8712PS
   brand: Moen
@@ -125,6 +213,17 @@
     dimensions:
       width: '12'
     image_file: Contemporary grab bar chrome.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b12\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(24|60|18|10|42|30|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: LR8724D3GBN
   sku: LR8724D3GBN
   brand: Moen
@@ -140,6 +239,17 @@
     dimensions:
       width: '24'
     image_file: 61YhuRPdfnL._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b24\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(60|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - traditional
+    - moen
+    - grabbars
 - id: R8718PS
   sku: R8718PS
   brand: Moen
@@ -155,6 +265,17 @@
     dimensions:
       width: '18'
     image_file: Contemporary grab bar chrome.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    - (?i)\b18\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    - (?i)\b(24|60|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8736PS
   sku: R8736PS
   brand: Moen
@@ -169,6 +290,15 @@
     description: Contemporary
     dimensions: {}
     image_file: Contemporary grab bar chrome.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)chrome
+    must_not_contain_regex:
+    - (?i)(brushed|brass|white|black|gold|nickel|bronze)
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8712P
   sku: R8712P
   brand: Moen
@@ -184,6 +314,17 @@
     dimensions:
       width: '12'
     image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b12\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|18|10|42|30|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8736P
   sku: R8736P
   brand: Moen
@@ -199,6 +340,17 @@
     dimensions:
       width: '36'
     image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b36\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|18|10|42|30|12|72|8|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8712BL
   sku: R8712BL
   brand: Moen
@@ -214,6 +366,17 @@
     dimensions:
       width: '12'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    - (?i)\b12\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    - (?i)\b(24|60|18|10|42|30|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8718BL
   sku: R8718BL
   brand: Moen
@@ -229,6 +392,17 @@
     dimensions:
       width: '18'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    - (?i)\b18\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    - (?i)\b(24|60|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8724P
   sku: R8724P
   brand: Moen
@@ -244,6 +418,17 @@
     dimensions:
       width: '24'
     image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b24\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(60|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8718P
   sku: R8718P
   brand: Moen
@@ -259,6 +444,17 @@
     dimensions:
       width: '18'
     image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  matching_rules:
+    must_contain_regex:
+    - (?i)brushed\s*nickel
+    - (?i)\b18\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|white|black|chrome|gold|brass|bronze)
+    - (?i)\b(24|60|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars
 - id: R8724BL
   sku: R8724BL
   brand: Moen
@@ -274,3 +470,14 @@
     dimensions:
       width: '24'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  matching_rules:
+    must_contain_regex:
+    - (?i)matte\s*black
+    - (?i)\b24\s*(in|inch|\"|'')
+    must_not_contain_regex:
+    - (?i)(polished|brass|white|stainless|chrome|gold|nickel|bronze)
+    - (?i)\b(60|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
+    keywords:
+    - contemporary
+    - moen
+    - grabbars

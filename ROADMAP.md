@@ -60,18 +60,17 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
     - [x] **Excel Injection:** Multi-tab output (one tab per room) into the V7 Material Cart template.
     - [x] **Job-Specific Debugging:** Auto-routing logs and outputs into `Debug/` and `ERP_Automated_Output/` within the job folder.
 
----
-## 📅 Phase 7: Hybrid LLM Matching Engine (Current Sprint) 🔮
-- [ ] **line item to database item improvements:** Reach 100% accuracy in matching by migrating to a Hybrid LLM approach.
-    - [ ] Build `llm_service.py` to interface with Local Ollama.
-    - [ ] Update `MatchingEngine` to parse and obey strictly generated Regex matching and exclusion rules.
-- [ ] **Database Manager / Add Item Upgrade:**
-    - [ ] Remove manual "Add Blank Item" form (move old code to backup).
-    - [ ] Create "Batch Add from PDF" UI queue to automatically surface unmatched items.
-    - [ ] Auto-fill the new item form using local LLM inference.
-    - [ ] Add explicit "Confirm LLM Rules" window before saving a new item to DB.
-- [ ] **test PDF material generator:** verify the pdf output generator behaviour. 
-- [ ] **test Excel injection:** verify the excel injection functionality. 
+## 📅 Phase 7: Hybrid LLM Matching Engine (Complete) ✅
+- [x] **line item to database item improvements:** Reach 100% accuracy in matching by migrating to a Hybrid LLM approach.
+    - [x] Build `llm_service.py` to interface with Local Ollama.
+    - [x] Update `MatchingEngine` to parse and obey strictly generated Regex matching and exclusion rules.
+- [x] **Database Manager / Add Item Upgrade:**
+    - [x] Remove manual "Add Blank Item" form (move old code to backup).
+    - [x] Create "Batch Add from PDF" UI queue to automatically surface unmatched items.
+    - [x] Auto-fill the new item form using local LLM inference.
+    - [x] Add explicit "Confirm LLM Rules" window before saving a new item to DB.
+- [x] **test PDF material generator:** verify the pdf output generator behaviour. (FIXED)
+- [x] **test Excel injection:** verify the excel injection functionality. 
 
 ---
 
