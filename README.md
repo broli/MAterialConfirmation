@@ -1,8 +1,8 @@
-# 🛠️ PKB Material Confirmation & Management System (v2.1)
+# 🛠️ PKB Material Confirmation & Management System (v2.5)
 **From Simple PDF Generation to a Lightweight ERP Ecosystem**
 
-![Version](https://img.shields.io/badge/version-2.1-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-Phase%202-orange?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.5-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-Phase%203-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.14%2B-green?style=for-the-badge)
 
 ---
@@ -27,6 +27,8 @@ We are now transforming this tool into a **Modular ERP System**. Instead of just
 * **AI-Powered Matching Engine:** A two-step deterministic pipeline using local LLMs to parse raw contract text into structured data, followed by strict attribute-based filtering for 100% accuracy.
 * **Contract Intelligence:** Extracting vital project data from contracts (with human-in-the-loop approval) to populate the system.
 * **Workstream Automation:** Transforming a single data entry into multiple tailored outputs.
+* **Ollama Orchestration:** In-app management of the local AI lifecycle, including model pulling, service control, and resource optimization.
+* **Custom Branding:** Dynamically select and import cover images for professional document generation.
 
 ---
 
@@ -54,7 +56,7 @@ The core of the system is the **Modular Output Engine**, which generates specifi
 
 ## 🛠️ Tech Stack
 * **GUI:** [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) (Modern Windows 11 aesthetics)
-* **AI Engine:** [Ollama](https://ollama.com/) (Local Llama 3) + [Instructor](https://github.com/jxnl/instructor) + [Pydantic](https://docs.pydantic.dev/)
+* **AI Engine:** [Ollama](https://ollama.com/) (REST API Integration) + [Instructor](https://github.com/jxnl/instructor) + [Pydantic](https://docs.pydantic.dev/)
 * **Matching:** RapidFuzz (String similarity)
 * **Data:** PyYAML (Git-friendly database)
 * **PDF Core:** fpdf2 & Pillow
@@ -65,8 +67,8 @@ The core of the system is the **Modular Output Engine**, which generates specifi
 
 ### Prerequisites
 * Python 3.14+
-* **Ollama Installed & Running** (Download from [ollama.com](https://ollama.com/))
-* **Llama 3 Model Pulled:** Run `ollama run llama3` in your terminal.
+* **Ollama Installed** (Download from [ollama.com](https://ollama.com/)). The app can now start/stop the service for you!
+* **LLM Model:** Use the in-app **Settings** menu to pull your preferred model (e.g., `llama3.1`).
 
 ### Installation
 1. Clone the repository.

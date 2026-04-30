@@ -74,12 +74,23 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ---
 
-## 📅 Phase 8: Performance & Advanced Automation (In Progress) 🔮
+## 📅 Phase 8: Performance & Advanced Automation (Complete) ✅
 - [x] **Pipeline Optimization:** Multi-thread LLM calls during batch PDF parsing to remove UI freezes.
 - [x] **Matching Diagnostic Logs:** Add comprehensive debug logging to track LLM extractions, filtered candidate sizes, and RapidFuzz scoring.
 - [x] **Database Migration:** Script to clean legacy regex fields (`matching_rules`), normalize providers, and enforce canonical schema ordering across all catalog files.
-- [ ] **Ollama Process Manager:** Add UI scripts to Python to automatically launch and stop the system-installed Ollama backend, standardizing the installation process for users.
+- [x] **Ollama Orchestration:** Added `SettingsWindow` to manage `ollama serve` lifecycle, pull/delete models, and select active models.
+- [x] **Dynamic PDF Branding:** Allow users to pick and import custom cover images via settings.
+
+## 📅 Phase 9: ERP Expansion & Workflow (In Progress) 🔮
+- [ ] **Inventory Integration:** Basic connection to stock, to auto route requests
 - [ ] **Payment schedule email text generator:** Automated text for BT invoices.
+- [ ] **automatic filling of job material Excel** For cart reviews for the PM based on the job folder name.
+
+## 📅 Phase X: MISC and future ideas, even dreaming
+- [ ] **Create automated daily logs and summary** of the activity of the ERP command center.
+- [ ] **auto clean database** clean images not used. Clean items that are not used for a certain amount of time. 
+- [ ] **real usage** get the real usage of features to improve the app.
+- [ ] **user feedback** get user feedback to improve the app & add new features.
 
 
 ---
