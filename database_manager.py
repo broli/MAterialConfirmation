@@ -6,6 +6,7 @@ import yaml
 import shutil
 import csv
 from PIL import Image
+from product_service import ProductService
 
 class DatabaseManager(ctk.CTkToplevel):
     def __init__(self, master, db_loader):
@@ -262,22 +263,12 @@ class DatabaseManager(ctk.CTkToplevel):
 
         item = self.catalog.get(item_id)
         cat_file = item.get('category_file') + '.yaml'
-        target_yaml_path = os.path.join(self.categories_path, cat_file)
 
-        if os.path.exists(target_yaml_path):
-            with open(target_yaml_path, 'r', encoding='utf-8') as f:
-                existing_data = yaml.safe_load(f) or []
-
-            new_data = [i for i in existing_data if i.get('id') != item_id]
-
-            with open(target_yaml_path, 'w', encoding='utf-8') as f:
-                yaml.dump(new_data, f, sort_keys=False, allow_unicode=True)
+        ProductService.remove_from_yaml(item_id, cat_file, self.categories_path)
 
         self.catalog = self.db_loader.load_all_categories()
-        # Ensure changes propagate
         self.master.catalog = self.db_loader.load_all_categories()
-        
-        self.refresh_browser_list()  
+        self.refresh_browser_list()
 
         if window:
             window.destroy()
@@ -373,33 +364,12 @@ class DatabaseManager(ctk.CTkToplevel):
         ctk.CTkButton(self.form_frame, text="Save to Database", command=self.save_product, fg_color="blue", height=40).grid(row=14, column=0, columnspan=2, pady=20)
 
     def add_dimension_row(self, key="", value=""):
-        row_frame = ctk.CTkFrame(self.dimensions_frame, fg_color="transparent")
-        row_frame.pack(fill="x", pady=2, padx=5)
-        
-        options = ["Width", "Length", "Height", "Depth", "Thickness", "Diameter", "Size"]
-        if key and key not in options:
-            options.append(key)
-            
-        combo = ctk.CTkComboBox(row_frame, values=options, width=120, state="readonly")
-        if key:
-            combo.set(key)
-        else:
-            combo.set(options[0])
-        combo.pack(side="left", padx=5)
-        
-        entry = ctk.CTkEntry(row_frame, placeholder_text='e.g. 60 sqft or 3"', width=150)
-        if value:
-            entry.insert(0, str(value))
-        entry.pack(side="left", padx=5, expand=True, fill="x")
-        
-        def remove_row():
-            row_frame.destroy()
-            self.dimension_rows = [r for r in self.dimension_rows if r[0] != combo]
-            
-        btn_remove = ctk.CTkButton(row_frame, text="X", width=30, fg_color="red", hover_color="darkred", command=remove_row)
-        btn_remove.pack(side="right", padx=5)
-        
-        self.dimension_rows.append((combo, entry))
+        """Add one dimension input row. Delegates to ProductService helper."""
+        ProductService.build_dimension_rows(
+            self.dimensions_frame,
+            existing_dims={key: value} if key else {},
+            row_store=self.dimension_rows,
+        )
 
     # --- View Switchers ---
     def show_browser_view(self):
@@ -467,58 +437,33 @@ class DatabaseManager(ctk.CTkToplevel):
             printable = {
                 "finish": self.finish_combobox.get().strip(),
                 "description": self.desc_entry.get("0.0", "end").strip(),
-                "dimensions": {}
+                "dimensions": ProductService.read_dimension_rows(self.dimension_rows),
             }
-            for combo, entry in self.dimension_rows:
-                k = combo.get().strip()
-                v = entry.get().strip()
-                if k and v:
-                    printable["dimensions"][k] = v
 
             source_image_path = self.image_path_var.get()
             if source_image_path:
-                filename = os.path.basename(source_image_path)
-                dest_image_path = os.path.join(self.assets_path, filename)
-                
-                if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
-                    shutil.copy(source_image_path, dest_image_path)
-                printable["image_file"] = filename
+                printable["image_file"] = ProductService.copy_image_to_assets(
+                    source_image_path, self.assets_path
+                )
             product["printable"] = printable
 
         if product["id"] in self.catalog and product["id"] != self.editing_item_id:
             messagebox.showerror("Duplicate ID", f"The ID '{product['id']}' already exists in the catalog.")
             return
 
-        target_yaml_path = os.path.join(self.categories_path, cat_file)
-
+        # If editing, remove from original file first
         if self.editing_item_id:
             orig_yaml_path = os.path.join(self.categories_path, self.editing_original_cat)
             if os.path.exists(orig_yaml_path):
-                with open(orig_yaml_path, 'r', encoding='utf-8') as f:
-                    old_data = yaml.safe_load(f) or []
-                
-                old_data = [i for i in old_data if i.get('id') != self.editing_item_id]
-                
-                with open(orig_yaml_path, 'w', encoding='utf-8') as f:
-                    yaml.dump(old_data, f, sort_keys=False, allow_unicode=True)
+                ProductService.remove_from_yaml(
+                    self.editing_item_id, self.editing_original_cat, self.categories_path
+                )
 
-        existing_data = []
-        if os.path.exists(target_yaml_path):
-            with open(target_yaml_path, 'r', encoding='utf-8') as f:
-                existing_data = yaml.safe_load(f) or []
-        
-        existing_data = [i for i in existing_data if i.get('id') != product["id"]]
-        existing_data.append(product)
-
-        with open(target_yaml_path, 'w', encoding='utf-8') as f:
-            yaml.dump(existing_data, f, sort_keys=False, allow_unicode=True)
+        ProductService.upsert_to_yaml(product, cat_file, self.categories_path)
 
         messagebox.showinfo("Success", f"Product '{product['id']}' saved successfully!")
         
         self.catalog = self.db_loader.load_all_categories()
-
-        # Push the refreshed catalog to the parent window and tell it to rebuild
-        # the MatchService index so newly saved items are immediately findable.
         self.master.catalog = self.catalog
         if hasattr(self.master, 'refresh_match_service'):
             self.master.refresh_match_service()

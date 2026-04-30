@@ -1,0 +1,616 @@
+[
+  {
+    "file": "L. Crehan - Venice - 1791341 - Contract 09-02.pdf",
+    "client_name": "Crehan, Lisa",
+    "project_po": "1791341",
+    "line_items": [
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor One",
+        "raw_description": "Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet space plumbing. Includes installation of moisture resistant backerboard and selected shower base tub, walls, fixtures, and accessories. Adjust height of showerhead.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor Pan",
+        "raw_description": "Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including: 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2\", 2 LF. ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet- Area Plywood 5/8x4x8, 1 2x4 wood",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Wall",
+        "category": "Systems BCI Walls",
+        "raw_description": "Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems Santorini White Smooth Standard - Shower W-SS-SAN: Standard Shower System Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Shower",
+        "category": "Bases SM",
+        "raw_description": "Bath Shower Bases SM Vasa Left Side Drain 60\" x 30\" White Ultra Low 2.6\"x3.5\" threshold with slip-resistant slate-look texture. Installation includes leveling of the floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to match the shower pan.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Shower",
+        "category": "Doors Single",
+        "raw_description": "Bath Shower Doors Single Sliding Shower Doors Charlotte 56\"-60\"W x 76\"H Matte Black 56\"-60\"W x 76\"H Single Slider Door with 3/8\" Clear Glass Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Fixtures",
+        "category": "Bundles Arcade",
+        "raw_description": "Bath Fixtures Bundles Arcade Bundle Matte Black Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Seating",
+        "raw_description": "Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat (900 Pound Capacity) Matching",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Vanities",
+        "category": "Vanity Labor",
+        "raw_description": "Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 48\" Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and painting or materials)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Cabinets Signature",
+        "raw_description": "Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) Semi-Custom Cabinet (Matching Interior) Standard Upper Cabinet - 12\" D (Exterior Depth) & 11.5\" (Interior Depth) Standard Base Cabinet - 24\" D - 30’’ L x 21’’ D x 32’’ H x 4-6’’ backsplash",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Countertops Quartz",
+        "raw_description": "Kitchen Countertops Quartz Package B PREFABRICATED 26\"x108\" QUARTZ COUNTERTOPS PKCES PACKAGE B PKCES Carrara Gold",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Accessories Sinks",
+        "raw_description": "Kitchen Accessories Sinks PKC2318S White Porcelain Top Mount Bowl Sink",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Vanities",
+        "category": "Vanity Faucets",
+        "raw_description": "Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte Black",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Toilets",
+        "category": "Cimmaron",
+        "raw_description": "Bath Toilets Cimmaron 28”L x 31”H x 18”W Seat: 17” H Elongated Comfort Height White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Special",
+        "category": "Requests",
+        "raw_description": "Bath Special Requests This price does not include: New Flooring, Medicine Cabinet, Mirror, Extensive Plumbing, Painting Patch work, and Electrical. Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Window",
+        "raw_description": "Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini White WK-TRV: Window Kit Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Bathroom",
+        "category": "Labor One",
+        "raw_description": "Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet space plumbing. Includes installation of moisture resistant backerboard and selected shower base tub, walls, fixtures, and accessories. Adjust height of showerhead.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Bathroom",
+        "category": "Labor Pan",
+        "raw_description": "Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including: 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2\", 2 LF. ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet- Area Plywood 5/8x4x8, 1 2x4 wood",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Wall",
+        "category": "Systems BCI Walls",
+        "raw_description": "Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems Santorini White Smooth Standard - Shower W-SS-SAN: Standard Shower System Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Shower",
+        "category": "Bases SM",
+        "raw_description": "Bath Shower Bases SM Vasa Left Side Drain 60\" x 30\" White Ultra Low 2.6\"x3.5\" threshold with slip-resistant slate-look texture. Installation includes leveling of the floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to match the shower pan.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Shower",
+        "category": "Doors Single",
+        "raw_description": "Bath Shower Doors Single Sliding Shower Doors Charlotte 56\"-60\"W x 76\"H Matte Black 56\"-60\"W x 76\"H Single Slider Door with 3/8\" Clear Glass",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Fixtures",
+        "category": "Bundles Arcade",
+        "raw_description": "Bath Fixtures Bundles Arcade Bundle Matte Black Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Accessories",
+        "category": "Seating",
+        "raw_description": "Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat (900 Pound Capacity) Matching Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Vanities",
+        "category": "Vanity Labor",
+        "raw_description": "Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 48\" Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and painting or materials)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Kitchen",
+        "category": "Cabinets Signature",
+        "raw_description": "Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) Semi-Custom Cabinet (Matching Interior) Standard Upper Cabinet - 12\" D (Exterior Depth) & 11.5\" (Interior Depth) Standard Base Cabinet - 24\" D - 30’’ L x 21’’ D x 32’’ H x 4-6’’ backsplash",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Kitchen",
+        "category": "Accessories Sinks",
+        "raw_description": "Kitchen Accessories Sinks PKCSM2318 (RUS2318) - 18 Gauge White Porcelain Top Mount Bowl Sink",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Vanities",
+        "category": "Vanity Faucets",
+        "raw_description": "Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte Black",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Toilets",
+        "category": "Cimmaron",
+        "raw_description": "Bath Toilets Cimmaron 28”L x 31”H x 18”W Seat: 17” H Elongated Comfort Height White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 2",
+        "section": "Bath Accessories",
+        "category": "Window",
+        "raw_description": "Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini White WK-TRV: Window Kit Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Bathroom",
+        "category": "Labor One",
+        "raw_description": "Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet space plumbing. Includes installation of moisture resistant backerboard and selected shower base tub, walls, fixtures, and accessories. Adjust height of showerhead. Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Bathroom",
+        "category": "Labor Pan",
+        "raw_description": "Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including: 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2\", 2 LF. ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet- Area Plywood 5/8x4x8, 1 2x4 wood",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Wall",
+        "category": "Systems BCI Walls",
+        "raw_description": "Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems Santorini White Smooth Standard - Shower W-SS-SAN: Standard Shower System Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Shower",
+        "category": "Bases SM",
+        "raw_description": "Bath Shower Bases SM Vasa Left Side Drain 60\" x 30\" White Ultra Low 2.6\"x3.5\" threshold with slip-resistant slate-look texture. Installation includes leveling of the floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to match the shower pan.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Shower",
+        "category": "Doors Single",
+        "raw_description": "Bath Shower Doors Single Sliding Shower Doors Charlotte 56\"-60\"W x 76\"H Matte Black 56\"-60\"W x 76\"H Single Slider Door with 3/8\" Clear Glass",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Fixtures",
+        "category": "Bundles Arcade",
+        "raw_description": "Bath Fixtures Bundles Arcade Bundle Matte Black Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Vanities",
+        "category": "Vanity Labor",
+        "raw_description": "Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 48\" Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and painting or materials)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Kitchen",
+        "category": "Cabinets Signature",
+        "raw_description": "Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) Semi-Custom Cabinet (Matching Interior) Standard Upper Cabinet - 12\" D (Exterior Depth) & 11.5\" (Interior Depth) Standard Base Cabinet - 24\" D - 30’’ L x 21’’ D x 32’’ H x 4-6’’ backsplash",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Vanities",
+        "category": "Vanity Faucets",
+        "raw_description": "Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte Black Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Kitchen",
+        "category": "Accessories Sinks",
+        "raw_description": "Kitchen Accessories Sinks PKCSM2318 (RUS2318) - 18 Gauge White Porcelain Top Mount Bowl Sink",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Toilets",
+        "category": "Cimmaron",
+        "raw_description": "Bath Toilets Cimmaron 28”L x 31”H x 18”W Seat: 17” H Elongated Comfort Height White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 3",
+        "section": "Bath Accessories",
+        "category": "Window",
+        "raw_description": "Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini White WK-TRV: Window Kit Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Dates",
+        "section": "Estimated",
+        "category": "Start & End Dates",
+        "raw_description": "Estimated Start & End Dates The work to be performed by the Contractor shall be commenced on approximately October 9th, 2024 (4-6 weeks) as long as any required permits are received and any agreed upon funds are paid to Contractor, provided that no delay is occasioned by changes made by the client, supply in material delays, weather or manpower disruptions.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Dates",
+        "section": "The work",
+        "category": "shall be substantially",
+        "raw_description": "The work shall be substantially completed within approximately 9-13 working days of said date of commencement (for reface/bath/flooring starting from demolition date, for kitchen remodel starting from new cabinet installation)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Dates",
+        "section": "Bath Special",
+        "category": "Requests",
+        "raw_description": "Bath Special Requests Amount financed through LENDHI $52,270.66 for 144 MONTHS @8.99% *See LENDHI agreement for payment details Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ -",
+        "qty": 1,
+        "unit": "ea"
+      }
+    ]
+  },
+  {
+    "file": "T. Spiropoulos - Rancho Palos Verdes - 2527258 - Contract 01-10.pdf",
+    "client_name": "Spiropoulos, Troy",
+    "project_po": "2527258",
+    "line_items": [
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor One",
+        "raw_description": "Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet space plumbing. Includes installation of moisture resistant backerboard and selected shower base or tub, walls, fixtures, and accessories. Adjust height of showerhead.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor Pan",
+        "raw_description": "Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including: 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2\", 2 LF. ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-Area Plywood 5/8x4x8, 1 2x4 wood",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor Demo",
+        "raw_description": "Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling with lighting Ceiling with Lighting Less than 80sqft Bath Bathroom Labor Miscellaneous Construction Miscellaneous 200 Pull-Up of Tile outside of Wet Space (Min. 50 Sq Ft) (Does Not Include Drywall, Painting & Patching Work) Bath Bathroom Labor Miscellaneous Construction Painting Drywall 200 Installation - Includes Taping, Patching & Texture (By SqFt) Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 3",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Bathroom",
+        "category": "Labor Miscellaneous",
+        "raw_description": "Bath Bathroom Labor Miscellaneous Construction Construction Related Build Pony Wall (P&I 2' x 4' and Drywall) Includes Drywall & Framing up to 6 FT Width (Must Consider Flooring)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Outside",
+        "category": "Partner Construction",
+        "raw_description": "Outside Partner Construction Related Demo Wall (If Not Load Bearing) Includes Disposal & Haul-Away with Drywall Patch max 8ft high x 5ft wide (Must Consider Flooring)",
+        "qty": 2,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Outside",
+        "category": "Partner Painting",
+        "raw_description": "Outside Partner Painting / Patch Basic Patch & Paint Bathroom Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching any wall damages from Demolition, as well as labor for Priming & Painting. Customer must supply paint and any applicable primer at time of installation. If Materials are available at time of installation customer is subject to a $150 trip surcharge.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Outside",
+        "category": "Partner Painting",
+        "raw_description": "Outside Partner Painting / Patch Paint Interior Door + Casing Includes Painting of both side of Door & Casing (Does Not Include Any New Material)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Shower",
+        "category": "Bases BCI",
+        "raw_description": "Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom Sprayfoam Bases Extra Large - Center Drain Only (Up To 72\" L x 48\" W) White SL-PLXL-W-SF: Sprayfoam Custom Shower Base, White - Extra Large (Over 60 In. Length Or 36 In. Width) - Center Drain Only",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Wall",
+        "category": "Systems BCI",
+        "raw_description": "Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems Santorini White Smooth Standard - Shower W-SS-SAN: Standard Shower System Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Window",
+        "raw_description": "Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini White WK-TRV: Window Kit Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Wall",
+        "category": "Systems BCI",
+        "raw_description": "Bath Wall Systems BCI Walls Single Panels Elite - Individual Walls Santorini White Smooth Ceiling W-CP-SAN: Ceiling Panel Santorini White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Shower",
+        "category": "Doors Custom",
+        "raw_description": "Bath Shower Doors Custom Glass Doors Clear Glass South Beach Matte Black Custom Oversized Sliding Shower Door **Note: This is a custom glass door - please allow for an additional 10-14 days for completion** Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 4",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Flooring",
+        "category": "Bathroom",
+        "raw_description": "Bath Flooring Bathroom Flooring Package (Under 60 SqFt) Trecento - Tile Calacatta Marbello (BACK-ORDERED) Includes Material and Installation of Luxury Vinyl up to 60 sq.ft, Wall Base 3.5\", and Transition Molding. Also includes toilet removal and reinstallation of client provided standard toilet (Standard toilet mounted with external and visible bolts, accessible from the outside). Includes the installation using the existing Toilet Flange and Water Shut-Off Valve, and the replacement of the Wax ring and Water line. Bath Flooring Pull Up Tile 60 Pull Up of Tile (Per Square Foot) Bath Flooring Sub Floor 60 Provide and Install Wonderboard / Plywood",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Special",
+        "category": "Requests",
+        "raw_description": "Bath Special Requests The following items are not included in this agreement: toilet, medicine cabinet, mirror, additional plumbing labor, and electrical work. This contract itemizes all client-selected materials. If the scope of work changes, any additional labor or materials must be documented in a Change Order (CO) and may incur an additional charge—unless the change is informational only and does not affect cost or labor. notes 1)The client will provide the toilet and it is best to have the supplier install it for warranty. The installation we provide is for a standard installation without any special requirements. 2) The client will provide the faucet fixtures for the vanity for us to install. 3) The bench is to be installed under the shower head 4) the client will provide the primer, paint and trim",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Demolition",
+        "raw_description": "Kitchen Refacing Demolition Demolition & Disposal of up to 14 Cabinet Doors & Drawer Faces. Kitchen Refacing Demolition Demolition & Disposal of Countertops 10",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Drawer",
+        "raw_description": "Kitchen Refacing Drawer Face RF / LF DBQ 3/4 949W WHITE",
+        "qty": 5,
+        "unit": "lft"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Door",
+        "raw_description": "Kitchen Refacing Door RF / LF DBQ 3/4\" (816) 949W WHITE Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 5",
+        "qty": 5,
+        "unit": "lft"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Deco-Lam",
+        "raw_description": "Kitchen Refacing Deco-Lam Deco-Lam Full Sheet (48\" x 96\") 949W WHITE",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Hardware",
+        "raw_description": "Kitchen Refacing Hardware BLUM Concealed 110+� Hinge",
+        "qty": 6,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Refacing",
+        "raw_description": "Kitchen Refacing Refacing Accessories Roll-Out (Requires Glides - Calculate Seperately)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Hardware",
+        "raw_description": "Kitchen Refacing Hardware BLUM Soft-Close Undermount Glide & Clip (Pair)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Countertops Quartz",
+        "raw_description": "Kitchen Countertops Quartz Package B PREFABRICATED 26\"x108\" QUARTZ COUNTERTOPS PKCES PACKAGE B PKCES Carrara White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Kitchen",
+        "category": "Refacing Demolition",
+        "raw_description": "Kitchen Refacing Demolition Haul Away of all Disposed Materials (Does not include Disposal of Appliances)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Vanities",
+        "category": "Vanity Sinks",
+        "raw_description": "Bath Vanities Vanity Sinks PKBBCS2210-WH White Porcelain Under-Mount Single Basin Bowl Vanity Sink",
+        "qty": 2,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Storage",
+        "raw_description": "Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid Accents 12 X 24 Inch Niche, White",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Seating",
+        "raw_description": "Bath Accessories Seating BCI 26\" x 15\" Wall Mounted Bench (2000 Pound Capacity) Matching",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Fixtures",
+        "category": "Gold Design",
+        "raw_description": "Bath Fixtures Gold Design Handheld HANDHELD UPGRADE (KEEPING BASIC VALVE)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Outside",
+        "category": "Partner Electrical",
+        "raw_description": "Outside Partner Electrical Cap off Electrical Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 6",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Accessories",
+        "category": "Grab",
+        "raw_description": "Bath Accessories Grab Bars Traditional 16\" Traditional Grab Bar Matte Black",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Bath 1",
+        "section": "Bath Fixtures",
+        "category": "Bundles Horizon",
+        "raw_description": "Bath Fixtures Bundles Horizon Bundle (NEW) Matte Black (MB)",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Dates",
+        "section": "& End",
+        "category": "Dates",
+        "raw_description": "& End Dates be performed by the Contractor shall be commenced on approximately, Feb 19, 2026, as long as permits are received and any agreed upon funds are paid to Contractor, provided that no delay changes made by the client, supply in material delays, weather or manpower disruptions.",
+        "qty": 1,
+        "unit": "ea"
+      },
+      {
+        "room": "Dates",
+        "section": "be substantially",
+        "category": "completed",
+        "raw_description": "be substantially completed within approximately 9-13 working date of commencement (for reface/bath/flooring starting from date, for kitchen remodel starting from new cabinet installation) Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 7",
+        "qty": 1,
+        "unit": "ea"
+      }
+    ]
+  }
+]

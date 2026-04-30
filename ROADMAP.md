@@ -61,9 +61,9 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
     - [x] **Job-Specific Debugging:** Auto-routing logs and outputs into `Debug/` and `ERP_Automated_Output/` within the job folder.
 
 ## 📅 Phase 7: Hybrid LLM Matching Engine (Complete) ✅
-- [x] **line item to database item improvements:** Reach 100% accuracy in matching by migrating to a Hybrid LLM approach.
-    - [x] Build `llm_service.py` to interface with Local Ollama.
-    - [x] Update `MatchingEngine` to parse and obey strictly generated Regex matching and exclusion rules.
+- [x] **Contract Item to Database Item Improvements:** Reach 100% accuracy in matching by migrating to a Hybrid LLM + Deterministic approach.
+    - [x] Build `llm_service.py` to interface with Local Ollama (using Instructor & Pydantic).
+    - [x] Update `MatchingEngine` to parse and obey strictly generated attribute constraints (Finish, Dimensions).
 - [x] **Database Manager / Add Item Upgrade:**
     - [x] Remove manual "Add Blank Item" form (move old code to backup).
     - [x] Create "Batch Add from PDF" UI queue to automatically surface unmatched items.
@@ -74,8 +74,10 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ---
 
-## 📅 Phase 8: Database & Advanced Automation (Upcoming) 🔮
-- [ ] **Migration Script:** Backfill all legacy catalog `.yaml` items with LLM-generated matching rules.
+## 📅 Phase 8: Performance & Advanced Automation (In Progress) 🔮
+- [x] **Pipeline Optimization:** Multi-thread LLM calls during batch PDF parsing to remove UI freezes.
+- [x] **Matching Diagnostic Logs:** Add comprehensive debug logging to track LLM extractions, filtered candidate sizes, and RapidFuzz scoring.
+- [x] **Database Migration:** Script to clean legacy regex fields (`matching_rules`), normalize providers, and enforce canonical schema ordering across all catalog files.
 - [ ] **Ollama Process Manager:** Add UI scripts to Python to automatically launch and stop the system-installed Ollama backend, standardizing the installation process for users.
 - [ ] **Payment schedule email text generator:** Automated text for BT invoices.
 

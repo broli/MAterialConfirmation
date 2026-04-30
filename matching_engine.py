@@ -21,9 +21,202 @@ Classes
                     ignored routing tags, and color-code calculation.
 """
 
+import logging
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from threading import Lock
+
 from rapidfuzz import process, fuzz
 from schema.contract_item import ContractItem
 from llm_service import LocalLLMClient
+
+
+# ---------------------------------------------------------------------------
+# MatchDebugLogger — per-item diagnostic file logger
+# ---------------------------------------------------------------------------
+
+class MatchDebugLogger:
+    """
+    Writes a detailed per-item diagnostic block to
+    ``logs/matching_YYYYMMDD_HHMMSS.log`` whenever debug_mode is enabled.
+
+    Each block contains:
+      - Raw PDF item fields (room, section, category, description, qty)
+      - LLM-extracted ContractItem fields (base_item, brand, finish, dimensions)
+      - Fuzzy search target string that was assembled
+      - How many candidates survived the finish/dimension filters
+      - Top-5 scored candidates with their DB oneclick_description strings
+      - Final winner with confidence score and traffic-light color
+    """
+
+    _instance: "MatchDebugLogger | None" = None
+
+    def __init__(self, log_dir: str = "logs"):
+        os.makedirs(log_dir, exist_ok=True)
+        stamp    = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_path = os.path.join(log_dir, f"matching_{stamp}.log")
+
+        self._logger = logging.getLogger(f"MatchDebug_{stamp}")
+        self._logger.setLevel(logging.DEBUG)
+        self._logger.propagate = False
+
+        fh = logging.FileHandler(log_path, encoding="utf-8")
+        fh.setFormatter(logging.Formatter("%(message)s"))
+        self._logger.addHandler(fh)
+        self._call_num = 0
+
+        self._logger.info(
+            f"=== Match Debug Log — Session {datetime.now().isoformat()} ===\n"
+        )
+
+    def log_resolution(
+        self,
+        item: dict,
+        contract_item: "ContractItem | None",
+        search_target: str,
+        catalog_size: int,
+        candidates_after_filter: dict,
+        top_results: list,
+        final_id: "str | None",
+        confidence: float,
+        color_code: str,
+        confirmed: bool,
+        is_ignored: bool,
+        fast_path_used: bool = False,
+    ) -> None:
+        """
+        Write one full diagnostic block for a single item resolution.
+
+        Parameters
+        ----------
+        item : dict
+            The raw PDF line item dict.
+        contract_item : ContractItem | None
+            The LLM-extracted structured data (None for confirmed items).
+        search_target : str
+            The string passed to RapidFuzz.
+        catalog_size : int
+            Total number of items in the catalog index.
+        candidates_after_filter : dict
+            ``{ item_id: oneclick_description }`` after finish/dim filtering.
+        top_results : list
+            List of ``(score, id, db_desc)`` tuples from RapidFuzz, top-5 only.
+        final_id : str | None
+            The winning match ID.
+        confidence : float
+            Confidence score (0–100).
+        color_code : str
+            Traffic-light color name.
+        confirmed : bool
+            Whether this item was already user-confirmed.
+        is_ignored : bool
+            Whether the winning DB entry has routing_tag=IGNORE.
+        """
+        self._call_num += 1
+        n   = self._call_num
+        sep = "=" * 70
+        dash = "-" * 70
+
+        lines = [
+            f"\n{sep}",
+            f"  MATCH #{n}  —  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            f"{sep}",
+            "",
+            "── 1. WHAT WE HAVE (PDF item) ──────────────────────────────────────",
+            f"  Room     : {item.get('room', '')}",
+            f"  Section  : {item.get('section', '')}",
+            f"  Category : {item.get('category', '')}",
+            f"  Qty/Unit : {item.get('qty', '')} {item.get('unit', '')}",
+            f"  Raw Desc : {item.get('raw_description', '')}",
+        ]
+
+        if confirmed:
+            lines += [
+                "",
+                "── 2. RESOLUTION PATH ──────────────────────────────────────────────",
+                f"  ✅ ALREADY CONFIRMED by user — trusted stored match_id.",
+                f"  Matched ID : {final_id}",
+                f"  Confidence : 100% (forced)",
+                f"  Color      : {color_code}",
+            ]
+        else:
+            if fast_path_used:
+                lines += [
+                    "",
+                    "── 2. LLM EXTRACTION ────────────────────────────────────────────────",
+                    "  ⚡ BYPASSED (Fast Path hit on raw description)",
+                    "",
+                    "── 3. DATABASE FILTER ───────────────────────────────────────────────",
+                    "  ⚡ BYPASSED",
+                    "",
+                    "── 4. FAST PATH SEARCH (token_set_ratio) ────────────────────────────",
+                    f"  Search target : {search_target!r}",
+                ]
+            else:
+                # LLM extraction block
+                if contract_item:
+                    dims_str = ", ".join(
+                        f"{k}={v}" for k, v in (contract_item.dimensions or {}).items()
+                    )
+                    lines += [
+                        "",
+                        "── 2. LLM EXTRACTION (ContractItem) ─────────────────────────────────",
+                        f"  base_item  : {contract_item.base_item}",
+                        f"  category   : {contract_item.category}",
+                        f"  brand      : {contract_item.brand}",
+                        f"  finish     : {contract_item.finish}",
+                        f"  dimensions : {dims_str or 'none'}",
+                    ]
+                else:
+                    lines += [
+                        "",
+                        "── 2. LLM EXTRACTION ────────────────────────────────────────────────",
+                        "  (LLM failed or not called)",
+                    ]
+
+                # Filter summary
+                filtered_out = catalog_size - len(candidates_after_filter)
+                lines += [
+                    "",
+                    "── 3. DATABASE FILTER ───────────────────────────────────────────────",
+                    f"  Catalog size       : {catalog_size} items",
+                    f"  Filtered out       : {filtered_out} items"
+                    + (f" (finish={contract_item.finish!r})" if contract_item and contract_item.finish else "")
+                    + (f" + dim constraints" if contract_item and contract_item.dimensions else ""),
+                    f"  Candidates left    : {len(candidates_after_filter)} items",
+                ]
+
+                # Fuzzy search
+                lines += [
+                    "",
+                    "── 4. FUZZY SEARCH (WRatio) ─────────────────────────────────────────",
+                    f"  Search target : {search_target!r}",
+                ]
+
+            if top_results:
+                lines.append("  Top matches   :")
+                for rank, (score, mid, db_desc) in enumerate(top_results, 1):
+                    marker = "  ★" if mid == final_id else "   "
+                    lines.append(f"{marker} #{rank:2d}  {score:6.2f}%  [{mid}]  {db_desc[:80]}")
+            else:
+                lines.append("  No candidates to rank.")
+
+            # Final verdict
+            verdict_emoji = "🟢" if color_code == "green" else ("🟡" if color_code == "yellow" else "🔴")
+            if is_ignored:
+                verdict_emoji = "⚫"
+            lines += [
+                "",
+                "── 5. VERDICT ───────────────────────────────────────────────────────",
+                f"  {verdict_emoji}  Match ID   : {final_id or 'NO MATCH'}",
+                f"     Confidence : {confidence:.1f}%",
+                f"     Color      : {color_code}",
+                f"     Ignored    : {is_ignored}",
+            ]
+
+        lines.append("")
+        self._logger.debug("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------
@@ -77,35 +270,74 @@ class MatchingEngine:
     # Public search API
     # ------------------------------------------------------------------
 
-    def match_item(self, contract_item: ContractItem) -> tuple:
+    def fast_match(self, raw_description: str) -> list:
+        """
+        Attempt a high-speed token_set_ratio match against all catalog items.
+        
+        Returns
+        -------
+        list
+            The top 2 match tuples: ``[(score, item_id, db_desc), ...]``
+            Used by MatchService to evaluate the "Margin of Victory".
+        """
+        if not self._index or not raw_description:
+            return []
+
+        all_results = process.extract(
+            raw_description,
+            self._index,
+            scorer=fuzz.token_set_ratio,
+            limit=2,
+        )
+        
+        # Sort descending and return in (score, id, db_desc) format to match Slow Path
+        results_sorted = sorted(all_results, key=lambda x: x[1], reverse=True)
+        return [(score, mid, db_desc) for db_desc, score, mid in results_sorted]
+
+    def match_item(
+        self,
+        contract_item: ContractItem,
+        _return_candidates: bool = False,
+    ) -> tuple:
         """
         Find the single best catalog entry for a parsed ContractItem.
-        First, strictly filters based on database dimensions and finish.
-        Then, uses RapidFuzz on the remaining candidate pool to pick the best.
+
+        First strictly filters on finish and dimensions, then uses RapidFuzz
+        on the remaining candidate pool.
+
+        Parameters
+        ----------
+        contract_item : ContractItem
+            Structured product fields extracted by the LLM.
+        _return_candidates : bool
+            Internal flag — when True, returns a 4-tuple that also includes
+            the candidate dict (used by the debug logger in MatchService).
         """
         if not self._index:
+            if _return_candidates:
+                return None, None, 0.0, {}
             return None, None, 0.0
 
         candidates = {}
         for item_id, item_data in self.catalog.items():
             desc = self._index.get(item_id, "")
-            
+
             # 1. Strict filter on Finish
             if contract_item.finish:
                 db_printable = item_data.get("printable") or {}
-                db_finish = db_printable.get("finish", "")
+                db_finish    = db_printable.get("finish", "")
                 if db_finish and contract_item.finish.lower() not in db_finish.lower():
-                    continue # Strict fail
-            
+                    continue
+
             # 2. Strict filter on Dimensions
             if contract_item.dimensions:
                 db_printable = item_data.get("printable") or {}
-                db_dims = db_printable.get("dimensions", {})
+                db_dims      = db_printable.get("dimensions", {})
                 if db_dims:
                     failed_dim = False
                     for dim_key, dim_val in contract_item.dimensions.items():
                         dim_str = str(dim_val).lower().replace('"', '').replace('in', '').strip()
-                        found = False
+                        found   = False
                         for db_k, db_val in db_dims.items():
                             db_str = str(db_val).lower().replace('"', '').replace('in', '').strip()
                             if dim_str in db_str or db_str in dim_str:
@@ -120,25 +352,41 @@ class MatchingEngine:
             candidates[item_id] = desc
 
         if not candidates:
+            if _return_candidates:
+                return None, None, 0.0, {}
             return None, None, 0.0
 
         # 3. Fuzzy Match
-        search_target = contract_item.base_item
+        search_target = contract_item.base_item or ""
         if contract_item.category:
             search_target = f"{contract_item.category} {search_target}"
         if contract_item.brand:
             search_target = f"{contract_item.brand} {search_target}"
 
-        result = process.extractOne(
+        all_results = process.extract(
             search_target,
             candidates,
             scorer=fuzz.WRatio,
+            limit=None,
         )
 
-        if result:
-            best_match_string, confidence_score, best_match_id = result
-            return best_match_id, best_match_string, confidence_score
+        if all_results:
+            # all_results is list of (db_desc, score, item_id) — sort descending
+            all_results_sorted = sorted(all_results, key=lambda x: x[1], reverse=True)
+            best_db_desc, confidence_score, best_match_id = all_results_sorted[0]
 
+            if _return_candidates:
+                # Return top-5 as (score, id, db_desc) for the debug logger
+                top5 = [
+                    (score, mid, db_desc)
+                    for db_desc, score, mid in all_results_sorted[:5]
+                ]
+                return best_match_id, best_db_desc, confidence_score, candidates, search_target, top5
+
+            return best_match_id, best_db_desc, confidence_score
+
+        if _return_candidates:
+            return None, None, 0.0, candidates, search_target, []
         return None, None, 0.0
 
     def get_color_code(self, score: float) -> str:
@@ -197,31 +445,105 @@ class MatchService:
         "gray":   "gray50",
     }
 
-    def __init__(self, catalog: dict):
+    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs"):
         """
         Parameters
         ----------
         catalog : dict
             The master catalog dict from ``CatalogLoader.load_all_categories()``.
+        debug_mode : bool
+            When True, Ollama requests/responses are written to a timestamped
+            log file in ``log_dir``.  Propagated to the LLM client.
+            Also enables the per-item match diagnostic log.
+        log_dir : str
+            Directory for debug log files (default: ``"logs/"``).
         """
-        self._engine  = MatchingEngine(catalog)
-        self._catalog = catalog
-        self._llm     = LocalLLMClient()
+        self._engine     = MatchingEngine(catalog)
+        self._catalog    = catalog
+        self._debug_mode = debug_mode
+        self._log_dir    = log_dir
+        self._llm        = LocalLLMClient(debug_mode=debug_mode, log_dir=log_dir)
+        # Create the match logger only when debug is on (avoids empty log files).
+        self._match_log: MatchDebugLogger | None = (
+            MatchDebugLogger(log_dir) if debug_mode else None
+        )
+
+    def check_ollama_ready(self) -> tuple[bool, str]:
+        """
+        Verify the Ollama connection and model availability.
+        Returns (True, "OK") or (False, "Error message").
+        """
+        return self._llm.check_connection()
 
     # ------------------------------------------------------------------
     # Public batch API
     # ------------------------------------------------------------------
 
-    def enrich_items(self, line_items: list, progress_callback=None) -> list:
+    def enrich_items(
+        self,
+        line_items: list,
+        progress_callback=None,
+        status_callback=None,
+    ) -> list:
         """
         Attach match metadata to every item in a session list, in-place.
+
+        Runs up to 3 LLM requests concurrently via ThreadPoolExecutor to
+        reduce total processing time when batch sizes are large.
+
+        Parameters
+        ----------
+        line_items : list
+            Session line items to enrich.
+        progress_callback : callable | None
+            ``fn(current: int, total: int)`` — called after each item resolves.
+        status_callback : callable | None
+            ``fn(msg: str)`` — called with a human-readable status string
+            (e.g. ``"Matching 3/15: Shower Bases SM Vasa..."``).  Use this
+            to update the UI status bar from the calling thread.
         """
-        total = len(line_items)
-        for i, item in enumerate(line_items):
-            if progress_callback:
-                progress_callback(i + 1, total)
+        total   = len(line_items)
+        counter = [0]   # mutable container — avoids nonlocal inside nested scopes
+        lock    = Lock()
+
+        def _resolve_and_tag(item: dict) -> dict:
+            """Resolve one item and return it (used inside thread pool)."""
+            # Fire pre-call status so the bar updates BEFORE the slow Ollama call
+            if status_callback:
+                short_desc = item.get("raw_description", "")[:55]
+                category   = item.get("category", "")
+                label      = f"{category}: {short_desc}" if category else short_desc
+                with lock:
+                    n = counter[0] + 1   # optimistic "about to process #n"
+                status_callback(f"🔗 Matching {n}/{total}: {label}...")
+
             item["_match"] = self._resolve(item)
+            return item
+
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            future_map = {pool.submit(_resolve_and_tag, item): item for item in line_items}
+            for future in as_completed(future_map):
+                try:
+                    future.result()  # propagate any worker exception
+                except Exception as exc:
+                    item = future_map[future]
+                    desc = item.get('raw_description', '')[:60]
+                    print(f"[MatchService] Worker error for '{desc}': {exc}")
+                    item["_match"] = {
+                        "match_id": None, "confidence": 0.0,
+                        "color_code": "red", "color_hex": self.COLOR_HEX["red"],
+                        "is_ignored": False,
+                    }
+                with lock:
+                    counter[0] += 1
+                    if progress_callback:
+                        progress_callback(counter[0], total)
+
+        if status_callback:
+            status_callback(f"✅ Matched {total} items.")
+
         return line_items
+
 
     # ------------------------------------------------------------------
     # Public single-item API
@@ -234,6 +556,11 @@ class MatchService:
         Used by the inspect popup and any other component that needs
         on-demand resolution for one item rather than an entire batch.
 
+        If the item was already processed by ``enrich_items()`` it will carry
+        a ``_match`` key — this method returns that cached value immediately
+        without touching Ollama.  Only genuinely uncached items fall through
+        to the full LLM resolution path.
+
         Parameters
         ----------
         item : dict
@@ -245,7 +572,15 @@ class MatchService:
             A ``_match`` metadata dict — same shape as produced by
             ``enrich_items`` (see its docstring for the full schema).
         """
+        # Fast path — return the result already computed by enrich_items().
+        # Prevents Ollama being called again every time the user opens the
+        # inspect popup for an item that was already matched in the batch.
+        if "_match" in item:
+            return item["_match"]
+
+        # Slow fallback — item hasn't been enriched yet.
         return self._resolve(item)
+
 
     # ------------------------------------------------------------------
     # Internal helpers — not part of the public contract
@@ -254,54 +589,94 @@ class MatchService:
     def _resolve(self, item: dict) -> dict:
         """
         Core resolution logic shared by ``enrich_items`` and ``resolve_match``.
-
-        Determines the best match ID and all associated display metadata for a
-        single line item, handling the confirmed/unconfirmed and ignored/normal
-        branches.
-
-        Parameters
-        ----------
-        item : dict
-            A single line item dict.
-
-        Returns
-        -------
-        dict
-            Populated ``_match`` metadata dict.
         """
         confirmed = item.get("confirmed", False)
+        contract_item: ContractItem | None = None
+        search_target = ""
+        candidates_after_filter: dict = {}
+        top5: list = []
+        fast_path_used = False
 
         if confirmed and "matched_id" in item:
-            # The user has already reviewed and approved this match.
-            # Trust the stored decision — no need to run the fuzzy engine again.
+            # User-confirmed — trust the stored decision.
             match_id   = item["matched_id"]
             confidence = 100.0
         else:
-            # No confirmed decision yet — run the LLM extraction then fuzzy engine.
             raw_desc = item.get("raw_description", "")
-            try:
-                contract_item = self._llm.extract_product_fields(raw_desc)
-                match_id, _, confidence = self._engine.match_item(contract_item)
-            except Exception as e:
-                # If LLM fails (e.g. Ollama not running), we fail the match gracefully
-                # The user will see red items and can check logs.
-                print(f"Error during LLM matching for '{raw_desc}': {e}")
-                match_id = None
-                confidence = 0.0
+            
+            # --- 1. FAST PATH ---
+            # Try a direct token_set_ratio match to bypass LLM on exact/labor items
+            fast_results = self._engine.fast_match(raw_desc)
+            if fast_results:
+                score1, id1, desc1 = fast_results[0]
+                score2, id2, desc2 = fast_results[1] if len(fast_results) > 1 else (0.0, None, "")
+                
+                # Margin of Victory logic
+                is_perfect = (score1 == 100.0)
+                is_high_with_margin = (score1 >= 95.0 and (score1 - score2) >= 5.0)
+                
+                if is_perfect or is_high_with_margin:
+                    match_id = id1
+                    confidence = score1
+                    fast_path_used = True
+                    search_target = raw_desc
+                    top5 = fast_results  # Log the fast path candidates
+            
+            # --- 2. SLOW PATH (LLM Fallback) ---
+            if not fast_path_used:
+                hint_section  = item.get("section") or None
+                hint_category = item.get("category") or None
+                try:
+                    contract_item = self._llm.extract_product_fields(
+                        raw_desc,
+                        hint_category=hint_category,
+                        hint_section=hint_section,
+                    )
+                    if self._debug_mode:
+                        # Use the extended return value to capture candidates + ranking
+                        result = self._engine.match_item(contract_item, _return_candidates=True)
+                        match_id, _, confidence, candidates_after_filter, search_target, top5 = result
+                    else:
+                        match_id, _, confidence = self._engine.match_item(contract_item)
+                except Exception as e:
+                    print(f"[MatchService] LLM error for '{raw_desc[:60]}': {e}")
+                    match_id   = None
+                    confidence = 0.0
 
-        # Check if the matched item is an administrative "IGNORE" routing entry.
+        # Routing tag check
         is_ignored = False
         if match_id and match_id in self._catalog:
             routing    = self._catalog[match_id].get("routing_tag", "").strip().upper()
             is_ignored = (routing == "IGNORE")
 
-        # Determine the traffic-light colour.
-        if is_ignored:
-            color_code = "gray"
-        elif confirmed:
-            color_code = "green"
+        # Traffic-light colour
+        if confirmed:
+            color_code = "gray" if is_ignored else "green"
         else:
             color_code = self._engine.get_color_code(confidence)
+            if is_ignored:
+                if color_code == "red":
+                    # Do not allow low-confidence matches to silently ignore themselves
+                    is_ignored = False
+                else:
+                    color_code = "gray"
+
+        # Write match diagnostic log if debug is on
+        if self._match_log is not None:
+            self._match_log.log_resolution(
+                item=item,
+                contract_item=contract_item,
+                search_target=search_target,
+                catalog_size=len(self._engine._index),
+                candidates_after_filter=candidates_after_filter,
+                top_results=top5,
+                final_id=match_id,
+                confidence=confidence,
+                color_code=color_code,
+                confirmed=confirmed,
+                is_ignored=is_ignored,
+                fast_path_used=fast_path_used,
+            )
 
         return {
             "match_id":   match_id,
@@ -309,4 +684,6 @@ class MatchService:
             "color_code": color_code,
             "color_hex":  self.COLOR_HEX.get(color_code, "gray50"),
             "is_ignored": is_ignored,
+            "fast_path_used": fast_path_used,
+            "extracted_fields": contract_item.model_dump() if contract_item else None,
         }

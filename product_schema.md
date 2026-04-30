@@ -20,11 +20,10 @@ This document defines the standard structure for all product data used in the **
 | `id` | String | Yes | Unique internal PKB Identifier. Used to link selections. |
 | `sku` | String | Yes | (ERP) Manufacturer or Vendor part number. |
 | `brand` | String | Yes | (ERP) Manufacturer (e.g., Kohler). Not shown to client. |
-| `provider` | String | No | (ERP) Purchasing origin (e.g., "Kohler Direct"). |
+| `provider` | String | No | (ERP) Purchasing origin (e.g., "Kohler Direct"). Empty string if unknown. |
 | `routing_tag` | String | Yes | (ERP) Export logic. Must be one of: `IGNORE`, `WAREHOUSE`, `PROCURE`, or `WH_OR_PROCURE`. |
 | `purchase_link` | String | No | URL string or action code ("CRM", "email") for purchasing. |
-| `oneclick_description` | String | Yes | The target string the Matching Engine expects. *Note: As we migrate to the LLM-matcher, this will slowly be replaced by matching_rules.* |
-| `matching_rules` | Object | No | **(New System)** Contains `must_contain_regex`, `must_not_contain_regex`, and `keywords` for exact PDF line matching. |
+| `oneclick_description` | String | Yes | The target string the Matching Engine expects. Used by the RapidFuzz fallback after strict attribute filtering. |
 | `printable` | Object | No | Client-facing data. Determines output behavior (see below). |
 
 ### 🛠️ Output Behaviors

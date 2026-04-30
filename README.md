@@ -33,9 +33,10 @@ We are now transforming this tool into a **Modular ERP System**. Instead of just
 ## 🧠 The Matching Pipeline
 The system uses a sophisticated matching logic to link messy PDF contract strings to our master catalog:
 
-1. **LLM Sanitization Layer:** Uses **Ollama (Llama 3)** and **Instructor** to parse raw text into a validated **Pydantic** model (`ContractItem`).
+1. **Multi-Threaded LLM Sanitization Layer:** Uses **Ollama (Llama 3)** and **Instructor** to parse raw text into a validated **Pydantic** model (`ContractItem`). Requests are processed concurrently to drastically reduce batch ingestion time.
 2. **Deterministic Filter:** Strictly filters the catalog by extracted attributes (Finish, Size, etc.). If an item contradicts these fields, it is discarded.
 3. **Fuzzy Fallback:** Applies a final fuzzy string match (RapidFuzz) on the remaining candidates to find the most accurate product link.
+4. **Diagnostic Logging:** Comprehensive debug tracking is available to monitor exact JSON requests, LLM execution times, and step-by-step match scoring.
 
 ---
 

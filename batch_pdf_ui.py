@@ -8,6 +8,7 @@ import threading
 from PIL import Image
 
 from contract_ingestion import OneClickIngestor
+from product_service import ProductService
 import matching_engine
 from llm_service import LocalLLMClient
 
@@ -145,33 +146,12 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         self.console_box.configure(state="disabled")
 
     def add_dimension_row(self, key="", value=""):
-        row_frame = ctk.CTkFrame(self.dimensions_frame, fg_color="transparent")
-        row_frame.pack(fill="x", pady=2)
-        
-        options = ["Width", "Length", "Height", "Depth", "Thickness", "Diameter", "Size"]
-        if key and key.title() not in options:
-            options.append(key.title())
-            
-        combo = ctk.CTkComboBox(row_frame, values=options, width=100, state="readonly")
-        if key:
-            combo.set(key.title())
-        else:
-            combo.set(options[0])
-        combo.pack(side="left", padx=(0,5))
-        
-        entry = ctk.CTkEntry(row_frame, placeholder_text='e.g. 60 sqft or 3"', width=120)
-        if value:
-            entry.insert(0, str(value))
-        entry.pack(side="left", padx=5, expand=True, fill="x")
-        
-        def remove_row():
-            row_frame.destroy()
-            self.dimension_rows = [r for r in self.dimension_rows if r[0] != combo]
-            
-        btn_remove = ctk.CTkButton(row_frame, text="X", width=30, fg_color="red", hover_color="darkred", command=remove_row)
-        btn_remove.pack(side="right", padx=5)
-        
-        self.dimension_rows.append((combo, entry))
+        """Add one dimension input row. Delegates to ProductService helper."""
+        ProductService.build_dimension_rows(
+            self.dimensions_frame,
+            existing_dims={key.title(): value} if key else {},
+            row_store=self.dimension_rows,
+        )
 
     def open_database_picker(self):
         DatabasePicker(self, self.master.catalog, self.populate_from_existing_item)
@@ -251,6 +231,17 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         threading.Thread(target=self._process_pdf, args=(pdf_path,), daemon=True).start()
 
     def _process_pdf(self, pdf_path):
+        ms = matching_engine.MatchService(self.master.catalog)
+        
+        # ── Safety Check: Is Ollama up? ──────────────────────────────
+        self.after(0, lambda: self.status_lbl.configure(text="🔍 Checking AI service..."))
+        ready, err = ms.check_ollama_ready()
+        if not ready:
+            self.after(0, lambda: messagebox.showerror("Ollama Connection Error", 
+                f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."))
+            self.after(0, lambda: self.status_lbl.configure(text="❌ Ollama Offline."))
+            return
+
         ingestor = OneClickIngestor(pdf_path)
         data = ingestor.extract_data()
         
@@ -292,13 +283,12 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
                 fg_color="gray20",
                 hover_color="gray30",
                 anchor="w",
-                command=lambda d=desc: self.select_item(d)
+                command=lambda it=item: self.select_item(it)
             )
             btn.pack(fill="x", padx=5, pady=2)
 
-    def select_item(self, raw_text):
-        self.selected_raw_text = raw_text
-        self.status_lbl.configure(text="Querying LLM for details...")
+    def select_item(self, item):
+        self.selected_raw_text = item.get("raw_description", "")
         
         # Clear fields
         self.id_entry.delete(0, 'end')
@@ -312,13 +302,25 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         self.image_path_var.set("")
         self.routing_entry.set("WAREHOUSE")
         
-        self.oneclick_entry.insert(0, raw_text)
+        self.oneclick_entry.insert(0, self.selected_raw_text)
         
-        self.progress_bar.start()
-        threading.Thread(target=self._query_llm_fields, args=(raw_text,), daemon=True).start()
+        extracted = item.get("_match", {}).get("extracted_fields")
+        if extracted:
+            self._fill_fields(extracted)
+            self.status_lbl.configure(text="Loaded fields from session cache.")
+        else:
+            self.status_lbl.configure(text="Querying LLM for details...")
+            self.progress_bar.start()
+            threading.Thread(target=self._query_llm_fields, args=(self.selected_raw_text,), daemon=True).start()
 
     def _query_llm_fields(self, text):
         try:
+            # ── Safety Check ──
+            ready, err = self.llm_client.check_connection()
+            if not ready:
+                self.after(0, lambda: messagebox.showerror("Ollama Connection Error", f"Cannot extract fields: {err}"))
+                return
+
             res = self.llm_client.extract_product_fields(text)
             self.after(0, lambda: self._fill_fields(res))
             self.after(0, lambda: self.status_lbl.configure(text="Done."))
@@ -356,59 +358,18 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
             messagebox.showwarning("Incomplete", "ID and Category are required.")
             return
             
-        self.status_lbl.configure(text="Compiling strict Matching Rules with LLM...")
-        self.btn_compile.configure(state="disabled")
-        
-        # Build dictionary
-        prod = {
-            "id": self.id_entry.get().strip(),
-            "brand": self.brand_entry.get().strip(),
-            "finish": self.finish_entry.get().strip(),
-            "dimensions": {}
-        }
-        for combo, entry in self.dimension_rows:
-            k = combo.get().strip()
-            v = entry.get().strip()
-            if k and v:
-                prod["dimensions"][k] = v
-        
-        self.progress_bar.start()
-        threading.Thread(target=self._compile_and_confirm, args=(prod,), daemon=True).start()
+        self._save_to_yaml()
 
-    def _compile_and_confirm(self, prod):
-        try:
-            rules = self.llm_client.compile_matching_rules(prod)
-            self.after(0, lambda: self._show_confirmation_window(rules))
-        except Exception as e:
-            self.after(0, lambda: messagebox.showerror("LLM Error compiling rules", str(e)))
-            self.after(0, lambda: self.btn_compile.configure(state="normal"))
-            self.after(0, lambda: self.status_lbl.configure(text=""))
-        finally:
-            self.after(0, self.progress_bar.stop)
-            self.after(0, lambda: self.progress_bar.set(0))
-
-    def _show_confirmation_window(self, rules):
-        self.btn_compile.configure(state="normal")
-        self.status_lbl.configure(text="")
-        
-        conf_msg = "LLM compiled the following regex rules for this item:\n\n"
-        conf_msg += "MUST CONTAIN:\n" + "\n".join(rules.get('must_contain_regex', [])) + "\n\n"
-        conf_msg += "MUST NOT CONTAIN:\n" + "\n".join(rules.get('must_not_contain_regex', [])) + "\n\n"
-        conf_msg += "Are you completely satisfied and ready to commit to the YAML Database?"
-        
-        if messagebox.askyesno("Confirm Final Rules", conf_msg):
-            self._save_to_yaml(rules)
-
-    def _save_to_yaml(self, rules):
+    def _save_to_yaml(self):
         cat_file = self.cat_entry.get().strip()
-        
+
         target_id = self.id_entry.get().strip()
         existing_item = self.master.catalog.get(target_id)
-        
-        sku = existing_item.get("sku", "MISSING_SKU") if existing_item else "MISSING_SKU"
-        provider = existing_item.get("provider", "MISSING_PROVIDER") if existing_item else "MISSING_PROVIDER"
+
+        sku           = existing_item.get("sku", "MISSING_SKU") if existing_item else "MISSING_SKU"
+        provider      = existing_item.get("provider", "MISSING_PROVIDER") if existing_item else "MISSING_PROVIDER"
         purchase_link = existing_item.get("purchase_link", "") if existing_item else ""
-        
+
         product = {
             "id": target_id,
             "sku": sku,
@@ -417,52 +378,31 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
             "purchase_link": purchase_link,
             "routing_tag": self.routing_entry.get().strip(),
             "oneclick_description": self.oneclick_entry.get().strip(),
-            "matching_rules": rules,
             "printable": {
                 "finish": self.finish_entry.get().strip(),
                 "description": self.desc_entry.get().strip(),
-                "dimensions": {}
+                "dimensions": ProductService.read_dimension_rows(self.dimension_rows),
             }
         }
-        
-        # Image Copy Logic (adapted from DatabaseManager)
+
         source_image_path = self.image_path_var.get()
         if source_image_path:
-            filename = os.path.basename(source_image_path)
-            dest_image_path = os.path.join(self.assets_path, filename)
-            
-            if os.path.abspath(source_image_path) != os.path.abspath(dest_image_path):
-                shutil.copy(source_image_path, dest_image_path)
-            product["printable"]["image_file"] = filename
-        
-        for combo, entry in self.dimension_rows:
-            k = combo.get().strip()
-            v = entry.get().strip()
-            if k and v:
-                product["printable"]["dimensions"][k] = v
+            product["printable"]["image_file"] = ProductService.copy_image_to_assets(
+                source_image_path, self.assets_path
+            )
 
-        target_yaml_path = os.path.join(self.categories_path, cat_file)
-        existing_data = []
-        if os.path.exists(target_yaml_path):
-            with open(target_yaml_path, 'r', encoding='utf-8') as f:
-                existing_data = yaml.safe_load(f) or []
-                
-        existing_data = [i for i in existing_data if i.get('id') != product["id"]]
-        existing_data.append(product)
-
-        with open(target_yaml_path, 'w', encoding='utf-8') as f:
-            yaml.dump(existing_data, f, sort_keys=False, allow_unicode=True)
+        ProductService.upsert_to_yaml(product, cat_file, self.categories_path)
 
         messagebox.showinfo("Success", f"Saved {product['id']} successfully!")
-        
+
         # Remove from queue visually
         if self.selected_raw_text:
             self.unmatched_items = [x for x in self.unmatched_items if x["raw_description"] != self.selected_raw_text]
             self._render_queue()
-            
+
         if self.refresh_callback:
             self.refresh_callback()
-            
+
         # Push catalog update
         self.master.catalog = self.db_loader.load_all_categories()
         if hasattr(self.master.master, 'refresh_match_service'):

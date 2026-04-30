@@ -1,8 +1,9 @@
 - id: DLT-1130602
   sku: DLT-1130602
   brand: PKB HV
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
+  purchase_link: ''
   oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
     x 30"
   printable:
@@ -12,23 +13,12 @@
       width: '60'
       height: '30'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b30\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - pkb hv
 - id: DLT-1130601
   sku: DLT-1130601
   brand: PKB HV
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
+  purchase_link: ''
   oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
     x 30"
   printable:
@@ -38,23 +28,12 @@
       width: '60'
       height: '30'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b30\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - pkb hv
 - id: DLT-1132601
   sku: DLT-1132601
   brand: PKB HV
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
+  purchase_link: ''
   oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
     x 32"
   printable:
@@ -64,23 +43,12 @@
       width: '60'
       height: '32'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b32\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|30|12|72|8|36|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - pkb hv
 - id: K-26109-LA-0
   sku: K-26109-LA-0
   brand: Kohler
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
+  purchase_link: ''
   oneclick_description: Kohler Entity Bathtub left drain white
   printable:
     finish: white
@@ -90,25 +58,12 @@
       height: '30'
       depth: '15'
     image_file: K-26109-LA-0 GBH_SQTemplate.png
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b30\s*(in|inch|\"|'')
-    - (?i)\b15\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - entity
-    - kohler
 - id: K-26109-RA-0
   sku: K-26109-RA-0
   brand: Kohler
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
+  purchase_link: ''
   oneclick_description: Kohler Entity Bathtub right drain white
   printable:
     finish: white
@@ -118,24 +73,10 @@
       height: '30'
       depth: '15'
     image_file: K-26109-RA-0 download.png
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b30\s*(in|inch|\"|'')
-    - (?i)\b15\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - entity
-    - kohler
 - id: DLT-1132602
   sku: DLT-1132602
   brand: PKB HV
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WAREHOUSE
   purchase_link: ''
   oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
@@ -147,22 +88,10 @@
       width: '60'
       height: '32'
     image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b32\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|30|12|72|8|36|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - wetareabases
-    - pkb hv
 - id: B23605-6030L-WH
   sku: B23605-6030L-WH
   brand: Delta
-  provider: MISSING_PROVIDER
+  provider: ''
   routing_tag: WH_OR_PROCURE
   purchase_link: ''
   oneclick_description: Bath Tubs Alcove Right Drain HV HV 60” x 30” x 14.25” White
@@ -174,19 +103,3 @@
       Length: '30'
       Depth: '14.25'
     image_file: B23605-6030L-WH-B1.png
-  matching_rules:
-    must_contain_regex:
-    - (?i)white
-    - (?i)\b60\s*(in|inch|\"|'')
-    - (?i)\b30\s*(in|inch|\"|'')
-    - (?i)\b14.25\s*(in|inch|\"|'')
-    must_not_contain_regex:
-    - (?i)(brass|black|stainless|chrome|gold|nickel|bronze)
-    - (?i)\b(24|18|10|42|30|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    - (?i)\b(24|60|18|10|42|12|72|8|36|32|16|48)\s*(in|inch|\"|'')
-    keywords:
-    - soaking
-    - alcove
-    - wetareabases
-    - delta
-    - deep

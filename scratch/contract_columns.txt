@@ -1,0 +1,1762 @@
+﻿
+================================================================================
+FILE: L. Crehan - Venice - 1791341 - Contract 09-02.pdf
+Total pages: 32
+
+  == Page 1 ==
+    TEXT| Carpet Wagon Glendale, Inc. Payless Kitchen Cabinets & Bath Makeover
+    TEXT| 3614 San Fernando Rd.
+    TEXT| Glendale, California 91204
+    TEXT| Home Improvement Agreement
+    TEXT| Prepared for:
+    TEXT| Crehan, Lisa
+    TEXT| 724 E Sunset Ave
+    TEXT| Venice, California 90291
+    TEXT| Prepared by:
+    TEXT| David Gray
+    TEXT| david.g@paylesskitchensandbaths.com
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 1 of 32
+
+  Word bbox dump (60 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Carpet                           212.5     42.7    246.2     54.0
+  Wagon                            249.3     42.7    284.4     54.0
+  Glendale,                        287.6     42.7    335.6     54.0
+  Inc.                             338.8     42.7    356.9     54.0
+  Payless                          360.0     42.7    399.3     54.0
+  Kitchen                          402.4     42.7    439.9     54.0
+  Cabinets                         443.0     42.7    487.3     54.0
+  &                                490.4     42.7    497.9     54.0
+  Bath                             501.0     42.7    524.1     54.0
+  Makeover                         527.3     42.7    576.6     54.0
+  3614                             456.7     54.0    481.7     65.2
+  San                              484.8     54.0    504.8     65.2
+  Fernando                         507.9     54.0    556.0     65.2
+  Rd.                              559.1     54.0    576.6     65.2
+  Glendale,                        443.6     65.2    491.7     76.4
+  California                       494.8     65.2    542.2     76.4
+  91204                            545.3     65.2    576.6     76.4
+  Home                              57.2    321.5    150.8    355.2
+  Improvement                      160.2    321.5    371.7    355.2
+  Agreement                        379.8    321.5    555.8    355.2
+  Prepared                         243.0    475.3    330.7    495.5
+  for:                             336.3    475.3    370.0    495.5
+  Crehan,                          274.7    495.3    314.6    506.5
+  Lisa                             317.7    495.3    338.3    506.5
+  724                              262.0    506.5    280.7    517.8
+  E                                283.8    506.5    291.3    517.8
+  Sunset                           294.4    506.5    329.4    517.8
+  Ave                              331.9    506.5    351.0    517.8
+  Venice,                          245.6    517.8    282.5    529.0
+  California                       285.6    517.8    333.0    529.0
+  90291                            336.1    517.8    367.4    529.0
+  Prepared                         244.7    590.4    332.3    610.6
+  by:                              338.0    590.4    368.3    610.6
+  David                            278.4    615.5    307.1    626.7
+  Gray                             310.2    615.5    334.6    626.7
+  david.g@paylesskitchensandba     207.8    637.9    405.2    649.1
+  Carpet                            11.6    763.3     38.6    772.3
+  Wagon                             41.1    763.3     69.6    772.3
+  Glendale_                         72.1    763.3    113.2    772.3
+  Inc.                             115.7    763.3    130.2    772.3
+  Payless                          132.7    763.3    164.2    772.3
+  Kitchen                          166.7    763.3    196.7    772.3
+  Cabinets                         199.2    763.3    234.7    772.3
+  &                                237.2    763.3    243.2    772.3
+  Bath                             245.7    763.3    264.2    772.3
+  Makeover                         266.7    763.3    306.2    772.3
+  -                                308.7    763.3    311.7    772.3
+  Home                             314.2    763.3    338.3    772.3
+  Improvement                      340.8    763.3    393.3    772.3
+  Agreement                        395.8    763.3    439.8    772.3
+  -                                442.3    763.3    445.3    772.3
+  Copy                             447.8    763.3    468.8    772.3
+  of                               471.3    763.3    478.8    772.3
+  1791341                          481.3    763.3    516.3    772.3
+  _HB_                             518.8    763.3    541.3    772.3
+  -                                543.8    763.3    546.8    772.3
+  Page                             549.3    763.3    570.4    772.3
+  1                                572.9    763.3    577.9    772.3
+  of                               580.4    763.3    587.9    772.3
+  32                               590.4    763.3    600.4    772.3
+
+  == Page 2 ==
+    TEXT| Payless Kitchen Cabinets and Bath Makeover License No. 913187
+    TEXT| YOU ARE IN THE PROCESS OF SIGNING A LEGALLY BINDING AGREEMENT.
+    TEXT| BEFORE DOING SO, YOU NEED TO KNOW THE FOLLOWING:
+    TEXT| As a licensed contractor, Contractor is required to follow the law (B&P 7110(a.))
+    TEXT| Pursuant to B&P 7159, you are entitled to receive a fully executed copy of the following
+    TEXT| Contract before Contractor begins any work on your project. This should be in Bold 12-point
+    TEXT| typeface.
+    TEXT| Upon satisfactory payment being made for any portion of the work performed, the contractor,
+    TEXT| prior to any further payment being made, will give you a full and unconditional release from
+    TEXT| any potential mechanics lien for that portion of the work for which you have paid.
+    TEXT| Any change to the services/materials listed in the contract must be executed by you and the
+    TEXT| Contractor through a change order. ôExtra Work and Change Orders become part of the
+    TEXT| contract once the order is prepared in writing and signed by the parties prior to the
+    TEXT| commencement of work covered by the new change order. The order must describe the scope of
+    TEXT| the extra work or change, the cost to be added or subtracted from the contract, and the effect
+    TEXT| the order will have on the schedule of progress payments.ö (If the change will increase the cost
+    TEXT| of the contract to the customer, you need to specify the approximate increase and what effect it
+    TEXT| will have on the progress payments and completion date.)
+    TEXT| In executing this Contract, you have the right to require the contractor to have a performance
+    TEXT| and payment bond.
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 2 of 32
+
+  Word bbox dump (285 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Payless                           61.2    121.2     92.1    128.7
+  Kitchen                           94.8    121.2    126.8    128.7
+  Cabinets                         129.5    121.2    166.0    128.7
+  and                              168.7    121.2    184.2    128.7
+  Bath                             186.9    121.2    206.5    128.7
+  Makeover                         209.2    121.2    249.6    128.7
+  License                          474.8    121.2    506.1    128.7
+  No.                              508.8    121.2    522.2    128.7
+  913187                           524.9    121.2    550.8    128.7
+  YOU                               61.2    157.4     89.6    169.4
+  ARE                               95.0    157.4    121.5    169.4
+  IN                               126.9    157.4    141.4    169.4
+  THE                              146.9    157.4    172.7    169.4
+  PROCESS                          178.2    157.4    233.8    169.4
+  OF                               239.2    157.4    256.5    169.4
+  SIGNING                          261.9    157.4    317.3    169.4
+  A                                322.7    157.4    332.0    169.4
+  LEGALLY                          337.4    157.4    397.8    169.4
+  BINDING                          403.2    157.4    460.0    169.4
+  AGREEMENT.                       465.4    157.4    550.8    169.4
+  BEFORE                            61.2    173.9    111.7    185.9
+  DOING                            114.7    173.9    158.2    185.9
+  SO,                              161.2    173.9    180.3    185.9
+  YOU                              183.3    173.9    211.7    185.9
+  NEED                             214.7    173.9    250.5    185.9
+  TO                               253.5    173.9    270.7    185.9
+  KNOW                             273.7    173.9    314.6    185.9
+  THE                              317.6    173.9    343.5    185.9
+  FOLLOWING:                       346.5    173.9    428.5    185.9
+  As                                61.2    206.9     75.1    218.9
+  a                                 78.1    206.9     84.1    218.9
+  licensed                          87.1    206.9    127.2    218.9
+  contractor,                      130.2    206.9    187.1    218.9
+  Contractor                       190.1    206.9    247.1    218.9
+  is                               250.1    206.9    257.9    218.9
+  required                         260.9    206.9    303.8    218.9
+  to                               306.8    206.9    317.4    218.9
+  follow                           320.4    206.9    352.8    218.9
+  the                              355.8    206.9    371.7    218.9
+  law                              374.7    206.9    392.6    218.9
+  (B&P                             395.6    206.9    424.1    218.9
+  7110(a.))                        427.1    206.9    472.3    218.9
+  Pursuant                          61.2    239.9    107.6    251.9
+  to                               113.5    239.9    124.1    251.9
+  B&P                              130.1    239.9    154.6    251.9
+  7159,                            160.5    239.9    187.8    251.9
+  you                              193.8    239.9    213.0    251.9
+  are                              219.0    239.9    234.8    251.9
+  entitled                         240.8    239.9    279.0    251.9
+  to                               285.0    239.9    295.6    251.9
+  receive                          301.6    239.9    336.5    251.9
+  a                                342.4    239.9    348.4    251.9
+  fully                            354.4    239.9    377.5    251.9
+  executed                         383.5    239.9    427.7    251.9
+  copy                             433.7    239.9    458.2    251.9
+  of                               464.1    239.9    474.8    251.9
+  the                              480.7    239.9    496.6    251.9
+  following                        502.5    239.9    550.8    251.9
+  Contract                          61.2    256.4    106.9    268.4
+  before                           110.9    256.4    143.2    268.4
+  Contractor                       147.1    256.4    204.1    268.4
+  begins                           208.0    256.4    240.4    268.4
+  any                              244.3    256.4    263.0    268.4
+  work                             266.9    256.4    293.4    268.4
+  on                               297.3    256.4    310.5    268.4
+  your                             314.4    256.4    338.3    268.4
+  project.                         342.2    256.4    381.1    268.4
+  This                             385.0    256.4    407.5    268.4
+  should                           411.4    256.4    445.8    268.4
+  be                               449.7    256.4    461.6    268.4
+  in                               465.5    256.4    475.4    268.4
+  Bold                             479.3    256.4    503.8    268.4
+  12-point                         507.7    256.4    550.8    268.4
+  typeface.                         61.2    272.9    106.8    284.9
+  Upon                              61.2    305.9     90.9    317.9
+  satisfactory                      94.5    305.9    153.5    317.9
+  payment                          157.0    305.9    201.4    317.9
+  being                            205.0    305.9    232.7    317.9
+  made                             236.3    305.9    264.1    317.9
+  for                              267.6    305.9    282.9    317.9
+
+  == Page 3 ==
+    TEXT| Date Home Improvement Agreement
+    TEXT| 09/04/2024 Copy of 1791341 (HB)
+    TEXT| Design Specialist
+    TEXT| David Gray
+    TEXT| Carpet Wagon Glendale, Inc. Payless Kitchen Cabinets &
+    TEXT| Bath Makeover
+    TEXT| License #913187
+    TEXT| 3614 San Fernando Rd.
+    TEXT| Glendale, California 91204
+    TEXT| Phone: 866-482-0919
+    TEXT| Home Improvement Agreement
+    TEXT| Crehan, Lisa
+    TEXT| 724 E Sunset Ave
+    TEXT| Venice, California 90291
+    TEXT| Included
+    TEXT| Product Quantity
+    TEXT| Bath Bathroom Labor One Piece Demo/Install 1 ea
+    TEXT| Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet
+    TEXT| space plumbing. Includes installation of moisture resistant backerboard and selected shower base or
+    TEXT| tub, walls, fixtures, and accessories. Adjust height of showerhead.
+    TEXT| Bath Bathroom Labor Pan Install Kit 1 ea
+    TEXT| PAN INSTALL KIT - Including:
+    TEXT| 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet
+    TEXT| template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF. ABS-DWV pipe 2ö, 1 pc-10 L.F Pex A
+    TEXT| white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2ö pex,
+    TEXT| F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-
+    TEXT| Area Plywood 5/8x4x8, 1 2x4 wood
+    TEXT| Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems 1 ea
+    TEXT| Santorini White Smooth Standard - Shower W-SS-SAN: Standard
+    TEXT| Shower System Santorini White
+    TEXT| Bath Shower Bases SM Vasa Left Side Drain 60" x 30" White 1 ea
+    TEXT| Ultra Low 2.6"x3.5" threshold with slip-resistant slate-look texture. Installation includes leveling of the
+    TEXT| floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to
+    TEXT| match the shower pan.
+    TEXT| Bath Shower Doors Single Sliding Shower Doors Charlotte 56"-60"W x 1 ea
+    TEXT| 76"H Matte Black
+    TEXT| 56"-60"W x 76"H Single Slider Door with 3/8" Clear Glass
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 3 of 32
+
+  Word bbox dump (299 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Date                             342.7     37.2    362.2     46.2
+  Home                             415.5     37.2    440.5     46.2
+  Improvement                      443.0     37.2    499.4     46.2
+  Agreement                        501.5     37.2    548.5     46.2
+  09/04/2024                       330.0     51.8    375.0     60.8
+  Copy                             437.3     51.8    458.3     60.8
+  of                               460.8     51.8    468.3     60.8
+  1791341                          470.7     51.8    505.7     60.8
+  (HB)                             508.2     51.8    526.7     60.8
+  Design                           401.5     66.4    431.5     75.4
+  Specialist                       434.0     66.4    475.9     75.4
+  David                            309.3     79.0    335.1     89.1
+  Gray                             338.0     79.0    359.9     89.1
+  Carpet                            39.2     86.3     69.6     96.4
+  Wagon                             72.4     86.3    104.0     96.4
+  Glendale,                        106.8     86.3    150.1     96.4
+  Inc.                             152.9     86.3    169.2     96.4
+  Payless                          172.0     86.3    207.4     96.4
+  Kitchen                          210.2     86.3    243.9     96.4
+  Cabinets                         246.7     86.3    286.6     96.4
+  &                                289.4     86.3    296.2     96.4
+  Bath                              39.2     96.4     60.0    106.5
+  Makeover                          62.8     96.4    107.2    106.5
+  License                           39.2    106.5     74.1    116.6
+  #913187                           76.9    106.5    116.2    116.6
+  3614                              39.2    116.6     61.7    126.7
+  San                               64.5    116.6     82.5    126.7
+  Fernando                          85.3    116.6    128.6    126.7
+  Rd.                              131.4    116.6    147.1    126.7
+  Glendale,                         39.2    126.7     82.5    136.8
+  California                        85.3    126.7    128.0    136.8
+  91204                            130.8    126.7    158.9    136.8
+  Phone:                            39.2    136.8     71.3    146.9
+  866-482-0919                      74.1    136.8    137.0    146.9
+  Home                             156.9    159.2    213.1    179.4
+  Improvement                      218.7    159.2    345.6    179.4
+  Agreement                        350.5    159.2    456.1    179.4
+  Crehan,                           39.2    190.5     71.2    199.5
+  Lisa                              73.7    190.5     90.2    199.5
+  724                               39.2    199.5     54.2    208.5
+  E                                 56.7    199.5     62.7    208.5
+  Sunset                            65.2    199.5     93.2    208.5
+  Ave                               95.2    199.5    110.5    208.5
+  Venice,                           39.2    208.5     68.7    217.4
+  California                        71.2    208.5    109.1    217.4
+  90291                            111.6    208.5    136.6    217.4
+  Included                          39.2    226.8     94.6    240.3
+  Product                          103.4    250.9    133.1    258.8
+  Quantity                         541.9    250.9    573.8    258.8
+  Bath                             106.2    269.3    128.6    279.4
+  Bathroom                         131.4    269.3    179.2    279.4
+  Labor                            182.0    269.3    210.1    279.4
+  One                              212.9    269.3    232.5    279.4
+  Piece                            235.3    269.3    261.7    279.4
+  Demo/Install                     264.5    269.3    324.6    279.4
+  1                                551.3    269.3    556.9    279.4
+  ea                               559.7    269.3    570.9    279.4
+  Demolition,                      106.2    285.1    156.7    295.2
+  Disposal,                        159.5    285.1    201.1    295.2
+  and                              203.9    285.1    220.8    295.2
+  haul                             223.6    285.1    242.7    295.2
+  away                             245.5    285.1    269.1    295.2
+  of                               271.9    285.1    280.3    295.2
+  existing                         283.1    285.1    317.4    295.2
+  wet                              320.2    285.1    335.9    295.2
+  space.                           338.8    285.1    368.5    295.2
+  Replace                          371.3    285.1    408.4    295.2
+  P-Trap,                          411.2    285.1    444.6    295.2
+  replace                          447.4    285.1    480.5    295.2
+  necessary                        483.3    285.1    529.4    295.2
+  wet                              532.2    285.1    547.9    295.2
+  space                            106.2    300.2    133.1    310.3
+  plumbing.                        136.0    300.2    179.8    310.3
+  Includes                         182.6    300.2    220.2    310.3
+  installation                     223.0    300.2    270.8    310.3
+  of                               273.6    300.2    282.0    310.3
+  moisture                         284.8    300.2    323.6    310.3
+  resistant                        326.4    300.2    364.6    310.3
+  backerboard                      367.4    300.2    423.6    310.3
+  and                              426.4    300.2    443.3    310.3
+
+  == Page 4 ==
+    TEXT| Bath Fixtures Bundles Arcade Bundle Matte Black 1 ea
+    TEXT| Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle
+    TEXT| Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat (900 1 ea
+    TEXT| Pound Capacity) Matching
+    TEXT| Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 1 ea
+    TEXT| 48"
+    TEXT| Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and
+    TEXT| painting or materials)
+    TEXT| Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) 1 ea
+    TEXT| Semi-Custom Cabinet (Matching Interior)
+    TEXT| Standard Upper Cabinet - 12" D (Exterior Depth) & 11.5" (Interior Depth)
+    TEXT| Standard Base Cabinet - 24" D
+    TEXT| - 30ÆÆ L x 21ÆÆ D x 32ÆÆ H x 4-6ÆÆ backsplash
+    TEXT| Kitchen Countertops Quartz Package B PREFABRICATED 26"x108" 1 ea
+    TEXT| QUARTZ COUNTERTOPS PKCES PACKAGE B PKCES Carrara Gold
+    TEXT| Kitchen Accessories Sinks PKC2318S 1 ea
+    TEXT| White Porcelain Top Mount Bowl Sink
+    TEXT| Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte 1 ea
+    TEXT| Black
+    TEXT| Bath Toilets Cimmaron 1 ea
+    TEXT| 28öL x 31öH x 18öW Seat: 17ö H
+    TEXT| Elongated
+    TEXT| Comfort Height
+    TEXT| White
+    TEXT| Bath Special Requests 1 ea
+    TEXT| This price does not include: New Flooring, Medicine Cabinet, Mirror, Extensive Plumbing, Painting &
+    TEXT| Patch work, and Electrical.
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 4 of 32
+
+  Word bbox dump (223 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             107.0     37.4    129.5     47.5
+  Fixtures                         132.3     37.4    171.6     47.5
+  Bundles                          174.4     37.4    214.3     47.5
+  Arcade                           216.7     37.4    251.0     47.5
+  Bundle                           253.8     37.4    288.1     47.5
+  Matte                            290.9     37.4    317.3     47.5
+  Black                            320.1     37.4    347.0     47.5
+  1                                550.1     37.4    555.8     47.5
+  ea                               558.6     37.4    569.8     47.5
+  Arcade                           107.0     53.2    139.1     63.3
+  Wall                             141.9     53.2    161.1     63.3
+  Mounted                          163.9     53.2    203.3     63.3
+  Rain                             206.1     53.2    226.9     63.3
+  Head                             229.7     53.2    253.8     63.3
+  +                                256.6     53.2    262.6     63.3
+  Arcade                           264.8     53.2    296.8     63.3
+  Valve                            299.6     53.2    324.2     63.3
+  with                             327.0     53.2    344.9     63.3
+  Diverter                         347.8     53.2    383.1     63.3
+  +                                385.9     53.2    391.8     63.3
+  Arcade                           394.1     53.2    426.1     63.3
+  Hand                             428.9     53.2    453.1     63.3
+  Shower                           455.9     53.2    490.2     63.3
+  on                               493.0     53.2    504.2     63.3
+  cradle                           507.0     53.2    534.5     63.3
+  Bath                             106.2    110.4    128.6    120.5
+  Accessories                      131.1    110.4    190.6    120.5
+  Seating                          193.4    110.4    229.9    120.5
+  BCI                              232.8    110.4    250.2    120.5
+  28.5                             253.0    110.4    272.6    120.5
+  x                                275.4    110.4    281.1    120.5
+  28.5                             283.9    110.4    303.5    120.5
+  Hexagon                          306.4    110.4    349.0    120.5
+  Corner                           351.8    110.4    385.0    120.5
+  Seat                             387.8    110.4    409.1    120.5
+  (900                             411.9    110.4    432.2    120.5
+  1                                551.3    110.4    556.9    120.5
+  ea                               559.7    110.4    570.9    120.5
+  Pound                            106.2    125.6    137.6    135.7
+  Capacity)                        140.4    125.6    185.9    135.7
+  Matching                         188.7    125.6    233.1    135.7
+  Bath                             107.0    189.6    129.5    199.7
+  Vanities                         132.3    189.6    170.5    199.7
+  Vanity                           173.3    189.6    203.1    199.7
+  Labor                            205.9    189.6    234.0    199.7
+  Remove                           236.8    189.6    276.1    199.7
+  &                                278.9    189.6    286.2    199.7
+  Replace/Install                  289.0    189.6    359.8    199.7
+  Large                            362.6    189.6    390.1    199.7
+  Vanity                           392.9    189.6    422.7    199.7
+  Up                               425.5    189.6    439.0    199.7
+  To                               441.8    189.6    453.4    199.7
+  1                                550.1    189.6    555.8    199.7
+  ea                               558.6    189.6    569.8    199.7
+  48"                              107.0    204.8    123.1    214.9
+  Includes                         107.0    220.5    144.7    230.6
+  demolition,                      147.5    220.5    196.4    230.6
+  disposal                         199.2    220.5    236.2    230.6
+  &                                239.1    220.5    245.8    230.6
+  haul                             248.6    220.5    267.7    230.6
+  away,                            270.5    220.5    296.2    230.6
+  and                              299.0    220.5    315.8    230.6
+  hook-ups                         318.7    220.5    360.2    230.6
+  of                               363.0    220.5    371.5    230.6
+  faucet.                          374.3    220.5    404.6    230.6
+  (Does                            407.4    220.5    434.4    230.6
+  not                              437.2    220.5    451.2    230.6
+  include                          454.0    220.5    486.1    230.6
+  patching                         488.9    220.5    527.1    230.6
+  and                              529.9    220.5    546.8    230.6
+  painting                         107.0    235.6    142.4    245.8
+  or                               145.2    235.6    154.2    245.8
+  materials)                       157.0    235.6    201.4    245.8
+  Kitchen                          106.2    274.4    143.2    284.5
+  Cabinets                         146.0    274.4    188.7    284.5
+  Signature                        191.5    274.4    238.2    284.5
+  Series                           241.0    274.4    271.3    284.5
+  ICE                              274.1    274.4    291.0    284.5
+  WHITE                            293.8    274.4    326.3    284.5
+  SHAKER                           329.1    274.4    371.8    284.5
+
+  == Page 5 ==
+    TEXT| Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini 1 ea
+    TEXT| White WK-TRV: Window Kit Santorini White
+    TEXT| Included Subtotal $37,633.11
+    TEXT| Bath 2
+    TEXT| Product Quantity
+    TEXT| Bath Bathroom Labor One Piece Demo/Install 1 ea
+    TEXT| Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet
+    TEXT| space plumbing. Includes installation of moisture resistant backerboard and selected shower base or
+    TEXT| tub, walls, fixtures, and accessories. Adjust height of showerhead.
+    TEXT| Bath Bathroom Labor Pan Install Kit 1 ea
+    TEXT| PAN INSTALL KIT - Including:
+    TEXT| 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet
+    TEXT| template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF. ABS-DWV pipe 2ö, 1 pc-10 L.F Pex A
+    TEXT| white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2ö pex,
+    TEXT| F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-
+    TEXT| Area Plywood 5/8x4x8, 1 2x4 wood
+    TEXT| Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems 1 ea
+    TEXT| Santorini White Smooth Standard - Shower W-SS-SAN: Standard
+    TEXT| Shower System Santorini White
+    TEXT| Bath Shower Bases SM Vasa Left Side Drain 60" x 30" White 1 ea
+    TEXT| Ultra Low 2.6"x3.5" threshold with slip-resistant slate-look texture. Installation includes leveling of the
+    TEXT| floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to
+    TEXT| match the shower pan.
+    TEXT| Bath Shower Doors Single Sliding Shower Doors Charlotte 56"-60"W x 1 ea
+    TEXT| 76"H Matte Black
+    TEXT| 56"-60"W x 76"H Single Slider Door with 3/8" Clear Glass
+    TEXT| Bath Fixtures Bundles Arcade Bundle Matte Black 1 ea
+    TEXT| Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle
+    TEXT| Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat (900 1 ea
+    TEXT| Pound Capacity) Matching
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 5 of 32
+
+  Word bbox dump (316 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             106.2     36.3    128.6     46.4
+  Accessories                      131.1     36.3    190.6     46.4
+  Window                           193.4     36.3    232.1     46.4
+  Trim                             234.9     36.3    256.2     46.4
+  Kits                             259.0     36.3    278.1     46.4
+  BCI                              280.9     36.3    298.3     46.4
+  Window                           301.2     36.3    339.8     46.4
+  Trim                             342.6     36.3    363.9     46.4
+  Kit                              366.8     36.3    380.2     46.4
+  Santorini                        383.0     36.3    426.8     46.4
+  1                                551.3     36.3    556.9     46.4
+  ea                               559.7     36.3    570.9     46.4
+  White                            106.2     51.5    133.7     61.6
+  WK-TRV:                          136.5     51.5    179.5     61.6
+  Window                           182.3     51.5    221.0     61.6
+  Kit                              223.8     51.5    237.3     61.6
+  Santorini                        240.1     51.5    283.9     61.6
+  White                            286.7     51.5    314.2     61.6
+  Included                         411.3     75.6    452.9     85.7
+  Subtotal                         455.7     75.6    496.1     85.7
+  $37,633.11                       517.6     75.6    568.1     85.7
+  Bath                              39.2     97.7     69.2    111.1
+  2                                 72.9     97.7     80.4    111.1
+  Product                          103.4    121.7    133.1    129.6
+  Quantity                         541.9    121.7    573.8    129.6
+  Bath                             106.2    140.2    128.6    150.3
+  Bathroom                         131.4    140.2    179.2    150.3
+  Labor                            182.0    140.2    210.1    150.3
+  One                              212.9    140.2    232.5    150.3
+  Piece                            235.3    140.2    261.7    150.3
+  Demo/Install                     264.5    140.2    324.6    150.3
+  1                                551.3    140.2    556.9    150.3
+  ea                               559.7    140.2    570.9    150.3
+  Demolition,                      106.2    155.9    156.7    166.0
+  Disposal,                        159.5    155.9    201.1    166.0
+  and                              203.9    155.9    220.8    166.0
+  haul                             223.6    155.9    242.7    166.0
+  away                             245.5    155.9    269.1    166.0
+  of                               271.9    155.9    280.3    166.0
+  existing                         283.1    155.9    317.4    166.0
+  wet                              320.2    155.9    335.9    166.0
+  space.                           338.8    155.9    368.5    166.0
+  Replace                          371.3    155.9    408.4    166.0
+  P-Trap,                          411.2    155.9    444.6    166.0
+  replace                          447.4    155.9    480.5    166.0
+  necessary                        483.3    155.9    529.4    166.0
+  wet                              532.2    155.9    547.9    166.0
+  space                            106.2    171.1    133.1    181.2
+  plumbing.                        136.0    171.1    179.8    181.2
+  Includes                         182.6    171.1    220.2    181.2
+  installation                     223.0    171.1    270.8    181.2
+  of                               273.6    171.1    282.0    181.2
+  moisture                         284.8    171.1    323.6    181.2
+  resistant                        326.4    171.1    364.6    181.2
+  backerboard                      367.4    171.1    423.6    181.2
+  and                              426.4    171.1    443.3    181.2
+  selected                         446.1    171.1    483.7    181.2
+  shower                           486.5    171.1    519.1    181.2
+  base                             521.9    171.1    543.8    181.2
+  or                               546.6    171.1    555.6    181.2
+  tub,                             106.2    186.2    123.0    196.3
+  walls,                           125.8    186.2    151.1    196.3
+  fixtures,                        153.9    186.2    189.3    196.3
+  and                              192.1    186.2    209.0    196.3
+  accessories.                     211.8    186.2    268.0    196.3
+  Adjust                           270.2    186.2    298.3    196.3
+  height                           301.1    186.2    328.6    196.3
+  of                               331.5    186.2    339.9    196.3
+  showerhead.                      342.7    186.2    400.6    196.3
+  Bath                             107.0    225.0    129.5    235.1
+  Bathroom                         132.3    225.0    180.0    235.1
+  Labor                            182.8    225.0    210.9    235.1
+  Pan                              213.7    225.0    232.3    235.1
+  Install                          235.1    225.0    264.3    235.1
+  Kit                              267.1    225.0    280.5    235.1
+  1                                550.1    225.0    555.8    235.1
+  ea                               558.6    225.0    569.8    235.1
+  PAN                              107.0    240.7    127.1    250.8
+  INSTALL                          129.9    240.7    170.1    250.8
+  KIT                              172.6    240.7    188.3    250.8
+
+  == Page 6 ==
+    TEXT| Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 1 ea
+    TEXT| 48"
+    TEXT| Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and
+    TEXT| painting or materials)
+    TEXT| Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) 1 ea
+    TEXT| Semi-Custom Cabinet (Matching Interior)
+    TEXT| Standard Upper Cabinet - 12" D (Exterior Depth) & 11.5" (Interior Depth)
+    TEXT| Standard Base Cabinet - 24" D
+    TEXT| - 30ÆÆ L x 21ÆÆ D x 32ÆÆ H x 4-6ÆÆ backsplash
+    TEXT| Kitchen Accessories Sinks PKCSM2318 (RUS2318) - 18 Gauge 1 ea
+    TEXT| White Porcelain Top Mount Bowl Sink
+    TEXT| Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte 1 ea
+    TEXT| Black
+    TEXT| Bath Toilets Cimmaron 1 ea
+    TEXT| 28öL x 31öH x 18öW Seat: 17ö H
+    TEXT| Elongated
+    TEXT| Comfort Height
+    TEXT| White
+    TEXT| Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini 1 ea
+    TEXT| White WK-TRV: Window Kit Santorini White
+    TEXT| Bath 2 Subtotal $34,695.17
+    TEXT| Bath 3
+    TEXT| Product Quantity
+    TEXT| Bath Bathroom Labor One Piece Demo/Install 1 ea
+    TEXT| Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet
+    TEXT| space plumbing. Includes installation of moisture resistant backerboard and selected shower base or
+    TEXT| tub, walls, fixtures, and accessories. Adjust height of showerhead.
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 6 of 32
+
+  Word bbox dump (216 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             107.0     37.4    129.5     47.5
+  Vanities                         132.3     37.4    170.5     47.5
+  Vanity                           173.3     37.4    203.1     47.5
+  Labor                            205.9     37.4    234.0     47.5
+  Remove                           236.8     37.4    276.1     47.5
+  &                                278.9     37.4    286.2     47.5
+  Replace/Install                  289.0     37.4    359.8     47.5
+  Large                            362.6     37.4    390.1     47.5
+  Vanity                           392.9     37.4    422.7     47.5
+  Up                               425.5     37.4    439.0     47.5
+  To                               441.8     37.4    453.4     47.5
+  1                                550.1     37.4    555.8     47.5
+  ea                               558.6     37.4    569.8     47.5
+  48"                              107.0     52.6    123.1     62.7
+  Includes                         107.0     68.3    144.7     78.4
+  demolition,                      147.5     68.3    196.4     78.4
+  disposal                         199.2     68.3    236.2     78.4
+  &                                239.1     68.3    245.8     78.4
+  haul                             248.6     68.3    267.7     78.4
+  away,                            270.5     68.3    296.2     78.4
+  and                              299.0     68.3    315.8     78.4
+  hook-ups                         318.7     68.3    360.2     78.4
+  of                               363.0     68.3    371.5     78.4
+  faucet.                          374.3     68.3    404.6     78.4
+  (Does                            407.4     68.3    434.4     78.4
+  not                              437.2     68.3    451.2     78.4
+  include                          454.0     68.3    486.1     78.4
+  patching                         488.9     68.3    527.1     78.4
+  and                              529.9     68.3    546.8     78.4
+  painting                         107.0     83.5    142.4     93.6
+  or                               145.2     83.5    154.2     93.6
+  materials)                       157.0     83.5    201.4     93.6
+  Kitchen                          106.2    122.2    143.2    132.3
+  Cabinets                         146.0    122.2    188.7    132.3
+  Signature                        191.5    122.2    238.2    132.3
+  Series                           241.0    122.2    271.3    132.3
+  ICE                              274.1    122.2    291.0    132.3
+  WHITE                            293.8    122.2    326.3    132.3
+  SHAKER                           329.1    122.2    371.8    132.3
+  (PKCGC)                          374.6    122.2    417.9    132.3
+  1                                551.3    122.2    556.9    132.3
+  ea                               559.7    122.2    570.9    132.3
+  Semi-Custom                      106.2    137.9    167.4    148.1
+  Cabinet                          170.2    137.9    205.0    148.1
+  (Matching                        207.8    137.9    252.2    148.1
+  Interior)                        255.0    137.9    289.8    148.1
+  Standard                         106.2    153.1    147.2    163.2
+  Upper                            150.0    153.1    177.5    163.2
+  Cabinet                          180.3    153.1    215.2    163.2
+  -                                218.0    153.1    221.4    163.2
+  12"                              224.2    153.1    239.0    163.2
+  D                                241.8    153.1    249.1    163.2
+  (Exterior                        251.9    153.1    290.1    163.2
+  Depth)                           292.9    153.1    323.2    163.2
+  &                                326.0    153.1    332.8    163.2
+  11.5"                            335.6    153.1    358.9    163.2
+  (Interior                        361.7    153.1    396.5    163.2
+  Depth)                           399.3    153.1    429.6    163.2
+  Standard                         106.2    168.3    147.2    178.4
+  Base                             150.0    168.3    173.0    178.4
+  Cabinet                          175.9    168.3    210.7    178.4
+  -                                213.5    168.3    216.9    178.4
+  24"                              219.7    168.3    234.5    178.4
+  D                                237.3    168.3    244.6    178.4
+  -                                106.2    198.6    109.5    208.7
+  30ÆÆ                             112.4    198.6    127.9    208.7
+  L                                130.3    198.6    136.0    208.7
+  x                                138.4    198.6    143.4    208.7
+  21ÆÆ                             146.3    198.6    161.8    208.7
+  D                                164.2    198.6    171.5    208.7
+  x                                174.3    198.6    179.4    208.7
+  32ÆÆ                             182.2    198.6    197.8    208.7
+  H                                200.2    198.6    207.5    208.7
+  x                                210.3    198.6    215.3    208.7
+  4-6ÆÆ                            218.2    198.6    237.1    208.7
+  backsplash                       239.5    198.6    290.1    208.7
+  Kitchen                          107.0    242.4    144.1    252.5
+  Accessories                      146.5    242.4    206.1    252.5
+  Sinks                            208.9    242.4    235.9    252.5
+  PKCSM2318                        238.7    242.4    297.6    252.5
+
+  == Page 7 ==
+    TEXT| Bath Bathroom Labor Pan Install Kit 1 ea
+    TEXT| PAN INSTALL KIT - Including:
+    TEXT| 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet
+    TEXT| template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF. ABS-DWV pipe 2ö, 1 pc-10 L.F Pex A
+    TEXT| white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2ö pex,
+    TEXT| F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-
+    TEXT| Area Plywood 5/8x4x8, 1 2x4 wood
+    TEXT| Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems 1 ea
+    TEXT| Santorini White Smooth Standard - Shower W-SS-SAN: Standard
+    TEXT| Shower System Santorini White
+    TEXT| Bath Shower Bases SM Vasa Left Side Drain 60" x 30" White 1 ea
+    TEXT| Ultra Low 2.6"x3.5" threshold with slip-resistant slate-look texture. Installation includes leveling of the
+    TEXT| floor, installation of a water dam, fastening of the dam to studs, and a modern linear drain cover to
+    TEXT| match the shower pan.
+    TEXT| Bath Shower Doors Single Sliding Shower Doors Charlotte 56"-60"W x 1 ea
+    TEXT| 76"H Matte Black
+    TEXT| 56"-60"W x 76"H Single Slider Door with 3/8" Clear Glass
+    TEXT| Bath Fixtures Bundles Arcade Bundle Matte Black 1 ea
+    TEXT| Arcade Wall Mounted Rain Head + Arcade Valve with Diverter + Arcade Hand Shower on cradle
+    TEXT| Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 1 ea
+    TEXT| 48"
+    TEXT| Includes demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching and
+    TEXT| painting or materials)
+    TEXT| Kitchen Cabinets Signature Series ICE WHITE SHAKER (PKCGC) 1 ea
+    TEXT| Semi-Custom Cabinet (Matching Interior)
+    TEXT| Standard Upper Cabinet - 12" D (Exterior Depth) & 11.5" (Interior Depth)
+    TEXT| Standard Base Cabinet - 24" D
+    TEXT| - 30ÆÆ L x 21ÆÆ D x 32ÆÆ H x 4-6ÆÆ backsplash
+    TEXT| Bath Vanities Vanity Faucets Kohler Purist Lever Wide Spread Matte 1 ea
+    TEXT| Black
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 7 of 32
+
+  Word bbox dump (320 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             107.0     37.4    129.5     47.6
+  Bathroom                         132.3     37.4    180.0     47.6
+  Labor                            182.8     37.4    210.9     47.6
+  Pan                              213.7     37.4    232.3     47.6
+  Install                          235.1     37.4    264.3     47.6
+  Kit                              267.1     37.4    280.5     47.6
+  1                                550.1     37.4    555.8     47.6
+  ea                               558.6     37.4    569.8     47.6
+  PAN                              107.0     53.2    127.1     63.3
+  INSTALL                          129.9     53.2    170.1     63.3
+  KIT                              172.6     53.2    188.3     63.3
+  -                                190.9     53.2    194.3     63.3
+  Including:                       197.1     53.2    240.3     63.3
+  12                               107.0     68.3    118.3     78.4
+  Sausage                          121.1     68.3    161.0     78.4
+  Adhesives,                       163.2     68.3    212.7     78.4
+  1                                215.5     68.3    221.1     78.4
+  Duraflex                         223.9     68.3    261.5     78.4
+  Caulking,                        264.3     68.3    306.5     78.4
+  3                                309.3     68.3    314.9     78.4
+  pcs.                             317.7     68.3    336.3     78.4
+  Pex,                             339.1     68.3    359.3     78.4
+  brass                            362.1     68.3    386.8     78.4
+  drop                             389.6     68.3    409.8     78.4
+  ear                              412.7     68.3    427.3     78.4
+  elbow,                           430.1     68.3    458.7     78.4
+  1                                461.5     68.3    467.2     78.4
+  Corrugated                       470.0     68.3    520.5     78.4
+  sheet                            523.3     68.3    548.1     78.4
+  template,                        107.0     83.5    148.6     93.6
+  4x8                              151.4     83.5    167.7     93.6
+  Moisture-Resistant               170.5     83.5    254.8     93.6
+  Drywall,                         257.6     83.5    293.5     93.6
+  1pc.                             296.3     83.5    315.4     93.6
+  P-TRAP                           318.2     83.5    355.3     93.6
+  2",                              357.9     83.5    369.9     93.6
+  2                                372.7     83.5    378.4     93.6
+  LF.                              381.2     83.5    394.7     93.6
+  ABS-DWV                          396.9     83.5    444.1     93.6
+  pipe                             446.9     83.5    466.0     93.6
+  2ö,                              468.8     83.5    480.6     93.6
+  1                                483.4     83.5    489.0     93.6
+  pc-10                            491.8     83.5    517.1     93.6
+  L.F                              519.9     83.5    534.5     93.6
+  Pex                              537.3     83.5    554.7     93.6
+  A                                557.0     83.5    563.7     93.6
+  white/                           107.0     98.6    133.4    108.8
+  Pex                              136.2     98.6    153.7    108.8
+  A                                155.9     98.6    162.6    108.8
+  red,                             164.9     98.6    182.3    108.8
+  2                                185.1     98.6    190.7    108.8
+  Corner                           193.6     98.6    224.4    108.8
+  Reinforcement,                   227.3     98.6    295.8    108.8
+  Drain                            298.6     98.6    322.7    108.8
+  Brass                            325.6     98.6    351.4    108.8
+  Receptor,                        354.2     98.6    397.5    108.8
+  8                                400.3     98.6    405.9    108.8
+  pcs.                             408.7     98.6    427.2    108.8
+  Everflow                         430.0     98.6    468.8    108.8
+  FPXSL012                         471.6     98.6    520.5    108.8
+  1/2ö                             523.3     98.6    540.7    108.8
+  pex,                             543.5     98.6    562.6    108.8
+  F1960                            107.0    113.8    135.7    123.9
+  sleeve                           138.5    113.8    167.7    123.9
+  w/                               170.5    113.8    180.6    123.9
+  stop,                            183.4    113.8    205.3    123.9
+  Color                            208.2    113.8    232.3    123.9
+  Coordinated:                     235.1    113.8    293.0    123.9
+  3                                295.8    113.8    301.4    123.9
+  Silicone,                        304.2    113.8    342.4    123.9
+  Color                            345.2    113.8    369.4    123.9
+  Coordinated:                     372.2    113.8    430.1    123.9
+  Matching                         432.9    113.8    473.9    123.9
+  drain                            476.7    113.8    499.2    123.9
+  cover,                           502.0    113.8    528.9    123.9
+  Wet-                             531.7    113.8    552.9    123.9
+  Area                             107.0    129.0    128.4    139.1
+  Plywood                          131.2    129.0    169.4    139.1
+  5/8x4x8,                         172.2    129.0    210.4    139.1
+  1                                213.2    129.0    218.8    139.1
+
+  == Page 8 ==
+    TEXT| Kitchen Accessories Sinks PKCSM2318 (RUS2318) - 18 Gauge 1 ea
+    TEXT| White Porcelain Top Mount Bowl Sink
+    TEXT| Bath Toilets Cimmaron 1 ea
+    TEXT| 28öL x 31öH x 18öW Seat: 17ö H
+    TEXT| Elongated
+    TEXT| Comfort Height
+    TEXT| White
+    TEXT| Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini 1 ea
+    TEXT| White WK-TRV: Window Kit Santorini White
+    TEXT| Bath 3 Subtotal $33,218.61
+    TEXT| Dates
+    TEXT| Product Quantity
+    TEXT| Estimated Start & End Dates 1 ea
+    TEXT| The work to be performed by the Contractor shall be commenced on approximately October 9th, 2024
+    TEXT| (4-6 weeks) as long as any required permits are received and any agreed upon funds are paid to
+    TEXT| Contractor, provided that no delay is occasioned by changes made by the client, supply in material
+    TEXT| delays, weather or manpower disruptions.
+    TEXT| The work shall be substantially completed within approximately 9-13 1 ea
+    TEXT| working days of said date of commencement (for reface/bath/flooring
+    TEXT| starting from demolition date, for kitchen remodel starting from new
+    TEXT| cabinet installation)
+    TEXT| Bath Special Requests 1 ea
+    TEXT| Amount financed through LENDHI $52,270.66 for 144 MONTHS @8.99%
+    TEXT| *See LENDHI agreement for payment details
+    TEXT| Dates Subtotal $0.00
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - Copy of 1791341 _HB_ - Page 8 of 32
+
+  Word bbox dump (199 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Kitchen                          107.0     37.5    144.1     47.6
+  Accessories                      146.5     37.5    206.1     47.6
+  Sinks                            208.9     37.5    235.9     47.6
+  PKCSM2318                        238.7     37.5    297.6     47.6
+  (RUS2318)                        300.5     37.5    351.0     47.6
+  -                                353.8     37.5    357.2     47.6
+  18                               360.0     37.5    371.2     47.6
+  Gauge                            374.0     37.5    405.5     47.6
+  1                                550.1     37.5    555.8     47.6
+  ea                               558.6     37.5    569.8     47.6
+  White                            107.0     53.2    132.9     63.3
+  Porcelain                        135.7     53.2    177.8     63.3
+  Top                              180.4     53.2    196.7     63.3
+  Mount                            199.5     53.2    227.6     63.3
+  Bowl                             230.4     53.2    252.3     63.3
+  Sink                             255.1     53.2    274.8     63.3
+  Bath                             106.2     91.9    128.6    102.0
+  Toilets                          131.4     91.9    163.3    102.0
+  Cimmaron                         166.1     91.9    216.1    102.0
+  1                                551.3     91.9    556.9    102.0
+  ea                               559.7     91.9    570.9    102.0
+  28öL                             106.2    107.6    126.4    117.7
+  x                                128.8    107.6    133.9    117.7
+  31öH                             136.7    107.6    158.6    117.7
+  x                                161.4    107.6    166.5    117.7
+  18öW                             169.3    107.6    193.4    117.7
+  Seat:                            196.2    107.6    219.8    117.7
+  17ö                              222.6    107.6    237.2    117.7
+  H                                240.1    107.6    247.4    117.7
+  Elongated                        106.2    122.8    151.7    132.9
+  Comfort                          106.2    138.0    142.1    148.1
+  Height                           144.9    138.0    174.1    148.1
+  White                            106.2    153.1    132.0    163.2
+  Bath                             107.0    191.9    129.5    202.0
+  Accessories                      131.9    191.9    191.5    202.0
+  Window                           194.3    191.9    232.9    202.0
+  Trim                             235.7    191.9    257.1    202.0
+  Kits                             259.9    191.9    279.0    202.0
+  BCI                              281.8    191.9    299.2    202.0
+  Window                           302.0    191.9    340.6    202.0
+  Trim                             343.5    191.9    364.8    202.0
+  Kit                              367.6    191.9    381.1    202.0
+  Santorini                        383.9    191.9    427.7    202.0
+  1                                550.1    191.9    555.8    202.0
+  ea                               558.6    191.9    569.8    202.0
+  White                            107.0    207.0    134.5    217.1
+  WK-TRV:                          137.3    207.0    180.4    217.1
+  Window                           183.2    207.0    221.8    217.1
+  Kit                              224.6    207.0    238.1    217.1
+  Santorini                        240.9    207.0    284.7    217.1
+  White                            287.5    207.0    315.0    217.1
+  Bath                             422.0    232.3    444.5    242.4
+  3                                447.3    232.3    452.9    242.4
+  Subtotal                         455.7    232.3    496.1    242.4
+  $33,218.61                       517.6    232.3    568.1    242.4
+  Dates                             39.2    254.3     75.9    267.8
+  Product                          103.4    278.4    133.1    286.3
+  Quantity                         541.9    278.4    573.8    286.3
+  Estimated                        106.2    296.9    154.5    307.0
+  Start                            157.3    296.9    180.3    307.0
+  &                                183.1    296.9    190.4    307.0
+  End                              193.2    296.9    212.3    307.0
+  Dates                            215.1    296.9    242.7    307.0
+  1                                551.3    296.9    556.9    307.0
+  ea                               559.7    296.9    570.9    307.0
+  The                              106.2    312.6    123.6    322.7
+  work                             126.4    312.6    147.7    322.7
+  to                               150.5    312.6    159.0    322.7
+  be                               161.8    312.6    173.0    322.7
+  performed                        175.8    312.6    221.9    322.7
+  by                               224.7    312.6    235.4    322.7
+  the                              238.2    312.6    252.2    322.7
+  Contractor                       255.0    312.6    302.2    322.7
+  shall                            305.0    312.6    325.8    322.7
+  be                               328.6    312.6    339.9    322.7
+  commenced                        342.7    312.6    397.7    322.7
+  on                               400.5    312.6    411.8    322.7
+  approximately                    414.6    312.6    477.5    322.7
+  October                          485.9    312.6    521.9    322.7
+  9th,                             524.7    312.6    541.5    322.7
+
+================================================================================
+FILE: T. Spiropoulos - Rancho Palos Verdes - 2527258 - Contract 01-10.pdf
+Total pages: 28
+
+  == Page 1 ==
+    TEXT| Carpet Wagon Glendale, Inc. Payless Kitchen Cabinets & Bath Makeover
+    TEXT| 3614 San Fernando Rd.
+    TEXT| Glendale, California 91204
+    TEXT| Home Improvement Agreement
+    TEXT| Prepared for:
+    TEXT| Spiropoulos, Troy
+    TEXT| 2431 Rue Le Charlene
+    TEXT| Rancho Palos Verdes, California 90275
+    TEXT| Prepared by:
+    TEXT| Jason Curtis Sparks - 91839 SP
+    TEXT| (310) 560-8365
+    TEXT| jason.s@paylesskitchensandbaths.com
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 1 of 28
+
+  Word bbox dump (65 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Carpet                           203.4     43.6    238.5     54.8
+  Wagon                            241.4     43.6    277.7     54.8
+  Glendale,                        280.6     43.6    330.0     54.8
+  Inc.                             332.9     43.6    351.2     54.8
+  Payless                          354.1     43.6    392.5     54.8
+  Kitchen                          395.5     43.6    434.6     54.8
+  Cabinets                         437.5     43.6    483.0     54.8
+  &                                486.0     43.6    494.1     54.8
+  Bath                             497.0     43.6    521.4     54.8
+  Makeover                         524.3     43.6    576.1     54.8
+  3614                             455.4     54.8    481.0     66.1
+  San                              484.0     54.8    503.2     66.1
+  Fernando                         506.1     54.8    556.4     66.1
+  Rd.                              559.3     54.8    576.1     66.1
+  Glendale,                        438.8     66.1    488.2     77.3
+  California                       491.1     66.1    541.1     77.3
+  91204                            544.0     66.1    576.1     77.3
+  Home                              39.1    342.5    138.6    376.1
+  Improvement                      147.4    342.5    377.7    376.1
+  Agreement                        386.4    342.5    573.4    376.1
+  Prepared                         239.7    493.9    332.3    514.1
+  for:                             337.6    493.9    372.8    514.1
+  Spiropoulos,                     260.5    512.6    326.0    523.8
+  Troy                             328.9    512.6    352.0    523.8
+  2431                             249.4    523.8    275.0    535.1
+  Rue                              277.9    523.8    298.1    535.1
+  Le                               301.0    523.8    313.1    535.1
+  Charlene                         316.0    523.8    363.1    535.1
+  Rancho                           206.4    535.1    245.4    546.3
+  Palos                            248.4    535.1    276.3    546.3
+  Verdes,                          279.2    535.1    318.2    546.3
+  California                       321.1    535.1    371.1    546.3
+  90275                            374.0    535.1    406.1    546.3
+  Prepared                         242.3    608.9    334.9    629.1
+  by:                              340.2    608.9    370.2    629.1
+  Jason                            227.7    632.7    255.9    643.9
+  Curtis                           258.8    632.7    289.5    643.9
+  Sparks                           292.4    632.7    327.5    643.9
+  -                                330.4    632.7    334.0    643.9
+  91839                            336.9    632.7    369.0    643.9
+  SP                               371.9    632.7    384.8    643.9
+  (310)                            267.6    643.9    293.5    655.1
+  560-8365                         296.4    643.9    344.9    655.1
+  jason.s@paylesskitchensandba     204.6    655.1    407.9    666.3
+  Carpet                            40.9    763.3     67.9    772.3
+  Wagon                             70.4    763.3     98.9    772.3
+  Glendale_                        101.4    763.3    142.4    772.3
+  Inc.                             144.9    763.3    159.4    772.3
+  Payless                          161.9    763.3    193.4    772.3
+  Kitchen                          195.9    763.3    226.0    772.3
+  Cabinets                         228.5    763.3    264.0    772.3
+  &                                266.5    763.3    272.5    772.3
+  Bath                             275.0    763.3    293.5    772.3
+  Makeover                         296.0    763.3    335.5    772.3
+  -                                338.0    763.3    341.0    772.3
+  Home                             343.5    763.3    367.5    772.3
+  Improvement                      370.0    763.3    422.5    772.3
+  Agreement                        425.0    763.3    469.1    772.3
+  -                                471.6    763.3    474.6    772.3
+  2527258                          477.1    763.3    512.1    772.3
+  -                                514.6    763.3    517.6    772.3
+  Page                             520.1    763.3    541.1    772.3
+  1                                543.6    763.3    548.6    772.3
+  of                               551.1    763.3    558.6    772.3
+  28                               561.1    763.3    571.1    772.3
+
+  == Page 2 ==
+    TEXT| California Home Improvement Agreement
+    TEXT| YOU ARE IN THE PROCESS OF SIGNING A LEGALLY BINDING AGREEMENT. BEFORE DOING
+    TEXT| SO, YOU NEED TO KNOW THE FOLLOWING:
+    TEXT| As a licensed contractor, Contractor is required to follow the law (B&P 7110(a.))
+    TEXT| Pursuant to B&P 7159, you are entitled to receive a fully executed copy of the following Contract before
+    TEXT| Contractor begins any work on your project. This should be in Bold 12-point typeface.
+    TEXT| Upon satisfactory payment being made for any portion of the work performed, the contractor, prior to any
+    TEXT| further payment being made, will give you a full and unconditional release from any potential mechanics lien
+    TEXT| for that portion of the work for which you have paid.
+    TEXT| Any change to the services/materials listed in the contract must be executed by you and the Contractor through
+    TEXT| a change order. ôExtra Work and Change Orders become part of the contract once the order is prepared in
+    TEXT| writing and signed by the parties prior to the commencement of work covered by the new change order. The
+    TEXT| order must describe the scope of the extra work or change, the cost to be added or subtracted from the
+    TEXT| contract, and the effect the order will have on the schedule of progress payments.ö (If the change will increase
+    TEXT| the cost of the contract to the customer, you need to specify the approximate increase and what effect it will
+    TEXT| have on the progress payments and completion date.)
+    TEXT| In executing this Contract, you have the right to require the contractor to have a performance and payment
+    TEXT| bond.
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 2 of 28
+
+  Word bbox dump (277 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  California                        22.8     88.1     62.7     99.1
+  Home                              65.4     88.1     88.7     99.1
+  Improvement                       91.5     88.1    145.2     99.1
+  Agreement                        147.9     88.1    192.2     99.1
+  YOU                               22.8    137.2     50.5    149.2
+  ARE                               54.1    137.2     80.6    149.2
+  IN                                84.2    137.2     98.7    149.2
+  THE                              102.3    137.2    128.2    149.2
+  PROCESS                          131.8    137.2    186.4    149.2
+  OF                               190.0    137.2    207.3    149.2
+  SIGNING                          210.9    137.2    266.2    149.2
+  A                                269.8    137.2    279.1    149.2
+  LEGALLY                          282.7    137.2    341.3    149.2
+  BINDING                          344.9    137.2    401.7    149.2
+  AGREEMENT.                       405.2    137.2    488.6    149.2
+  BEFORE                           492.2    137.2    542.8    149.2
+  DOING                            546.3    137.2    589.8    149.2
+  SO,                               22.8    153.7     41.5    165.7
+  YOU                               44.5    153.7     72.2    165.7
+  NEED                              75.2    153.7    111.0    165.7
+  TO                               114.0    153.7    131.3    165.7
+  KNOW                             134.3    153.7    174.7    165.7
+  THE                              177.7    153.7    203.5    165.7
+  FOLLOWING:                       206.5    153.7    287.8    165.7
+  As                                22.8    186.7     36.7    198.7
+  a                                 39.7    186.7     45.7    198.7
+  licensed                          48.7    186.7     88.8    198.7
+  contractor,                       91.8    186.7    147.5    198.7
+  Contractor                       150.5    186.7    207.4    198.7
+  is                               210.4    186.7    218.3    198.7
+  required                         221.3    186.7    263.8    198.7
+  to                               266.8    186.7    277.4    198.7
+  follow                           280.4    186.7    312.0    198.7
+  the                              315.0    186.7    330.9    198.7
+  law                              333.9    186.7    351.0    198.7
+  (B&P                             354.0    186.7    382.5    198.7
+  7110(a.))                        385.5    186.7    430.8    198.7
+  Pursuant                          22.8    219.7     69.2    231.7
+  to                                74.5    219.7     85.1    231.7
+  B&P                               90.5    219.7    115.0    231.7
+  7159,                            120.3    219.7    147.6    231.7
+  you                              152.9    219.7    171.7    231.7
+  are                              177.1    219.7    192.8    231.7
+  entitled                         198.1    219.7    236.4    231.7
+  to                               241.7    219.7    252.3    231.7
+  receive                          257.7    219.7    292.1    231.7
+  a                                297.4    219.7    303.4    231.7
+  fully                            308.8    219.7    331.7    231.7
+  executed                         337.0    219.7    381.0    231.7
+  copy                             386.3    219.7    410.6    231.7
+  of                               416.0    219.7    426.6    231.7
+  the                              433.1    219.7    449.0    231.7
+  following                        454.3    219.7    501.7    231.7
+  Contract                         507.1    219.7    552.8    231.7
+  before                           558.1    219.7    589.8    231.7
+  Contractor                        22.8    236.2     79.7    248.2
+  begins                            82.7    236.2    115.1    248.2
+  any                              118.1    236.2    136.2    248.2
+  work                             139.2    236.2    165.2    248.2
+  on                               168.2    236.2    181.4    248.2
+  your                             184.4    236.2    207.8    248.2
+  project.                         210.8    236.2    249.3    248.2
+  This                             252.3    236.2    274.8    248.2
+  should                           277.8    236.2    312.1    248.2
+  be                               315.1    236.2    327.0    248.2
+  in                               330.0    236.2    339.9    248.2
+  Bold                             342.9    236.2    367.4    248.2
+  12-point                         370.4    236.2    413.5    248.2
+  typeface.                        416.5    236.2    461.5    248.2
+  Upon                              22.8    269.2     52.6    281.2
+  satisfactory                      57.1    269.2    115.7    281.2
+  payment                          120.2    269.2    164.1    281.2
+  being                            168.6    269.2    196.3    281.2
+  made                             200.8    269.2    228.6    281.2
+  for                              233.1    269.2    247.8    281.2
+  any                              252.3    269.2    270.5    281.2
+  portion                          275.0    269.2    313.3    281.2
+  of                               317.8    269.2    328.4    281.2
+  the                              334.0    269.2    349.9    281.2
+  work                             354.4    269.2    380.3    281.2
+
+  == Page 3 ==
+    TEXT| Date Home Improvement Agreement
+    TEXT| 01/10/2026 2527258
+    TEXT| Design Specialist
+    TEXT| Jason Curtis Sparks - 91839 SP
+    TEXT| Phone: (310) 560-8365
+    TEXT| Carpet Wagon Glendale, Inc. Payless Kitchen Cabinets &
+    TEXT| Bath Makeover
+    TEXT| License #913187
+    TEXT| 3614 San Fernando Rd.
+    TEXT| Glendale, California 91204
+    TEXT| Phone: 866-482-0919
+    TEXT| Home Improvement Agreement
+    TEXT| Spiropoulos, Troy
+    TEXT| 2431 Rue Le Charlene
+    TEXT| Rancho Palos Verdes, California 90275
+    TEXT| Included
+    TEXT| Product Quantity
+    TEXT| Bath Bathroom Labor One Piece Demo/Install 1 ea
+    TEXT| Demolition, Disposal, and haul away of existing wet space. Replace P-Trap, replace necessary wet
+    TEXT| space plumbing. Includes installation of moisture resistant backerboard and selected shower base
+    TEXT| or tub, walls, fixtures, and accessories. Adjust height of showerhead.
+    TEXT| Bath Bathroom Labor Pan Install Kit 1 ea
+    TEXT| PAN INSTALL KIT - Including:
+    TEXT| 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated sheet
+    TEXT| template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF. ABS-DWV pipe 2ö, 1 pc-10 L.F Pex A
+    TEXT| white/ Pex A red, 2 Corner Reinforcement, Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2ö
+    TEXT| pex, F1960 sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching drain cover,
+    TEXT| Wet-Area Plywood 5/8x4x8, 1 2x4 wood
+    TEXT| Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling with 1 ea
+    TEXT| lighting Ceiling with Lighting Less than 80sqft
+    TEXT| Bath Bathroom Labor Miscellaneous Construction Miscellaneous 200 sqft
+    TEXT| Pull-Up of Tile outside of Wet Space (Min. 50 Sq Ft)
+    TEXT| (Does Not Include Drywall, Painting & Patching Work)
+    TEXT| Bath Bathroom Labor Miscellaneous Construction Painting Drywall 200 ea
+    TEXT| Installation - Includes Taping, Patching & Texture (By SqFt)
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 3 of 28
+
+  Word bbox dump (265 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Date                             341.5     38.5    362.8     47.5
+  Home                             410.3     38.5    436.9     47.5
+  Improvement                      439.2     38.5    500.6     47.5
+  Agreement                        503.0     38.5    552.8     47.5
+  01/10/2026                       328.4     53.1    376.0     62.0
+  2527258                          463.6     53.1    499.5     62.0
+  Design                           400.9     67.7    431.0     76.6
+  Specialist                       433.3     67.7    475.9     76.6
+  Jason                            309.1     80.3    334.5     90.4
+  Curtis                           337.1     80.3    364.7     90.4
+  Sparks                           367.3     80.3    398.9     90.4
+  -                                401.5     80.3    404.8     90.4
+  91839                            407.4     80.3    436.3     90.4
+  SP                               438.9     80.3    450.5     90.4
+  Phone:                           309.1     91.4    334.6     99.3
+  (310)                            336.7     91.4    354.8     99.3
+  560-8365                         356.8     91.4    390.8     99.3
+  Carpet                            39.2    106.1     70.8    116.2
+  Wagon                             73.4    106.1    106.1    116.2
+  Glendale,                        108.7    106.1    153.1    116.2
+  Inc.                             155.7    106.1    172.2    116.2
+  Payless                          174.8    106.1    209.4    116.2
+  Kitchen                          212.0    106.1    247.3    116.2
+  Cabinets                         249.9    106.1    290.9    116.2
+  &                                293.5    106.1    300.8    116.2
+  Bath                              39.2    116.2     61.1    126.3
+  Makeover                          63.8    116.2    110.4    126.3
+  License                           39.2    126.3     74.2    136.4
+  #913187                           76.8    126.3    118.0    136.4
+  3614                              39.2    136.4     62.3    146.5
+  San                               64.9    136.4     82.3    146.5
+  Fernando                          84.9    136.4    130.2    146.5
+  Rd.                              132.8    136.4    147.8    146.5
+  Glendale,                         39.2    146.5     83.6    156.6
+  California                        86.2    146.5    131.2    156.6
+  91204                            133.9    146.5    162.7    156.6
+  Phone:                            39.2    156.6     72.1    166.7
+  866-482-0919                      74.7    156.6    138.9    166.7
+  Home                             146.0    179.8    205.7    200.0
+  Improvement                      210.9    179.8    349.1    200.0
+  Agreement                        354.4    179.8    466.5    200.0
+  Spiropoulos,                      39.2    210.1     91.6    219.1
+  Troy                              94.0    210.1    112.5    219.1
+  2431                              39.2    219.1     59.7    228.1
+  Rue                               62.1    219.1     78.2    228.1
+  Le                                80.5    219.1     90.2    228.1
+  Charlene                          92.6    219.1    130.2    228.1
+  Rancho                            39.2    228.1     70.5    237.1
+  Palos                             72.8    228.1     95.1    237.1
+  Verdes,                           97.4    228.1    128.6    237.1
+  California                       131.0    228.1    171.0    237.1
+  90275                            173.3    228.1    199.0    237.1
+  Included                          39.2    246.8     97.4    260.3
+  Product                          103.3    270.4    134.2    278.3
+  Quantity                         538.3    270.4    573.3    278.3
+  Bath                             106.1    289.0    130.0    299.1
+  Bathroom                         132.6    289.0    183.5    299.1
+  Labor                            186.2    289.0    215.2    299.1
+  One                              217.8    289.0    238.5    299.1
+  Piece                            241.1    289.0    267.6    299.1
+  Demo/Install                     270.3    289.0    335.7    299.1
+  1                                550.8    289.0    556.6    299.1
+  ea                               559.2    289.0    570.5    299.1
+  Demolition,                      106.1    304.7    160.7    314.8
+  Disposal,                        163.3    304.7    205.8    314.8
+  and                              208.4    304.7    226.4    314.8
+  haul                             229.0    304.7    249.6    314.8
+  away                             252.2    304.7    276.3    314.8
+  of                               278.9    304.7    288.4    314.8
+  existing                         291.0    304.7    327.2    314.8
+  wet                              329.8    304.7    346.9    314.8
+  space.                           349.5    304.7    379.3    314.8
+  Replace                          381.9    304.7    418.6    314.8
+  P-Trap,                          421.3    304.7    454.7    314.8
+  replace                          457.3    304.7    491.9    314.8
+  necessary                        494.6    304.7    541.4    314.8
+  wet                              544.0    304.7    561.1    314.8
+  space                            106.1    319.9    133.2    330.0
+  plumbing.                        135.8    319.9    183.2    330.0
+  Includes                         185.8    319.9    225.0    330.0
+
+  == Page 4 ==
+    TEXT| Bath Bathroom Labor Miscellaneous Construction Construction 1 ea
+    TEXT| Related Build Pony Wall (P&I 2' x 4' and Drywall)
+    TEXT| Includes Drywall & Framing up to 6 FT Width (Must Consider Flooring)
+    TEXT| Outside Partner Construction Related Demo Wall (If Not Load 2 ea
+    TEXT| Bearing)
+    TEXT| Includes Disposal & Haul-Away with Drywall Patch max 8ft high x 5ft wide (Must Consider Flooring)
+    TEXT| Outside Partner Painting / Patch Basic Patch & Paint Bathroom Walls 1 ea
+    TEXT| & Ceiling (Does Not Include Doors & Door Casings)
+    TEXT| Includes Patching any wall damages from Demolition, as well as labor for Priming & Painting.
+    TEXT| Customer must supply paint and any applicable primer at time of installation. If Materials are not
+    TEXT| available at time of installation customer is subject to a $150 trip surcharge.
+    TEXT| Outside Partner Painting / Patch Paint Interior Door + Casing 1 ea
+    TEXT| Includes Painting of both side of Door & Casing (Does Not Include Any New Material)
+    TEXT| Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom 1 ea
+    TEXT| Sprayfoam Bases Extra Large - Center Drain Only (Up To 72" L x 48"
+    TEXT| W) White SL-PLXL-W-SF: Sprayfoam Custom Shower Base, White -
+    TEXT| Extra Large (Over 60 In. Length Or 36 In. Width) - Center Drain Only
+    TEXT| Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems 1 ea
+    TEXT| Santorini White Smooth Standard - Shower W-SS-SAN: Standard
+    TEXT| Shower System Santorini White
+    TEXT| Bath Accessories Window Trim Kits BCI Window Trim Kit Santorini 1 ea
+    TEXT| White WK-TRV: Window Kit Santorini White
+    TEXT| Bath Wall Systems BCI Walls Single Panels Elite - Individual Walls 1 ea
+    TEXT| Santorini White Smooth Ceiling W-CP-SAN: Ceiling Panel Santorini
+    TEXT| White
+    TEXT| Bath Shower Doors Custom Glass Doors Clear Glass South Beach 1 ea
+    TEXT| Matte Black
+    TEXT| Custom Oversized Sliding Shower Door
+    TEXT| **Note: This is a custom glass door - please allow for an additional 10-14 days for completion**
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 4 of 28
+
+  Word bbox dump (322 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             107.0     38.8    130.9     48.9
+  Bathroom                         133.5     38.8    184.4     48.9
+  Labor                            187.0     38.8    216.0     48.9
+  Miscellaneous                    218.7     38.8    290.2     48.9
+  Construction                     292.8     38.8    358.3     48.9
+  Construction                     361.0     38.8    426.5     48.9
+  1                                549.7     38.8    555.4     48.9
+  ea                               558.1     38.8    569.3     48.9
+  Related                          107.0     54.0    145.5     64.1
+  Build                            148.1     54.0    174.1     64.1
+  Pony                             176.7     54.0    201.7     64.1
+  Wall                             204.3     54.0    226.4     64.1
+  (P&I                             229.0     54.0    249.7     64.1
+  2'                               252.3     54.0    260.7     64.1
+  x                                263.4     54.0    269.2     64.1
+  4'                               271.8     54.0    280.3     64.1
+  and                              282.9     54.0    302.0     64.1
+  Drywall)                         304.7     54.0    346.8     64.1
+  Includes                         107.0     69.7    146.2     79.8
+  Drywall                          148.8     69.7    183.9     79.8
+  &                                186.5     69.7    193.9     79.8
+  Framing                          196.5     69.7    235.0     79.8
+  up                               237.6     69.7    250.0     79.8
+  to                               252.6     69.7    262.3     79.8
+  6                                264.9     69.7    270.7     79.8
+  FT                               273.3     69.7    284.1     79.8
+  Width                            286.7     69.7    314.6     79.8
+  (Must                            317.2     69.7    343.8     79.8
+  Consider                         346.5     69.7    388.4     79.8
+  Flooring)                        391.1     69.7    432.3     79.8
+  Outside                          106.1    111.2    145.6    121.3
+  Partner                          148.2    111.2    186.8    121.3
+  Construction                     189.5    111.2    255.0    121.3
+  Related                          257.6    111.2    296.1    121.3
+  Demo                             298.8    111.2    328.4    121.3
+  Wall                             331.0    111.2    353.0    121.3
+  (If                              355.6    111.2    366.3    121.3
+  Not                              368.9    111.2    387.8    121.3
+  Load                             390.4    111.2    414.8    121.3
+  2                                550.8    111.2    556.6    121.3
+  ea                               559.2    111.2    570.5    121.3
+  Bearing)                         106.1    126.3    148.4    136.4
+  Includes                         106.1    142.0    145.4    152.1
+  Disposal                         148.0    142.0    187.9    152.1
+  &                                190.5    142.0    197.9    152.1
+  Haul-Away                        200.5    142.0    250.4    152.1
+  with                             253.0    142.0    273.2    152.1
+  Drywall                          275.8    142.0    310.9    152.1
+  Patch                            313.5    142.0    339.8    152.1
+  max                              342.4    142.0    362.7    152.1
+  8ft                              365.3    142.0    378.1    152.1
+  high                             380.7    142.0    401.1    152.1
+  x                                403.7    142.0    409.0    152.1
+  5ft                              411.7    142.0    424.4    152.1
+  wide                             427.0    142.0    449.3    152.1
+  (Must                            451.9    142.0    478.6    152.1
+  Consider                         481.2    142.0    523.1    152.1
+  Flooring)                        525.8    142.0    567.0    152.1
+  Outside                          107.0    180.7    146.5    190.8
+  Partner                          149.1    180.7    187.7    190.8
+  Painting                         190.3    180.7    232.3    190.8
+  /                                234.9    180.7    239.1    190.8
+  Patch                            241.7    180.7    270.3    190.8
+  Basic                            273.0    180.7    299.1    190.8
+  Patch                            301.8    180.7    330.4    190.8
+  &                                333.0    180.7    340.6    190.8
+  Paint                            343.2    180.7    369.8    190.8
+  Bathroom                         372.4    180.7    423.3    190.8
+  Walls                            425.9    180.7    453.0    190.8
+  1                                549.7    180.7    555.4    190.8
+  ea                               558.1    180.7    569.3    190.8
+  &                                107.0    195.9    114.5    206.0
+  Ceiling                          117.2    195.9    151.1    206.0
+  (Does                            153.8    195.9    181.9    206.0
+  Not                              184.5    195.9    203.4    206.0
+  Include                          206.0    195.9    243.2    206.0
+  Doors                            245.9    195.9    275.4    206.0
+  &                                278.1    195.9    285.6    206.0
+  Door                             288.3    195.9    312.8    206.0
+  Casings)                         315.4    195.9    356.9    206.0
+
+  == Page 5 ==
+    TEXT| Bath Flooring Bathroom Flooring Package (Under 60 SqFt) Trecento - 1 ea
+    TEXT| Tile Calacatta Marbello (BACK-ORDERED)
+    TEXT| Includes Material and Installation of Luxury Vinyl up to 60 sq.ft, Wall Base 3.5", and Transition
+    TEXT| Molding. Also includes toilet removal and reinstallation of client provided standard toilet (Standard
+    TEXT| toilet mounted with external and visible bolts, accessible from the outside). Includes the
+    TEXT| installation using the existing Toilet Flange and Water Shut-Off Valve, and the replacement of the
+    TEXT| Wax ring and Water line.
+    TEXT| Bath Flooring Pull Up Tile 60 sqft
+    TEXT| Pull Up of Tile (Per Square Foot)
+    TEXT| Bath Flooring Sub Floor 60 sqft
+    TEXT| Provide and Install Wonderboard / Plywood
+    TEXT| Bath Special Requests 1 ea
+    TEXT| The following items are not included in this agreement: toilet, medicine cabinet, mirror, additional
+    TEXT| plumbing labor, and electrical work. This contract itemizes all client-selected materials. If the
+    TEXT| scope of work changes, any additional labor or materials must be documented in a Change Order
+    TEXT| (CO) and may incur an additional chargeùunless the change is informational only and does not
+    TEXT| affect cost or labor.
+    TEXT| notes
+    TEXT| 1)The client will provide the toilet and it is best to have the supplier install it for warranty. The
+    TEXT| installation we provide is for a standard installation without any special requirements.
+    TEXT| 2) The client will provide the faucet fixtures for the vanity for us to install.
+    TEXT| 3) The bench is to be installed under the shower head
+    TEXT| 4) the client will provide the primer, paint and trim
+    TEXT| Kitchen Refacing Demolition Demolition & Disposal of up to 14 1 ea
+    TEXT| Cabinet Doors & Drawer Faces.
+    TEXT| Kitchen Refacing Demolition Demolition & Disposal of Countertops 10 sqft
+    TEXT| Kitchen Refacing Drawer Face RF / LF DBQ 3/4 949W WHITE 5 lft
+    TEXT| Kitchen Refacing Door RF / LF DBQ 3/4" (816) 949W WHITE 5 lft
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 5 of 28
+
+  Word bbox dump (313 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             106.1     37.7    130.0     47.8
+  Flooring                         132.6     37.7    173.8     47.8
+  Bathroom                         176.4     37.7    227.3     47.8
+  Flooring                         229.9     37.7    271.1     47.8
+  Package                          273.7     37.7    315.3     47.8
+  (Under                           318.0     37.7    352.6     47.8
+  60                               355.2     37.7    366.8     47.8
+  SqFt)                            369.4     37.7    394.7     47.8
+  Trecento                         397.3     37.7    442.1     47.8
+  -                                444.8     37.7    448.0     47.8
+  1                                550.8     37.7    556.6     47.8
+  ea                               559.2     37.7    570.5     47.8
+  Tile                             106.1     52.8    124.1     62.9
+  Calacatta                        126.7     52.8    174.6     62.9
+  Marbello                         177.2     52.8    222.2     62.9
+  (BACK-ORDERED)                   224.8     52.8    309.4     62.9
+  Includes                         106.1     68.5    145.4     78.6
+  Material                         148.0     68.5    186.8     78.6
+  and                              189.4     68.5    207.4     78.6
+  Installation                     210.0     68.5    262.2     78.6
+  of                               264.8     68.5    274.3     78.6
+  Luxury                           276.9     68.5    309.0     78.6
+  Vinyl                            311.6     68.5    334.0     78.6
+  up                               336.6     68.5    349.0     78.6
+  to                               351.6     68.5    361.3     78.6
+  60                               363.9     68.5    375.5     78.6
+  sq.ft,                           378.1     68.5    401.3     78.6
+  Wall                             404.0     68.5    424.0     78.6
+  Base                             426.6     68.5    449.2     78.6
+  3.5",                            451.9     68.5    472.7     78.6
+  and                              475.3     68.5    493.3     78.6
+  Transition                       495.9     68.5    543.2     78.6
+  Molding.                         106.1     83.7    146.9     93.8
+  Also                             149.5     83.7    169.3     93.8
+  includes                         171.9     83.7    210.9     93.8
+  toilet                           213.5     83.7    237.6     93.8
+  removal                          240.2     83.7    278.6     93.8
+  and                              281.3     83.7    299.2     93.8
+  reinstallation                   301.9     83.7    363.5     93.8
+  of                               366.2     83.7    375.6     93.8
+  client                           378.3     83.7    403.7     93.8
+  provided                         406.3     83.7    448.3     93.8
+  standard                         450.9     83.7    493.2     93.8
+  toilet                           495.8     83.7    519.9     93.8
+  (Standard                        522.5     83.7    568.5     93.8
+  toilet                           106.1     98.8    130.2    108.9
+  mounted                          132.8     98.8    176.0    108.9
+  with                             178.7     98.8    198.8    108.9
+  external                         201.4     98.8    240.1    108.9
+  and                              242.8     98.8    260.8    108.9
+  visible                          263.4     98.8    292.7    108.9
+  bolts,                           295.3     98.8    321.2    108.9
+  accessible                       323.8     98.8    371.3    108.9
+  from                             373.9     98.8    396.9    108.9
+  the                              399.5     98.8    415.0    108.9
+  outside).                        417.6     98.8    458.3    108.9
+  Includes                         460.9     98.8    500.2    108.9
+  the                              502.8     98.8    518.3    108.9
+  installation                     106.1    114.0    158.0    124.1
+  using                            160.6    114.0    185.9    124.1
+  the                              188.5    114.0    203.9    124.1
+  existing                         206.6    114.0    242.7    124.1
+  Toilet                           245.3    114.0    271.3    124.1
+  Flange                           273.9    114.0    304.7    124.1
+  and                              307.3    114.0    325.3    124.1
+  Water                            327.9    114.0    356.2    124.1
+  Shut-Off                         358.8    114.0    398.3    124.1
+  Valve,                           400.9    114.0    428.4    124.1
+  and                              431.0    114.0    449.0    124.1
+  the                              451.6    114.0    467.1    124.1
+  replacement                      469.7    114.0    529.2    124.1
+  of                               531.8    114.0    541.3    124.1
+  the                              543.9    114.0    559.3    124.1
+  Wax                              106.1    129.1    126.3    139.2
+  ring                             129.0    129.1    147.3    139.2
+  and                              149.9    129.1    167.9    139.2
+  Water                            170.5    129.1    198.9    139.2
+  line.                            201.5    129.1    221.1    139.2
+  Bath                             107.0    167.8    130.9    177.9
+  Flooring                         133.5    167.8    174.6    177.9
+
+  == Page 6 ==
+    TEXT| Kitchen Refacing Deco-Lam Deco-Lam Full Sheet (48" x 96") 949W 1 ea
+    TEXT| WHITE
+    TEXT| [unicode error]
+    TEXT| Kitchen Refacing Refacing Accessories Roll-Out (Requires Glides - 1 ea
+    TEXT| Calculate Seperately)
+    TEXT| Kitchen Refacing Hardware BLUM Soft-Close Undermount Glide & 1 ea
+    TEXT| Clip (Pair)
+    TEXT| Kitchen Countertops Quartz Package B PREFABRICATED 26"x108" 1 ea
+    TEXT| QUARTZ COUNTERTOPS PKCES PACKAGE B PKCES Carrara White
+    TEXT| Kitchen Refacing Demolition Haul Away of all Disposed Materials 1 ea
+    TEXT| (Does not include Disposal of Appliances)
+    TEXT| Bath Vanities Vanity Sinks PKBBCS2210-WH 2 ea
+    TEXT| White Porcelain Under-Mount Single Basin Bowl Vanity Sink
+    TEXT| Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid Accents 1 ea
+    TEXT| 12 X 24 Inch Niche, White
+    TEXT| Bath Accessories Seating BCI 26" x 15" Wall Mounted Bench (2000 1 ea
+    TEXT| Pound Capacity) Matching
+    TEXT| Bath Fixtures Gold Design Handheld HANDHELD UPGRADE (KEEPING 1 ea
+    TEXT| BASIC VALVE)
+    TEXT| Outside Partner Electrical Cap off Electrical 1 ea
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 6 of 28
+
+  Word bbox dump (168 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Kitchen                          106.1     37.7    144.7     47.8
+  Refacing                         147.3     37.7    190.6     47.8
+  Deco-Lam                         193.2     37.7    243.1     47.8
+  Deco-Lam                         245.7     37.7    295.5     47.8
+  Full                             298.2     37.7    316.5     47.8
+  Sheet                            319.1     37.7    347.6     47.8
+  (48"                             350.3     37.7    370.0     47.8
+  x                                372.6     37.7    378.5     47.8
+  96")                             381.1     37.7    400.8     47.8
+  949W                             403.4     37.7    430.5     47.8
+  1                                550.8     37.7    556.6     47.8
+  ea                               559.2     37.7    570.5     47.8
+  WHITE                            106.1     52.8    138.4     62.9
+  Kitchen                          107.0    111.2    145.6    121.3
+  Refacing                         148.2    111.2    191.4    121.3
+  Hardware                         194.1    111.2    244.2    121.3
+  BLUM                             246.8    111.2    276.4    121.3
+  Concealed                        279.0    111.2    331.1    121.3
+  [unicode]   333.7    111.2
+  Hinge                            369.5    111.2    398.6    121.3
+  6                                549.7    111.2    555.4    121.3
+  ea                               558.1    111.2    569.3    121.3
+  Kitchen                          106.1    150.4    144.7    160.5
+  Refacing                         147.3    150.4    190.6    160.5
+  Refacing                         193.2    150.4    236.5    160.5
+  Accessories                      239.1    150.4    297.4    160.5
+  Roll-Out                         300.0    150.4    341.4    160.5
+  (Requires                        344.0    150.4    391.7    160.5
+  Glides                           394.3    150.4    425.2    160.5
+  -                                427.8    150.4    431.1    160.5
+  1                                550.8    150.4    556.6    160.5
+  ea                               559.2    150.4    570.5    160.5
+  Calculate                        106.1    165.6    153.1    175.7
+  Seperately)                      155.7    165.6    212.9    175.7
+  Kitchen                          107.0    204.9    145.6    215.0
+  Refacing                         148.2    204.9    191.4    215.0
+  Hardware                         194.1    204.9    244.2    215.0
+  BLUM                             246.8    204.9    276.4    215.0
+  Soft-Close                       279.0    204.9    329.2    215.0
+  Undermount                       331.8    204.9    396.8    215.0
+  Glide                            399.4    204.9    425.3    215.0
+  &                                427.9    204.9    435.5    215.0
+  1                                549.7    204.9    555.4    215.0
+  ea                               558.1    204.9    569.3    215.0
+  Clip                             107.0    220.0    125.9    230.1
+  (Pair)                           128.6    220.0    155.5    230.1
+  Kitchen                          106.1    259.3    144.7    269.4
+  Countertops                      147.3    259.3    210.3    269.4
+  Quartz                           212.9    259.3    247.6    269.4
+  Package                          250.2    259.3    291.8    269.4
+  B                                294.5    259.3    301.3    269.4
+  PREFABRICATED                    303.9    259.3    384.2    269.4
+  26"x108"                         386.8    259.3    431.1    269.4
+  1                                550.8    259.3    556.6    269.4
+  ea                               559.2    259.3    570.5    269.4
+  QUARTZ                           106.1    274.4    147.1    284.5
+  COUNTERTOPS                      149.7    274.4    224.0    284.5
+  PKCES                            226.6    274.4    257.3    284.5
+  PACKAGE                          259.9    274.4    306.3    284.5
+  B                                308.9    274.4    315.7    284.5
+  PKCES                            318.4    274.4    349.1    284.5
+  Carrara                          351.7    274.4    390.2    284.5
+  White                            392.8    274.4    422.6    284.5
+  Kitchen                          107.0    331.1    145.6    341.2
+  Refacing                         148.2    331.1    191.4    341.2
+  Demolition                       194.1    331.1    250.2    341.2
+  Haul                             252.8    331.1    276.4    341.2
+  Away                             279.0    331.1    306.4    341.2
+  of                               309.1    331.1    319.2    341.2
+  all                              321.8    331.1    334.1    341.2
+  Disposed                         336.7    331.1    382.3    341.2
+  Materials                        384.9    331.1    432.8    341.2
+  1                                549.7    331.1    555.4    341.2
+  ea                               558.1    331.1    569.3    341.2
+  (Does                            107.0    346.2    135.1    356.3
+  not                              137.7    346.2    155.0    356.3
+  include                          157.6    346.2    194.6    356.3
+  Disposal                         197.2    346.2    239.6    356.3
+  of                               242.3    346.2    252.4    356.3
+  Appliances)                      255.0    346.2    313.3    356.3
+
+  == Page 7 ==
+    TEXT| Bath Accessories Grab Bars Traditional 16" Traditional Grab Bar 1 ea
+    TEXT| Matte Black
+    TEXT| Bath Fixtures Bundles Horizon Bundle (NEW) Matte Black (MB) 1 ea
+    TEXT| Included Subtotal $81,353.06
+    TEXT| Dates
+    TEXT| Product Quantity
+    TEXT| Estimated Start & End Dates 1 ea
+    TEXT| The work to be performed by the Contractor shall be commenced on approximately, Feb 19, 2026, as long as
+    TEXT| any required permits are received and any agreed upon funds are paid to Contractor, provided that no delay is
+    TEXT| occasioned by changes made by the client, supply in material delays, weather or manpower disruptions.
+    TEXT| The work shall be substantially completed within approximately 9-13 working 1 ea
+    TEXT| days of said date of commencement (for reface/bath/flooring starting from
+    TEXT| demolition date, for kitchen remodel starting from new cabinet installation)
+    TEXT| Dates Subtotal $0.00
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 7 of 28
+
+  Word bbox dump (146 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Bath                             107.0     38.8    130.9     48.9
+  Accessories                      133.5     38.8    191.7     48.9
+  Grab                             194.4     38.8    218.8     48.9
+  Bars                             221.4     38.8    243.9     48.9
+  Traditional                      246.5     38.8    302.0     48.9
+  16"                              304.6     38.8    321.0     48.9
+  Traditional                      323.6     38.8    379.1     48.9
+  Grab                             381.7     38.8    406.1     48.9
+  Bar                              408.8     38.8    426.2     48.9
+  1                                549.7     38.8    555.4     48.9
+  ea                               558.1     38.8    569.3     48.9
+  Matte                            107.0     54.0    137.3     64.1
+  Black                            139.9     54.0    167.4     64.1
+  Bath                             106.1     93.2    130.0    103.3
+  Fixtures                         132.6     93.2    173.7    103.3
+  Bundles                          176.3     93.2    216.8    103.3
+  Horizon                          219.4     93.2    258.9    103.3
+  Bundle                           261.5     93.2    297.0    103.3
+  (NEW)                            299.6     93.2    330.1    103.3
+  Matte                            332.7     93.2    363.1    103.3
+  Black                            365.7     93.2    393.1    103.3
+  (MB)                             395.8     93.2    418.9    103.3
+  1                                550.8     93.2    556.6    103.3
+  ea                               559.2     93.2    570.5    103.3
+  Included                         406.7    188.6    450.3    198.7
+  Subtotal                         452.9    188.6    495.7    198.7
+  $81,353.06                       516.2    188.6    567.7    198.7
+  Dates                             39.2    210.9     77.8    224.4
+  Product                           39.2    234.5     70.2    242.3
+  Quantity                         538.3    234.5    573.3    242.3
+  Estimated                         42.0    253.1     92.9    263.2
+  Start                             95.5    253.1    120.6    263.2
+  &                                123.2    253.1    130.8    263.2
+  End                              133.4    253.1    152.1    263.2
+  Dates                            154.7    253.1    183.6    263.2
+  1                                550.8    253.1    556.6    263.2
+  ea                               559.2    253.1    570.5    263.2
+  The                               42.0    268.8     59.4    278.9
+  work                              62.1    268.8     85.4    278.9
+  to                                88.0    268.8     97.7    278.9
+  be                               100.3    268.8    112.2    278.9
+  performed                        114.8    268.8    165.6    278.9
+  by                               168.2    268.8    179.4    278.9
+  the                              182.0    268.8    197.5    278.9
+  Contractor                       200.1    268.8    250.7    278.9
+  shall                            253.4    268.8    275.1    278.9
+  be                               277.7    268.8    289.5    278.9
+  commenced                        292.2    268.8    350.3    278.9
+  on                               352.9    268.8    365.2    278.9
+  approximately,                   367.8    268.8    438.3    278.9
+  Feb                              440.9    268.8    458.0    278.9
+  19,                              460.6    268.8    474.8    278.9
+  2026,                            477.4    268.8    503.1    278.9
+  as                               508.3    268.8    518.8    278.9
+  long                             521.4    268.8    541.7    278.9
+  as                               544.3    268.8    554.7    278.9
+  any                               42.0    284.0     58.9    294.1
+  required                          61.5    284.0    102.2    294.1
+  permits                          104.8    284.0    141.1    294.1
+  are                              143.7    284.0    159.1    294.1
+  received                         161.8    284.0    201.5    294.1
+  and                              204.1    284.0    222.1    294.1
+  any                              224.7    284.0    241.6    294.1
+  agreed                           244.2    284.0    277.0    294.1
+  upon                             279.6    284.0    304.2    294.1
+  funds                            306.8    284.0    333.6    294.1
+  are                              336.2    284.0    351.6    294.1
+  paid                             354.3    284.0    374.8    294.1
+  to                               377.4    284.0    387.1    294.1
+  Contractor,                      389.7    284.0    442.9    294.1
+  provided                         445.5    284.0    487.5    294.1
+  that                             490.2    284.0    509.2    294.1
+  no                               511.8    284.0    524.1    294.1
+  delay                            526.7    284.0    551.8    294.1
+  is                               554.4    284.0    561.7    294.1
+  occasioned                        42.0    299.1     94.9    309.2
+  by                                97.5    299.1    108.7    309.2
+  changes                          111.3    299.1    150.1    309.2
+  made                             152.8    299.1    179.6    309.2
+  by                               182.2    299.1    193.4    309.2
+
+  == Page 8 ==
+    TEXT| Customer Information
+    TEXT| Spiropoulos, Troy Troy_Spiropoulos@hotmail.com Date: 01/10/2026
+    TEXT| 2431 Rue Le Charlene Rep: Jason Curtis Sparks - 91839 SP
+    TEXT| Rancho Palos Verdes, California
+    TEXT| 90275
+    TEXT| Total Order
+    TEXT| Subtotal $81,353.06
+    TEXT| Special -$28,473.57
+    TEXT| Total Contract Amount $52,879.49
+    TEXT| Payment Schedule
+    TEXT| Initial Deposit $1,000 Covers initial site visit $1,000.00
+    TEXT| scheduling and design/order prep.
+    TEXT| Measure + Material 15% Measure & Order $7,781.92
+    TEXT| Payment: Work completed includes contract set-up,
+    TEXT| project planning, scheduling and database entry,
+    TEXT| accounting set-up, management oversight,
+    TEXT| customer coordination, measure, and commitment
+    TEXT| of manufacturing and installation capacity, order &
+    TEXT| delivery of installation kit & plumbing fixture. (15%)
+    TEXT| Demolition & Installation of Wall System, Pan, Glass $38,909.62
+    TEXT| Door/Curtain Rod & Accessories Installation 75%
+    TEXT| Due upon delivery & start of demolition &
+    TEXT| installation of wet area products (wall panels,
+    TEXT| shower base, glass door / curtain rod &
+    TEXT| accessories). (75%)
+    TEXT| Final Walk-Through 10% Due at the time of $5,187.95
+    TEXT| substantial completion and final walkthrough or
+    TEXT| custom glass door. (10%)
+    TEXT| Marina Spiropoulos 01/10/26
+    TEXT| Homeowner 1 Signature Homeowner 1 Name Date
+    TEXT| Homeowner 2 Signature Homeowner 2 Name Date
+    TEXT| 01/10/26
+    TEXT| Carpet Wagon Glendale, Inc. Payless Kitchen Cabinets Date
+    TEXT| & Bath Makeover Representative
+    TEXT| Carpet Wagon Glendale_ Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2527258 - Page 8 of 28
+
+  Word bbox dump (201 words):
+  text                                x0      top       x1   bottom
+  ------------------------------------------------------------
+  Customer                          40.3     34.8    105.9     48.2
+  Information                      109.4     34.8    190.9     48.2
+  Spiropoulos,                      42.6     59.6    105.0     69.7
+  Troy                             107.6     59.6    130.0     69.7
+  Troy_Spiropoulos@hotmail.com     228.9     59.6    378.3     69.7
+  Date:                            480.7     59.6    507.5     69.7
+  01/10/2026                       510.1     59.6    564.6     69.7
+  2431                              42.6     74.7     65.7     84.8
+  Rue                               68.3     74.7     86.4     84.8
+  Le                                89.0     74.7    100.0     84.8
+  Charlene                         102.6     74.7    145.0     84.8
+  Rep:                             399.8     74.7    420.5     84.8
+  Jason                            423.2     74.7    448.6     84.8
+  Curtis                           451.2     74.7    478.8     84.8
+  Sparks                           481.4     74.7    513.0     84.8
+  -                                515.6     74.7    518.9     84.8
+  91839                            521.5     74.7    550.4     84.8
+  SP                               553.0     74.7    564.6     84.8
+  Rancho                            42.6     89.9     77.7    100.0
+  Palos                             80.3     89.9    105.5    100.0
+  Verdes,                          108.1     89.9    143.2    100.0
+  California                       145.8     89.9    190.8    100.0
+  90275                             42.6    105.0     71.5    115.1
+  Total                             40.3    134.6     74.6    148.1
+  Order                             78.1    134.6    117.5    148.1
+  Subtotal                          42.6    159.4     81.9    169.5
+  $81,353.06                       518.4    159.4    569.9    169.5
+  Special                           42.6    174.6     75.5    184.7
+  -$28,473.57                      515.2    174.6    569.9    184.7
+  Total                             42.6    189.7     66.0    199.8
+  Contract                          68.6    189.7    109.0    199.8
+  Amount                           111.6    189.7    149.4    199.8
+  $52,879.49                       518.4    189.7    569.9    199.8
+  Payment                           40.3    219.3    100.5    232.8
+  Schedule                         104.0    219.3    164.5    232.8
+  Initial                           42.6    246.9     68.5    257.0
+  Deposit                           71.1    246.9    107.3    257.0
+  $1,000                           109.9    246.9    141.4    257.0
+  Covers                           144.0    246.9    176.1    257.0
+  initial                          178.7    246.9    204.3    257.0
+  site                             207.0    246.9    223.6    257.0
+  visit                            226.2    246.9    244.8    257.0
+  $1,000.00                        524.2    246.9    569.9    257.0
+  scheduling                        42.6    262.1     93.2    272.2
+  and                               95.9    262.1    113.8    272.2
+  design/order                     116.5    262.1    177.2    272.2
+  prep.                            179.9    262.1    204.7    272.2
+  Measure                           42.6    280.0     83.8    290.1
+  +                                 86.4    280.0     92.1    290.1
+  Material                          94.8    280.0    133.6    290.1
+  15%                              136.2    280.0    156.1    290.1
+  Measure                          158.7    280.0    199.9    290.1
+  &                                202.5    280.0    209.9    290.1
+  Order                            212.5    280.0    240.4    290.1
+  $7,781.92                        524.2    280.0    569.9    290.1
+  Payment:                          42.6    295.2     86.8    305.3
+  Work                              89.4    295.2    114.2    305.3
+  completed                        116.9    295.2    167.0    305.3
+  includes                         169.6    295.2    208.6    305.3
+  contract                         211.2    295.2    250.1    305.3
+  set-up,                          252.7    295.2    285.0    305.3
+  project                           42.6    310.3     75.6    320.4
+  planning,                         78.2    310.3    121.8    320.4
+  scheduling                       124.4    310.3    175.1    320.4
+  and                              177.7    310.3    195.7    320.4
+  database                         198.3    310.3    241.6    320.4
+  entry,                           244.2    310.3    271.5    320.4
+  accounting                        42.6    325.5     94.2    335.6
+  set-up,                           96.8    325.5    129.1    335.6
+  management                       131.7    325.5    194.4    335.6
+  oversight,                       197.1    325.5    243.2    335.6
+  customer                          42.6    340.6     87.2    350.7
+  coordination,                     89.9    340.6    152.5    350.7
+  measure,                         155.2    340.6    199.2    350.7
+  and                              201.8    340.6    219.8    350.7
+  commitment                       222.4    340.6    283.0    350.7
+  of                                42.6    355.8     52.1    365.9
+  manufacturing                     54.7    355.8    124.0    365.9
+  and                              126.6    355.8    144.6    365.9
+  installation                     147.2    355.8    199.1    365.9

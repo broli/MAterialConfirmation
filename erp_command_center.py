@@ -4,6 +4,7 @@ from tkinter import filedialog
 import os
 import json
 import yaml
+import threading
 from PIL import Image
 
 from catalog_loader import CatalogLoader
@@ -24,16 +25,22 @@ class ERPCommandCenter(ctk.CTk):
         self.geometry("1100x750")
 
         self.target_pdf_dir = ""
-        self.session_data = {}
+        self.session_path   = ""
+        self.session_data   = {}
         
         # Load database
         self.db_loader = CatalogLoader(base_path="database")
-        self.catalog = self.db_loader.load_all_categories()
-        
-        # MatchService is the single backend entry point for all DB-lookup logic.
-        # The UI never calls MatchingEngine directly.
-        self.match_service = MatchService(self.catalog)
+        self.catalog   = self.db_loader.load_all_categories()
+
+        # MatchService — single backend entry point for all DB-lookup logic.
+        # debug_mode is wired here so Ollama logs are written when the toggle is on.
+        self.match_service = MatchService(
+            self.catalog,
+            debug_mode=False,
+            log_dir="logs",
+        )
         self.ingestor = None
+        self._busy    = False   # True while background ingestion is running
         
         # UI layout
         self.grid_columnconfigure(0, weight=1)
@@ -102,39 +109,135 @@ class ERPCommandCenter(ctk.CTk):
         self.status_bar = ctk.CTkLabel(self, text="Ready.", anchor="w", text_color="gray", font=ctk.CTkFont(size=12))
         self.status_bar.grid(row=3, column=0, sticky="ew", padx=20, pady=(0, 5))
 
+        # Startup Ollama check (silent background ping)
+        threading.Thread(target=self.check_ollama_background, daemon=True).start()
+
+    # ──────────────────────────────────────────────────────────────────────
+    # Busy-state helpers — disable UI while background work runs
+    # ──────────────────────────────────────────────────────────────────────
+
+    def check_ollama_background(self):
+        """Perform a silent ping on startup to warn user if service is offline."""
+        success, _ = self.match_service.check_ollama_ready()
+        if not success:
+            self.after(0, lambda: self.status_bar.configure(text="⚠️ Ollama Offline (Start Ollama to use AI extraction)", text_color="orange"))
+        else:
+            self.after(0, lambda: self.status_bar.configure(text="Ready.", text_color="gray"))
+
+    def _set_busy(self, msg: str = "Working...") -> None:
+        """Disable interactive buttons and show a status message."""
+        self._busy = True
+        self.btn_load_dir.configure(state="disabled", text="⏳ Processing...")
+        self.status_bar.configure(text=msg, text_color="#1F6AA5")
+
+    def _set_idle(self, msg: str = "Ready.") -> None:
+        """Re-enable interactive buttons and clear the busy status."""
+        self._busy = False
+        self.btn_load_dir.configure(state="normal", text="📁 Pick Job Folder")
+        self.status_bar.configure(text=msg, text_color="gray")
+
+    def _update_status(self, msg: str) -> None:
+        """Thread-safe status bar update (can be called from any thread)."""
+        self.after(0, lambda: self.status_bar.configure(text=msg))
+
     def toggle_debug(self):
+        debug_on = self.debug_var.get()
+        # Rebuild MatchService so the LLM client picks up the new debug_mode flag
+        self.match_service = MatchService(
+            self.catalog,
+            debug_mode=debug_on,
+            log_dir="logs",
+        )
         if self.ingestor:
-            self.ingestor.refresh_logger(self.debug_var.get())
-            self.status_bar.configure(text=f"Debug Logging: {'ON (Job Folder)' if self.debug_var.get() else 'OFF (Global)'}")
+            self.ingestor.refresh_logger(debug_on)
+        label = "ON — writing to logs/" if debug_on else "OFF"
+        self._update_status(f"Debug Logging: {label}")
 
     def load_directory(self):
-        pdf_path = filedialog.askopenfilename(title="Select Contract PDF", filetypes=[("PDF Files", "*.pdf")])
+        if self._busy:
+            return
+        pdf_path = filedialog.askopenfilename(
+            title="Select Contract PDF",
+            filetypes=[("PDF Files", "*.pdf")]
+        )
         if not pdf_path:
             return
-            
+
         self.target_pdf_dir = os.path.dirname(pdf_path)
-        session_file = os.path.join(self.target_pdf_dir, "session_data.json")
-        
-        if os.path.exists(session_file):
-            if messagebox.askyesno("Session Found", "A previous session exists in this folder. Do you want to resume?"):
-                self.load_session(session_file)
+        self.session_path   = os.path.splitext(pdf_path)[0] + ".json"
+
+        if os.path.exists(self.session_path):
+            if messagebox.askyesno("Session Found", "A previous session exists for this specific PDF. Resume?"):
+                self.load_session(self.session_path)
                 return
-        
-        # New Ingestion
-        self.ingestor = OneClickIngestor(pdf_path, self.debug_var.get())
-        raw_data = self.ingestor.extract_data()
-        
-        if not raw_data.get("line_items"):
-            messagebox.showwarning("No Items", "Could not extract line items. Ensure Estimate/Contract PDFs exist.")
-        
-        self.entry_client.delete(0, "end")
-        self.entry_client.insert(0, raw_data.get("client_name", ""))
-        
-        self.entry_po.delete(0, "end")
-        self.entry_po.insert(0, raw_data.get("project_po", ""))
-        
-        self.session_data = raw_data
-        self.populate_verification_ui()
+
+        # ── Run ingestion in a background thread so the UI stays responsive ──
+        self._set_busy("📖 Reading PDF...")
+        threading.Thread(
+            target=self._ingest_worker,
+            args=(pdf_path,),
+            daemon=True,
+        ).start()
+
+    def _ingest_worker(self, pdf_path: str) -> None:
+        """
+        Background worker: parse PDF, then run LLM matching.
+        All UI updates are dispatched via self.after() for thread safety.
+        """
+        try:
+            # ── Safety Check: Is Ollama up? ──────────────────────────────
+            self.after(0, lambda: self.status_bar.configure(text="🔍 Checking AI service..."))
+            ready, err = self.match_service.check_ollama_ready()
+            if not ready:
+                self.after(0, lambda: messagebox.showerror("Ollama Connection Error", 
+                    f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running and the model is pulled."))
+                self.after(0, lambda: self._set_idle("❌ Ollama Offline."))
+                return
+
+            # ── Step 1: Extract data from PDF ──────────────────────────────
+            self.after(0, lambda: self.status_bar.configure(text="📖 Extracting PDF..."))
+            self.ingestor = OneClickIngestor(pdf_path, self.debug_var.get())
+            raw_data = self.ingestor.extract_data()
+
+            if not raw_data.get("line_items"):
+                self.after(0, lambda: messagebox.showwarning(
+                    "No Items",
+                    "Could not extract line items from this PDF.\n"
+                    "Make sure the file is a OneClick Contract (not Estimate)."
+                ))
+                self.after(0, lambda: self._set_idle("⚠️ No items found."))
+                return
+
+            # Populate header fields on main thread
+            def _fill_header():
+                self.entry_client.delete(0, "end")
+                self.entry_client.insert(0, raw_data.get("client_name", ""))
+                self.entry_po.delete(0, "end")
+                self.entry_po.insert(0, raw_data.get("project_po", ""))
+            self.after(0, _fill_header)
+
+            n = len(raw_data["line_items"])
+            self.after(0, lambda: self.status_bar.configure(
+                text=f"📋 PDF done — {n} items extracted. Starting matching..."
+            ))
+
+            # ── Step 2: Enrich with LLM + fuzzy matching ───────────────────
+            def _status(msg: str):
+                self.after(0, lambda: self.status_bar.configure(text=msg))
+
+            self.match_service.enrich_items(
+                raw_data["line_items"],
+                status_callback=_status,
+            )
+
+            # ── Step 3: Commit to session and render ───────────────────────
+            self.session_data = raw_data
+            self.after(0, self.populate_verification_ui)
+            self.after(0, lambda: self._set_idle(f"✅ Loaded {n} items."))
+
+        except Exception as exc:
+            self.after(0, lambda: messagebox.showerror("Ingestion Error", str(exc)))
+            self.after(0, lambda: self._set_idle(f"❌ Error: {exc}"))
 
     def open_database_manager(self):
         DatabaseManager(self, self.db_loader)
@@ -145,28 +248,34 @@ class ERPCommandCenter(ctk.CTk):
 
         Called by DatabaseManager whenever a product is saved or deleted so
         that the match index stays in sync with the on-disk YAML files.
-        The UI does not need to know how the service is built — it just
-        triggers this method and the backend handles the rest.
         """
-        self.match_service = MatchService(self.catalog)
+        self.match_service = MatchService(
+            self.catalog,
+            debug_mode=self.debug_var.get(),
+            log_dir="logs",
+        )
 
     def populate_verification_ui(self):
         """
         Rebuild the two-panel verification UI from the current session data.
 
-        This method is *display-only*: it asks MatchService for match metadata
-        and renders it.  No matching logic lives here.
+        If items already carry ``_match`` data (e.g. after a session resume)
+        the enrichment step is skipped.  For fresh data the match is run
+        inline (it is fast — LLM was already run in the background worker).
         """
-        # Clear existing widgets from both panels.
-        for w in self.left_panel.winfo_children(): w.destroy()
+        for w in self.left_panel.winfo_children():  w.destroy()
         for w in self.right_panel.winfo_children(): w.destroy()
 
         items = self.session_data.get("line_items", [])
 
-        # Enrich every item with match metadata in one batch call.
-        # This attaches a '_match' dict to each item (in-place) without touching
-        # the session fields that are persisted to disk.
-        self.match_service.enrich_items(items)
+        # Only re-enrich if items lack _match metadata (e.g. fresh session start
+        # where the background worker hasn't run yet, or a unit-test scenario).
+        needs_enrich = any("_match" not in item for item in items)
+        if needs_enrich:
+            self.match_service.enrich_items(
+                items,
+                status_callback=lambda msg: self.status_bar.configure(text=msg),
+            )
 
         for i, item in enumerate(items):
             desc  = item.get("raw_description", "")
@@ -381,19 +490,18 @@ class ERPCommandCenter(ctk.CTk):
             ctk.CTkLabel(scroll_f, text="No properties matched in database.", text_color="red", font=ctk.CTkFont(size=14, weight="bold")).pack(pady=100)
 
     def save_session(self, silent=True):
-        if not self.target_pdf_dir:
+        if not self.session_path:
             return
         # Save current client/po edits
         self.session_data["client_name"] = self.entry_client.get().strip()
         self.session_data["project_po"] = self.entry_po.get().strip()
         
-        path = os.path.join(self.target_pdf_dir, "session_data.json")
         try:
-            with open(path, "w") as f:
+            with open(self.session_path, "w") as f:
                 json.dump(self.session_data, f, indent=4)
-            self.status_bar.configure(text="💾 Session autosaved correctly.")
+            self.status_bar.configure(text=f"💾 Session saved: {os.path.basename(self.session_path)}")
             if not silent:
-                messagebox.showinfo("Saved", f"Session saved to:\n{path}")
+                messagebox.showinfo("Saved", f"Session saved to:\n{self.session_path}")
         except Exception as e:
             self.status_bar.configure(text=f"Error saving session: {e}", text_color="red")
 
