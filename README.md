@@ -1,7 +1,7 @@
-# 🛠️ PKB Material Confirmation & Management System (v2.5)
+# 🛠️ PKB Material Confirmation & Management System (v2.6)
 **From Simple PDF Generation to a Lightweight ERP Ecosystem**
 
-![Version](https://img.shields.io/badge/version-2.5-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.6-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-Phase%203-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.14%2B-green?style=for-the-badge)
 

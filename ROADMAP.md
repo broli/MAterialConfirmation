@@ -38,13 +38,13 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 - [x] **Custom "One-Off" Pages:** Allow users to upload a custom image directly into the Document Generator.
 - [x] **Grab bar size on selector:** distinguish items that only differ in size.
 - [x] **Collapse categories:** dynamic category management in the selector.
-- [x] **Add title to extra image:** add a text box before the image for the "one off". (Completed in v2.0)
-- [x] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path. (Completed in v2.0)
-- [x] **Packaging (v2.0):** Bundle the app into a standalone `.exe` with version 2.0 branding. (Completed)
+- [x] **Add title to extra image:** add a text box before the image for the "one off". (Completed in v2.6)
+- [x] **Shared Storage:** Configure the app to read the `database/` folder from a shared PKB OneDrive path. (Completed in v2.6)
+- [x] **Packaging (v2.6):** Bundle the app into a standalone `.exe` with version 2.0 branding. (Completed)
 
 ---
 
-## 📅 Phase 6: Road to Lightweight ERP (v2.0 Complete) ✅
+## 📅 Phase 6: Road to Lightweight ERP (v2.6 Complete) ✅
 - [x] **Module Renaming & Refactoring:**
     - [x] Transition to `main.py` entry point and decoupled GUI from legacy PDF engine.
     - [x] Expand database schema (`client_facing`, `routing_tag`, `provider`, `sku`, `printable`).

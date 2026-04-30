@@ -25,7 +25,7 @@ class ERPCommandCenter(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("PKB ERP Command Center v2.0")
+        self.title("PKB ERP Command Center v2.6")
         self.geometry("1100x750")
 
         self.target_pdf_dir = ""
