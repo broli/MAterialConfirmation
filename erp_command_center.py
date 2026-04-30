@@ -13,6 +13,7 @@ from matching_engine import MatchService
 from client_pdf_generator import PDFGenerator
 from excel_routing_engine import ExcelRoutingEngine
 from database_manager import DatabaseManager
+from batch_pdf_ui import BatchPdfIngestWindow
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -57,6 +58,9 @@ class ERPCommandCenter(ctk.CTk):
 
         self.btn_load_dir = ctk.CTkButton(self.header_frame, text="📁 Pick Job Folder", command=self.load_directory)
         self.btn_load_dir.pack(side="left", padx=20)
+        
+        self.btn_batch_add = ctk.CTkButton(self.header_frame, text="📄 Batch Add (PDF)", fg_color="green", hover_color="darkgreen", command=self.open_batch_ingest)
+        self.btn_batch_add.pack(side="left", padx=10)
 
         self.btn_manage_db = ctk.CTkButton(self.header_frame, text="⚙️ Manage Database", fg_color="#153E83", hover_color="#0d2b61", command=self.open_database_manager)
         self.btn_manage_db.pack(side="right", padx=10)
@@ -98,6 +102,9 @@ class ERPCommandCenter(ctk.CTk):
         
         self.btn_save_session = ctk.CTkButton(self.footer, text="💾 Save Session", command=lambda: self.save_session(silent=False))
         self.btn_save_session.pack(side="left", padx=10)
+        
+        self.btn_process_unmatched = ctk.CTkButton(self.footer, text="⚙️ Process Unrecognized Items", fg_color="orange", text_color="black", command=self.process_unmatched)
+        self.btn_process_unmatched.pack(side="left", padx=10)
         
         self.btn_gen_pdf = ctk.CTkButton(self.footer, text="📄 Generate Client PDF", fg_color="green", command=self.generate_pdf)
         self.btn_gen_pdf.pack(side="right", padx=10)
@@ -241,6 +248,26 @@ class ERPCommandCenter(ctk.CTk):
 
     def open_database_manager(self):
         DatabaseManager(self, self.db_loader)
+        
+    def open_batch_ingest(self):
+        BatchPdfIngestWindow(self, self.db_loader, os.path.join(self.db_loader.base_path, "categories"), os.path.join(self.db_loader.base_path, "assets"), self.populate_verification_ui)
+        
+    def process_unmatched(self):
+        unmatched_items = []
+        for item in self.session_data.get("line_items", []):
+            match_meta = item.get("_match", {})
+            color_code = match_meta.get("color_code", "red")
+            is_ignored = match_meta.get("is_ignored", False)
+            confirmed = item.get("confirmed", False)
+            
+            if color_code != "green" and not is_ignored and not confirmed:
+                unmatched_items.append(item)
+                
+        if not unmatched_items:
+            messagebox.showinfo("All Good", "No unconfirmed/unrecognized items found in this session.")
+            return
+            
+        BatchPdfIngestWindow(self, self.db_loader, os.path.join(self.db_loader.base_path, "categories"), os.path.join(self.db_loader.base_path, "assets"), self.populate_verification_ui, unmatched_items=unmatched_items)
 
     def refresh_match_service(self):
         """
@@ -389,8 +416,10 @@ class ERPCommandCenter(ctk.CTk):
         raw_info_container.pack(fill="both", expand=True, padx=5, pady=5)
         
         raw_txt = f"Room: {item.get('room')}\nQty: {item.get('qty')}\n\nDescription:\n{item.get('raw_description')}"
-        lbl_raw = ctk.CTkLabel(raw_info_container, text=raw_txt, justify="left", wraplength=450, anchor="nw")
-        lbl_raw.pack(padx=10, pady=10, fill="both", expand=True)
+        textbox_raw = ctk.CTkTextbox(raw_info_container, wrap="word", fg_color="transparent")
+        textbox_raw.insert("0.0", raw_txt)
+        textbox_raw.configure(state="disabled")
+        textbox_raw.pack(padx=10, pady=10, fill="both", expand=True)
         
         # Right side: DB Knowledge center
         db_panel = ctk.CTkFrame(top)

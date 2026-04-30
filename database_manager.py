@@ -69,10 +69,7 @@ class DatabaseManager(ctk.CTkToplevel):
         header.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         ctk.CTkLabel(header, text="Database Browser", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=20)
         
-        from batch_pdf_ui import BatchPdfIngestWindow
-        ctk.CTkButton(header, text="Batch Add (PDF)", command=lambda: BatchPdfIngestWindow(self, self.db_loader, self.categories_path, self.assets_path, self.refresh_browser_list), fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
-        
-        ctk.CTkButton(header, text="Bulk Load (CSV)", command=self.show_bulk_load_ui, fg_color="#153E83", hover_color="#0d2b61").pack(side="right", padx=10)
+        ctk.CTkButton(header, text="Add New Item", command=self.show_form_view, fg_color="green", hover_color="darkgreen").pack(side="right", padx=20)
 
         self.tree_frame = ctk.CTkScrollableFrame(self.browser_frame)
         self.tree_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)

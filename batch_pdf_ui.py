@@ -13,7 +13,7 @@ import matching_engine
 from llm_service import LocalLLMClient
 
 class BatchPdfIngestWindow(ctk.CTkToplevel):
-    def __init__(self, master, db_loader, categories_path, assets_path, refresh_callback):
+    def __init__(self, master, db_loader, categories_path, assets_path, refresh_callback, unmatched_items=None):
         super().__init__(master)
         
         self.title("Batch Add Unmatched PDF Items")
@@ -37,17 +37,28 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         self.grid_columnconfigure(1, weight=2)
         self.grid_rowconfigure(0, weight=1)
         
-        self.build_left_pane()
+        self.build_left_pane(bool(unmatched_items))
         self.build_right_pane()
         
-    def build_left_pane(self):
+        if unmatched_items:
+            self.unmatched_items = []
+            for it in unmatched_items:
+                if it["raw_description"] not in [x["raw_description"] for x in self.unmatched_items]:
+                    self.unmatched_items.append(it)
+            self.after(100, self._render_queue)
+        
+    def build_left_pane(self, has_items=False):
         self.left_frame = ctk.CTkFrame(self)
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.left_frame.grid_rowconfigure(2, weight=1)
         self.left_frame.grid_columnconfigure(0, weight=1)
         
         ctk.CTkLabel(self.left_frame, text="1. Select Job Folder", font=ctk.CTkFont(weight="bold")).grid(row=0, column=0, pady=(10, 5), padx=10, sticky="w")
-        ctk.CTkButton(self.left_frame, text="Browse for Agreement...", command=self.load_pdf).grid(row=1, column=0, pady=5, padx=10, sticky="ew")
+        btn_browse = ctk.CTkButton(self.left_frame, text="Browse for Agreement...", command=self.load_pdf)
+        btn_browse.grid(row=1, column=0, pady=5, padx=10, sticky="ew")
+        
+        if has_items:
+            btn_browse.configure(state="disabled", text="Items loaded from session.")
         
         self.queue_frame = ctk.CTkScrollableFrame(self.left_frame)
         self.queue_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
@@ -405,7 +416,9 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
 
         # Push catalog update
         self.master.catalog = self.db_loader.load_all_categories()
-        if hasattr(self.master.master, 'refresh_match_service'):
+        if hasattr(self.master, 'refresh_match_service'):
+            self.master.refresh_match_service()
+        elif hasattr(self.master, 'master') and hasattr(self.master.master, 'refresh_match_service'):
             self.master.master.refresh_match_service()
 
 class DatabasePicker(ctk.CTkToplevel):
