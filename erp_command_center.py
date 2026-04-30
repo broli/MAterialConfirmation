@@ -14,6 +14,9 @@ from client_pdf_generator import PDFGenerator
 from excel_routing_engine import ExcelRoutingEngine
 from database_manager import DatabaseManager
 from batch_pdf_ui import BatchPdfIngestWindow
+from settings_ui import SettingsWindow
+from config_manager import ConfigManager
+from ollama_utils import OllamaUtils
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -39,9 +42,13 @@ class ERPCommandCenter(ctk.CTk):
             self.catalog,
             debug_mode=False,
             log_dir="logs",
+            llm_model=ConfigManager.get("llm_model")
         )
         self.ingestor = None
         self._busy    = False   # True while background ingestion is running
+        
+        # Kill Ollama on exit
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         
         # UI layout
         self.grid_columnconfigure(0, weight=1)
@@ -61,6 +68,9 @@ class ERPCommandCenter(ctk.CTk):
         
         self.btn_batch_add = ctk.CTkButton(self.header_frame, text="📄 Batch Add (PDF)", fg_color="green", hover_color="darkgreen", command=self.open_batch_ingest)
         self.btn_batch_add.pack(side="left", padx=10)
+
+        self.btn_settings = ctk.CTkButton(self.header_frame, text="⚙️ Settings", fg_color="#555555", hover_color="#333333", command=self.open_settings_window)
+        self.btn_settings.pack(side="right", padx=10)
 
         self.btn_manage_db = ctk.CTkButton(self.header_frame, text="⚙️ Manage Database", fg_color="#153E83", hover_color="#0d2b61", command=self.open_database_manager)
         self.btn_manage_db.pack(side="right", padx=10)
@@ -248,6 +258,13 @@ class ERPCommandCenter(ctk.CTk):
 
     def open_database_manager(self):
         DatabaseManager(self, self.db_loader)
+        
+    def open_settings_window(self):
+        SettingsWindow(self)
+        
+    def on_closing(self):
+        OllamaUtils.stop_server()
+        self.destroy()
         
     def open_batch_ingest(self):
         BatchPdfIngestWindow(self, self.db_loader, os.path.join(self.db_loader.base_path, "categories"), os.path.join(self.db_loader.base_path, "assets"), self.populate_verification_ui)

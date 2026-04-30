@@ -7,6 +7,8 @@ import shutil
 import threading
 from PIL import Image
 
+from schema.contract_item import ContractItem
+from config_manager import ConfigManager
 from contract_ingestion import OneClickIngestor
 from product_service import ProductService
 import matching_engine
@@ -248,7 +250,7 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
 
     def _process_pdf(self, pdf_path):
         try:
-            ms = matching_engine.MatchService(self.master.catalog)
+            ms = matching_engine.MatchService(self.master.catalog, llm_model=ConfigManager.get("llm_model"))
             
             # ── Safety Check: Is Ollama up? ──────────────────────────────
             if self.winfo_exists():
@@ -278,7 +280,7 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
             num_items = len(data["line_items"])
             self.log_to_console(f"Found {num_items} items in PDF. Starting matching pipeline...")
                 
-            ms = matching_engine.MatchService(self.master.catalog)
+            ms = matching_engine.MatchService(self.master.catalog, llm_model=ConfigManager.get("llm_model"))
             
             def update_progress(current, total):
                 if self.winfo_exists() and self.status_lbl.winfo_exists():

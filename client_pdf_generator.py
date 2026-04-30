@@ -1,6 +1,7 @@
 import os
 from fpdf import FPDF
 from PIL import Image
+from config_manager import ConfigManager
 
 class MaterialConfirmationPDF(FPDF):
     def __init__(self, client_info, assets_path):
@@ -103,7 +104,11 @@ class PDFGenerator:
         pdf.add_page()
         
         # --- COVER PAGE ---
-        cover_img = os.path.join(self.assets_path, "Bath Document Cover Page.png")
+        cover_filename = ConfigManager.get("cover_image_filename")
+        if not cover_filename:
+            cover_filename = "Bath Document Cover Page.png"
+            
+        cover_img = os.path.join(self.assets_path, cover_filename)
         if os.path.exists(cover_img):
             pdf.image(cover_img, x=0, y=0, w=215.9)
             pdf.set_y(150) 

@@ -1,0 +1,5 @@
+{
+    "llm_model": "llama3.1:latest",
+    "show_ollama_window": false,
+    "cover_image_filename": "Material List Cover Page.png"
+}

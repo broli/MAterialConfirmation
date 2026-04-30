@@ -445,7 +445,7 @@ class MatchService:
         "gray":   "gray50",
     }
 
-    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs"):
+    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs", llm_model: str = "llama3"):
         """
         Parameters
         ----------
@@ -462,7 +462,7 @@ class MatchService:
         self._catalog    = catalog
         self._debug_mode = debug_mode
         self._log_dir    = log_dir
-        self._llm        = LocalLLMClient(debug_mode=debug_mode, log_dir=log_dir)
+        self._llm        = LocalLLMClient(model=llm_model, debug_mode=debug_mode, log_dir=log_dir)
         # Create the match logger only when debug is on (avoids empty log files).
         self._match_log: MatchDebugLogger | None = (
             MatchDebugLogger(log_dir) if debug_mode else None
