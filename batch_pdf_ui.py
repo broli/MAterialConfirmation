@@ -211,10 +211,11 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
 
     def log_to_console(self, msg):
         def _update():
-            self.console_box.configure(state="normal")
-            self.console_box.insert("end", msg + "\n")
-            self.console_box.see("end")
-            self.console_box.configure(state="disabled")
+            if self.winfo_exists() and self.console_box.winfo_exists():
+                self.console_box.configure(state="normal")
+                self.console_box.insert("end", msg + "\n")
+                self.console_box.see("end")
+                self.console_box.configure(state="disabled")
         self.after(0, _update)
 
     def check_ai_connectivity(self):
@@ -238,45 +239,73 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         if not pdf_path: return
         
         self.status_lbl.configure(text="Reading PDF...")
+        self.log_to_console("--- Starting Batch PDF Ingestion ---")
+        self.log_to_console(f"Selected: {os.path.basename(pdf_path)}")
+        self.progress_bar.start()
+        
         # Start matching pipeline in thread
         threading.Thread(target=self._process_pdf, args=(pdf_path,), daemon=True).start()
 
     def _process_pdf(self, pdf_path):
-        ms = matching_engine.MatchService(self.master.catalog)
-        
-        # ── Safety Check: Is Ollama up? ──────────────────────────────
-        self.after(0, lambda: self.status_lbl.configure(text="🔍 Checking AI service..."))
-        ready, err = ms.check_ollama_ready()
-        if not ready:
-            self.after(0, lambda: messagebox.showerror("Ollama Connection Error", 
-                f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."))
-            self.after(0, lambda: self.status_lbl.configure(text="❌ Ollama Offline."))
-            return
+        try:
+            ms = matching_engine.MatchService(self.master.catalog)
+            
+            # ── Safety Check: Is Ollama up? ──────────────────────────────
+            if self.winfo_exists():
+                self.after(0, lambda: self.status_lbl.configure(text="🔍 Checking AI service..."))
+            self.log_to_console("Checking AI service...")
+            
+            ready, err = ms.check_ollama_ready()
+            if not ready:
+                if self.winfo_exists():
+                    self.after(0, lambda: messagebox.showerror("Ollama Connection Error", 
+                        f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."))
+                    self.after(0, lambda: self.status_lbl.configure(text="❌ Ollama Offline."))
+                self.log_to_console("Error: Ollama Offline.")
+                return
 
-        ingestor = OneClickIngestor(pdf_path)
-        data = ingestor.extract_data()
-        
-        if "line_items" not in data or not data["line_items"]:
-            self.after(0, lambda: messagebox.showwarning("Warning", "No readable items found in PDF."))
-            self.after(0, lambda: self.status_lbl.configure(text=""))
-            return
+            self.log_to_console("Extracting text from PDF... (this may take a moment)")
+            ingestor = OneClickIngestor(pdf_path)
+            data = ingestor.extract_data()
             
-        ms = matching_engine.MatchService(self.master.catalog)
-        
-        def update_progress(current, total):
-            self.after(0, lambda: self.status_lbl.configure(text=f"Extracting item {current} of {total} with LLM..."))
-            
-        enriched = ms.enrich_items(data["line_items"], progress_callback=update_progress)
-        
-        self.unmatched_items = []
-        for it in enriched:
-            score_color = it.get("_match", {}).get("color_code", "red")
-            if score_color != "green" and not it.get("_match", {}).get("is_ignored"):
-                # Avoid duplicates
-                if it["raw_description"] not in [x["raw_description"] for x in self.unmatched_items]:
-                    self.unmatched_items.append(it)
+            if "line_items" not in data or not data["line_items"]:
+                if self.winfo_exists():
+                    self.after(0, lambda: messagebox.showwarning("Warning", "No readable items found in PDF."))
+                    self.after(0, lambda: self.status_lbl.configure(text=""))
+                self.log_to_console("Error: No items found in PDF.")
+                return
                 
-        self.after(0, self._render_queue)
+            num_items = len(data["line_items"])
+            self.log_to_console(f"Found {num_items} items in PDF. Starting matching pipeline...")
+                
+            ms = matching_engine.MatchService(self.master.catalog)
+            
+            def update_progress(current, total):
+                if self.winfo_exists() and self.status_lbl.winfo_exists():
+                    self.after(0, lambda: self.status_lbl.configure(text=f"Extracting item {current} of {total} with LLM..."))
+                    
+            def status_cb(msg):
+                self.log_to_console(msg)
+                
+            enriched = ms.enrich_items(data["line_items"], progress_callback=update_progress, status_callback=status_cb)
+            
+            self.unmatched_items = []
+            for it in enriched:
+                score_color = it.get("_match", {}).get("color_code", "red")
+                if score_color != "green" and not it.get("_match", {}).get("is_ignored"):
+                    # Avoid duplicates
+                    if it["raw_description"] not in [x["raw_description"] for x in self.unmatched_items]:
+                        self.unmatched_items.append(it)
+                        
+            if self.winfo_exists():
+                self.after(0, self._render_queue)
+                
+        except Exception as e:
+            self.log_to_console(f"Error during ingestion: {str(e)}")
+        finally:
+            if self.winfo_exists() and self.progress_bar.winfo_exists():
+                self.after(0, self.progress_bar.stop)
+                self.after(0, lambda: self.progress_bar.set(0))
         
     def _render_queue(self):
         self.status_lbl.configure(text=f"Found {len(self.unmatched_items)} unmatched items.")
