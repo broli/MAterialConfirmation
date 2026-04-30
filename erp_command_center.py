@@ -56,7 +56,7 @@ class ERPCommandCenter(ctk.CTk):
         self.debug_var = ctk.BooleanVar(value=False)
         ctk.CTkSwitch(self.header_frame, text="Debug Mode (Log Parsing)", variable=self.debug_var, command=self.toggle_debug).pack(side="right", padx=10)
 
-        self.btn_load_dir = ctk.CTkButton(self.header_frame, text="📁 Pick Job Folder", command=self.load_directory)
+        self.btn_load_dir = ctk.CTkButton(self.header_frame, text="📁 Pick Agreement", command=self.load_directory)
         self.btn_load_dir.pack(side="left", padx=20)
         
         self.btn_batch_add = ctk.CTkButton(self.header_frame, text="📄 Batch Add (PDF)", fg_color="green", hover_color="darkgreen", command=self.open_batch_ingest)
@@ -140,7 +140,7 @@ class ERPCommandCenter(ctk.CTk):
     def _set_idle(self, msg: str = "Ready.") -> None:
         """Re-enable interactive buttons and clear the busy status."""
         self._busy = False
-        self.btn_load_dir.configure(state="normal", text="📁 Pick Job Folder")
+        self.btn_load_dir.configure(state="normal", text="📁 Pick Agreement")
         self.status_bar.configure(text=msg, text_color="gray")
 
     def _update_status(self, msg: str) -> None:
