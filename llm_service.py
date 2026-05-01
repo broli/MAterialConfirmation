@@ -79,13 +79,13 @@ class LocalLLMClient:
     def __init__(
         self,
         host: str = "http://localhost:11434",
-        model: str = "llama3",
+        model: str = None,
         log_callback=None,
         debug_mode: bool = False,
         log_dir: str = "logs",
     ):
         self.host        = host
-        self.model       = model
+        self._model_override = model
         self.log_callback = log_callback
         self.debug_mode  = debug_mode
         self.log_dir     = log_dir
@@ -98,6 +98,14 @@ class LocalLLMClient:
             ),
             mode=instructor.Mode.JSON,
         )
+
+    @property
+    def model(self) -> str:
+        """Dynamically fetch the model from config unless overridden during init."""
+        if self._model_override is not None:
+            return self._model_override
+        from config_manager import ConfigManager
+        return ConfigManager.get("llm_model")
 
     # ──────────────────────────────────────────────────────────────────────────
     # Logging helpers
@@ -247,7 +255,7 @@ class LocalLLMClient:
 # ─── CLI self-test ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Testing connection to Ollama...")
-    llm = LocalLLMClient(model="llama3", debug_mode=True)
+    llm = LocalLLMClient(model=None, debug_mode=True)
 
     success, msg = llm.check_connection()
     if success:
@@ -266,4 +274,4 @@ if __name__ == "__main__":
             print(f"Test failed: {e}")
     else:
         print(f"Ollama Connection Failed: {msg}")
-        print("Ensure Ollama is running and model is pulled ('ollama run llama3').")
+        print("Ensure Ollama is running and model is pulled ('ollama run llama3.1').")

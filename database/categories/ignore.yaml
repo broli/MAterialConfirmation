@@ -183,3 +183,55 @@
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Electrical Cap off Electrical
+- id: '21'
+  sku: MISSING_SKU
+  brand: ''
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Special Requests DOES NOT INCLUDE: - FLOORING MATERIAL
+    - VANITY MATERIAL - LIGHT FIXTURE'
+  printable:
+    finish: ''
+    description: ''
+    dimensions: {}
+- id: '22'
+  sku: MISSING_SKU
+  brand: ''
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Electrical Replace "Like for Like" Light Fixture
+    Using Existing Electrical Does Not Include Additional Electrical / Patch & Paint
+  printable:
+    finish: ''
+    description: ''
+    dimensions: {}
+- id: '23'
+  sku: MISSING_SKU
+  brand: ''
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: IGNORE
+  oneclick_description: Flooring Flooring Extra Labor Remove Replace Furniture / Appliances
+    / Toilet REMOVE & REPLACE EXISTING/NEW CLIENT PROVIDED TOILET Remove & Reinstall
+    Existing Client Toilet Installation of client provided standard toilet (Standard
+    toilet mounted with external and visible bolts, accessible from the outside).
+    Includes the installation using the existing Toilet Flange and Water Shut-Off
+    Valve, and the replacement of the Wax ring and Water line.
+  printable:
+    finish: ''
+    description: ''
+    dimensions: {}
+- id: '24'
+  sku: MISSING_SKU
+  brand: ''
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: IGNORE
+  oneclick_description: Flooring Flooring Labor Only CERAMIC INSTALLATION MINIMUM
+    CERAMIC INSTALLATION MINIMUM LABOR (WHEN UNDER 80 SQFT)
+  printable:
+    finish: ''
+    description: ''
+    dimensions: {}

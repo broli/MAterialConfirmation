@@ -8,9 +8,29 @@ class ConfigManager:
     CONFIG_FILE = "settings.json"
     
     DEFAULT_SETTINGS = {
-        "llm_model": "llama3",
+        "llm_model": "llama3.1",
         "show_ollama_window": True,
-        "cover_image_filename": "Bath Document Cover Page.png"
+        "cover_image_filename": "Bath Document Cover Page.png",
+        "window_maximized": True,
+        "window_width": 1100,
+        "window_height": 750,
+        "window_x": 100,
+        "window_y": 100,
+        "batch_window_maximized": True,
+        "batch_window_width": 1100,
+        "batch_window_height": 700,
+        "batch_window_x": 150,
+        "batch_window_y": 150,
+        "db_window_maximized": True,
+        "db_window_width": 1100,
+        "db_window_height": 750,
+        "db_window_x": 150,
+        "db_window_y": 150,
+        "settings_window_maximized": False,
+        "settings_window_width": 550,
+        "settings_window_height": 650,
+        "settings_window_x": 200,
+        "settings_window_y": 200
     }
     
     @classmethod

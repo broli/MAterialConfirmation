@@ -3,7 +3,7 @@ import os
 sys.path.append(os.getcwd())
 from llm_service import LocalLLMClient
 
-client = LocalLLMClient(model="llama3")
+client = LocalLLMClient(model=None)
 
 test_product = {
     'category': 'Faucet',

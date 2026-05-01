@@ -19,8 +19,19 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         super().__init__(master)
         
         self.title("Batch Add Unmatched PDF Items")
-        self.geometry("1100x700")
-        self.transient(master)
+        
+        # Load window geometry from config
+        width = ConfigManager.get("batch_window_width")
+        height = ConfigManager.get("batch_window_height")
+        x = ConfigManager.get("batch_window_x")
+        y = ConfigManager.get("batch_window_y")
+        is_maximized = ConfigManager.get("batch_window_maximized")
+
+        self.geometry(f"{width}x{height}+{x}+{y}")
+        if is_maximized:
+            self.after(200, lambda: self.state('zoomed'))
+
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
         self.focus_set()
         self.attributes("-topmost", True)
@@ -205,6 +216,19 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
             if printable.get("image_file"):
                 # Just show the filename for now
                 self.image_path_var.set(printable.get("image_file"))
+
+    def on_closing(self):
+        # Save window state before exiting
+        is_maximized = (self.state() == 'zoomed')
+        ConfigManager.set("batch_window_maximized", is_maximized)
+        
+        if not is_maximized:
+            ConfigManager.set("batch_window_width", self.winfo_width())
+            ConfigManager.set("batch_window_height", self.winfo_height())
+            ConfigManager.set("batch_window_x", self.winfo_x())
+            ConfigManager.set("batch_window_y", self.winfo_y())
+            
+        self.destroy()
 
     def on_category_change(self, choice):
         if choice == "ignore.yaml":

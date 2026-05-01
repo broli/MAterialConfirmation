@@ -12,10 +12,20 @@ class SettingsWindow(ctk.CTkToplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Settings")
-        self.geometry("500x550")
         
+        # Load window geometry from config
+        width = ConfigManager.get("settings_window_width")
+        height = ConfigManager.get("settings_window_height")
+        x = ConfigManager.get("settings_window_x")
+        y = ConfigManager.get("settings_window_y")
+        is_maximized = ConfigManager.get("settings_window_maximized")
+
+        self.geometry(f"{width}x{height}+{x}+{y}")
+        if is_maximized:
+            self.after(200, lambda: self.state('zoomed'))
+            
         # Make it modal
-        self.transient(parent)
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
 
         self.grid_columnconfigure(0, weight=1)
@@ -32,6 +42,19 @@ class SettingsWindow(ctk.CTkToplevel):
         self.progress.start()
         
         threading.Thread(target=self._load_data, daemon=True).start()
+
+    def on_closing(self):
+        # Save window state before exiting
+        is_maximized = (self.state() == 'zoomed')
+        ConfigManager.set("settings_window_maximized", is_maximized)
+        
+        if not is_maximized:
+            ConfigManager.set("settings_window_width", self.winfo_width())
+            ConfigManager.set("settings_window_height", self.winfo_height())
+            ConfigManager.set("settings_window_x", self.winfo_x())
+            ConfigManager.set("settings_window_y", self.winfo_y())
+            
+        self.destroy()
 
     def _load_data(self):
         is_installed = OllamaUtils.is_installed()
@@ -101,7 +124,7 @@ class SettingsWindow(ctk.CTkToplevel):
             pull_frame = ctk.CTkFrame(actions_frame, fg_color="transparent")
             pull_frame.pack(pady=10)
             
-            self.entry_pull = ctk.CTkEntry(pull_frame, placeholder_text="e.g. llama3")
+            self.entry_pull = ctk.CTkEntry(pull_frame, placeholder_text="e.g. llama3.1")
             self.entry_pull.pack(side="left", padx=5)
             
             self.btn_pull = ctk.CTkButton(pull_frame, text="⬇️ Pull/Update", command=self.pull_model)

@@ -13,8 +13,20 @@ class DatabaseManager(ctk.CTkToplevel):
         super().__init__(master)
         
         self.title("Catalog Manager")
-        self.geometry("1100x750")
-        self.transient(master)
+        
+        # Load window geometry from config
+        from config_manager import ConfigManager
+        width = ConfigManager.get("db_window_width")
+        height = ConfigManager.get("db_window_height")
+        x = ConfigManager.get("db_window_x")
+        y = ConfigManager.get("db_window_y")
+        is_maximized = ConfigManager.get("db_window_maximized")
+
+        self.geometry(f"{width}x{height}+{x}+{y}")
+        if is_maximized:
+            self.after(200, lambda: self.state('zoomed'))
+
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
         self.focus_set()
         self.attributes("-topmost", True)
@@ -410,6 +422,20 @@ class DatabaseManager(ctk.CTkToplevel):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
         if file_path:
             self.image_path_var.set(file_path)
+
+    def on_closing(self):
+        # Save window state before exiting
+        from config_manager import ConfigManager
+        is_maximized = (self.state() == 'zoomed')
+        ConfigManager.set("db_window_maximized", is_maximized)
+        
+        if not is_maximized:
+            ConfigManager.set("db_window_width", self.winfo_width())
+            ConfigManager.set("db_window_height", self.winfo_height())
+            ConfigManager.set("db_window_x", self.winfo_x())
+            ConfigManager.set("db_window_y", self.winfo_y())
+            
+        self.destroy()
 
     def on_category_change(self, choice):
         if choice == "ignore.yaml":

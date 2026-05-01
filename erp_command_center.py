@@ -26,7 +26,29 @@ class ERPCommandCenter(ctk.CTk):
         super().__init__()
 
         self.title("PKB ERP Command Center v2.6")
-        self.geometry("1100x750")
+        
+        # Load window geometry from config
+        width = ConfigManager.get("window_width")
+        height = ConfigManager.get("window_height")
+        x = ConfigManager.get("window_x")
+        y = ConfigManager.get("window_y")
+        is_maximized = ConfigManager.get("window_maximized")
+
+        self.geometry(f"{width}x{height}+{x}+{y}")
+        if is_maximized:
+            # We use after() to ensure the window is drawn before maximizing
+            self.after(200, lambda: self.state('zoomed'))
+
+        # Set Window Icon
+        icon_path = os.path.join(os.path.dirname(__file__), "icon", "app_icon.ico")
+        if os.path.exists(icon_path):
+            try:
+                self.iconbitmap(icon_path)
+                # This trick makes the icon appear in the Windows Taskbar correctly
+                import ctypes
+                ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pkb.erp.materialconfirm.v26")
+            except Exception:
+                pass
 
         self.target_pdf_dir = ""
         self.session_path   = ""
@@ -41,8 +63,7 @@ class ERPCommandCenter(ctk.CTk):
         self.match_service = MatchService(
             self.catalog,
             debug_mode=False,
-            log_dir="logs",
-            llm_model=ConfigManager.get("llm_model")
+            log_dir="logs"
         )
         self.ingestor = None
         self._busy    = False   # True while background ingestion is running
@@ -263,6 +284,17 @@ class ERPCommandCenter(ctk.CTk):
         SettingsWindow(self)
         
     def on_closing(self):
+        # Save window state before exiting
+        is_maximized = (self.state() == 'zoomed')
+        ConfigManager.set("window_maximized", is_maximized)
+        
+        if not is_maximized:
+            # If we are in 'normal' state, save the specific dimensions
+            ConfigManager.set("window_width", self.winfo_width())
+            ConfigManager.set("window_height", self.winfo_height())
+            ConfigManager.set("window_x", self.winfo_x())
+            ConfigManager.set("window_y", self.winfo_y())
+
         OllamaUtils.stop_server()
         self.destroy()
         

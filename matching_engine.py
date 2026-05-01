@@ -445,7 +445,7 @@ class MatchService:
         "gray":   "gray50",
     }
 
-    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs", llm_model: str = "llama3"):
+    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs", llm_model: str = None):
         """
         Parameters
         ----------

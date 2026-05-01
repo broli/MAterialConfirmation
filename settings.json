@@ -1,5 +1,25 @@
 {
     "llm_model": "llama3.1:latest",
     "show_ollama_window": false,
-    "cover_image_filename": "Material List Cover Page.png"
+    "cover_image_filename": "Material List Cover Page.png",
+    "window_maximized": true,
+    "window_width": 1100,
+    "window_height": 750,
+    "window_x": 100,
+    "window_y": 100,
+    "batch_window_maximized": true,
+    "batch_window_width": 1100,
+    "batch_window_height": 700,
+    "batch_window_x": 476,
+    "batch_window_y": 187,
+    "db_window_maximized": true,
+    "db_window_width": 1100,
+    "db_window_height": 750,
+    "db_window_x": 150,
+    "db_window_y": 150,
+    "settings_window_maximized": false,
+    "settings_window_width": 550,
+    "settings_window_height": 650,
+    "settings_window_x": 200,
+    "settings_window_y": 200
 }
