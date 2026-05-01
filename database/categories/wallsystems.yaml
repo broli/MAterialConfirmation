@@ -51,3 +51,16 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem white.png
+- id: WK-W
+  sku: MISSING_SKU
+  brand: BCI
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: PROCURE
+  oneclick_description: 'Bath Accessories Window Trim Kits BCI Window Trim Kit White
+    WK- W: Window Kit White 33X22'
+  printable:
+    finish: White
+    description: ''
+    dimensions: {}
+    image_file: wk-w_l.png

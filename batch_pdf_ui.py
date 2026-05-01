@@ -83,7 +83,7 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         
         # Identity
         ctk.CTkLabel(self.right_frame, text="Category File *").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-        self.cat_entry = ctk.CTkComboBox(self.right_frame, values=self._get_existing_categories())
+        self.cat_entry = ctk.CTkComboBox(self.right_frame, values=self._get_existing_categories(), command=self.on_category_change)
         self.cat_entry.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
         if self._get_existing_categories():
             self.cat_entry.set(self._get_existing_categories()[0])
@@ -132,7 +132,7 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
         self.dimensions_frame.grid(row=10, column=0, columnspan=2, padx=10, pady=(0,5), sticky="ew")
         
         # Action
-        self.btn_compile = ctk.CTkButton(self.right_frame, text="Compile Rules & Save", fg_color="green", command=self.initiate_save)
+        self.btn_compile = ctk.CTkButton(self.right_frame, text="Save", fg_color="green", command=self.initiate_save)
         self.btn_compile.grid(row=11, column=0, columnspan=2, pady=30)
         
         # Info label
@@ -205,6 +205,15 @@ class BatchPdfIngestWindow(ctk.CTkToplevel):
             if printable.get("image_file"):
                 # Just show the filename for now
                 self.image_path_var.set(printable.get("image_file"))
+
+    def on_category_change(self, choice):
+        if choice == "ignore.yaml":
+            if not self.id_entry.get().strip():
+                # We need a db loader instance. The master catalog is passed or we can instantiate one
+                from catalog_loader import CatalogLoader
+                loader = CatalogLoader()
+                next_id = loader.get_next_ignore_id()
+                self.id_entry.insert(0, next_id)
 
     def browse_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])

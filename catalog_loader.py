@@ -67,6 +67,23 @@ class CatalogLoader:
             if not os.path.exists(img_path):
                 self.errors.append(f"MISSING IMAGE: '{item['printable']['image_file']}' referenced in {filename} (ID: {item.get('id', 'Unknown')})")
 
+    def get_next_ignore_id(self):
+        """Returns the next available integer ID from the ignore.yaml file."""
+        if not self.master_catalog:
+            self.load_all_categories()
+            
+        max_id = 0
+        for item in self.master_catalog.values():
+            if item.get('category_file') == 'ignore':
+                try:
+                    current_id = int(item['id'])
+                    if current_id > max_id:
+                        max_id = current_id
+                except ValueError:
+                    pass
+                    
+        return str(max_id + 1)
+
     def report(self):
         """Prints a summary of the validation."""
         if not self.errors:

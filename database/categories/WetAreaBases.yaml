@@ -103,3 +103,17 @@
       Length: '30'
       Depth: '14.25'
     image_file: B23605-6030L-WH-B1.png
+- id: DLT-1136601
+  sku: MISSING_SKU
+  brand: HV
+  provider: MISSING_PROVIDER
+  purchase_link: ''
+  routing_tag: WH_OR_PROCURE
+  oneclick_description: Bath Shower Bases HV Single Threshold Center Drain 60" x 36"
+  printable:
+    finish: White
+    description: ''
+    dimensions:
+      Width: '60'
+      Depth: '36'
+    image_file: white-dreamline-shower-pans-dlt-1136600-64_1200.png

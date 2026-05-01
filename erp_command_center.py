@@ -381,34 +381,60 @@ class ERPCommandCenter(ctk.CTk):
             else:
                 info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
 
-            ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w").pack(side="left", padx=5)
+            info_lbl = ctk.CTkLabel(right_f, text=info_str, width=250, anchor="w")
+            info_lbl.pack(side="left", padx=5)
 
-            # Confirm button — disabled once the user has already confirmed the item.
+            # Confirm button — toggles between Confirm and Unconfirm
             if confirmed:
                 btn_color = "gray50" if is_ignored else "green"
-                btn_text  = "Ignored" if is_ignored else "Confirmed"
-                btn_state = "disabled"
+                btn_text  = "Unconfirm"
             else:
                 btn_color = "#153E83"
                 btn_text  = "Confirm"
-                btn_state = "normal"
 
             btn_verify = ctk.CTkButton(
-                right_f, text=btn_text, width=80, fg_color=btn_color, state=btn_state,
-                command=lambda idx=i, mid=match_id: self.confirm_item(idx, mid)
+                right_f, text=btn_text, width=80, fg_color=btn_color
+            )
+            btn_verify.configure(
+                command=lambda idx=i, mid=match_id, lbl=info_lbl, btn=btn_verify: self.toggle_confirm(idx, mid, lbl, btn)
             )
             btn_verify.pack(side="right", padx=5)
 
-    def confirm_item(self, idx, match_id):
-        if not match_id:
+    def toggle_confirm(self, idx, match_id, info_lbl, btn_verify):
+        item = self.session_data["line_items"][idx]
+        current_state = item.get("confirmed", False)
+        new_state = not current_state
+        
+        if new_state and not match_id:
             messagebox.showwarning("No Match", "Cannot confirm an item with no matched ID.")
             return
             
-        self.session_data["line_items"][idx]["matched_id"] = match_id
-        self.session_data["line_items"][idx]["confirmed"] = True
+        item["confirmed"] = new_state
+        if new_state:
+            item["matched_id"] = match_id
+            self.status_bar.configure(text=f"✅ Assigned: {match_id}")
+        else:
+            item.pop("matched_id", None)
+            self.status_bar.configure(text=f"🔄 Unconfirmed: {match_id}")
+            
         self.save_session(silent=True)
-        self.status_bar.configure(text=f"✅ Assigned: {match_id}")
-        self.populate_verification_ui()
+        
+        # Update the UI elements without rebuilding the list
+        meta = item.get("_match", {})
+        conf = meta.get("confidence", 0)
+        is_ignored = meta.get("is_ignored", False)
+        
+        if new_state:
+            info_str = f"{idx+1}. IGNORED: {match_id}" if is_ignored else f"{idx+1}. CONFIRMED: {match_id}"
+            btn_color = "gray50" if is_ignored else "green"
+            btn_text = "Unconfirm"
+        else:
+            info_str = f"{idx+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{idx+1}. No Match Found"
+            btn_color = "#153E83"
+            btn_text = "Confirm"
+            
+        info_lbl.configure(text=info_str)
+        btn_verify.configure(text=btn_text, fg_color=btn_color)
 
     def inspect_item(self, item):
         top = ctk.CTkToplevel(self)

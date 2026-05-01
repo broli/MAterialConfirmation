@@ -287,7 +287,7 @@ class DatabaseManager(ctk.CTkToplevel):
         ctk.CTkLabel(self.form_frame, text="INTERNAL MATCHING LOGIC", font=ctk.CTkFont(weight="bold", size=14), text_color="#00BFFF").grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="w")
         
         ctk.CTkLabel(self.form_frame, text="Category File *", anchor="w").grid(row=2, column=0, padx=10, sticky="ew")
-        self.cat_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_existing_categories())
+        self.cat_combobox = ctk.CTkComboBox(self.form_frame, values=self.get_existing_categories(), command=self.on_category_change)
         self.cat_combobox.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="ew")
 
         ctk.CTkLabel(self.form_frame, text="Unique ID *", text_color="yellow", anchor="w").grid(row=2, column=1, padx=10, sticky="ew")
@@ -410,6 +410,12 @@ class DatabaseManager(ctk.CTkToplevel):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
         if file_path:
             self.image_path_var.set(file_path)
+
+    def on_category_change(self, choice):
+        if choice == "ignore.yaml":
+            if not self.id_entry.get().strip():
+                next_id = self.db_loader.get_next_ignore_id()
+                self.id_entry.insert(0, next_id)
 
     def save_product(self):
         cat_file = self.cat_combobox.get().strip()

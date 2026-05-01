@@ -85,8 +85,12 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 - [ ] **Inventory Integration:** Basic connection to stock, to auto route requests
 - [ ] **Payment schedule email text generator:** Automated text for BT invoices.
 - [ ] **automatic filling of job material Excel** For cart reviews for the PM based on the job folder name.
+- [x] **Update PDF Generator** to handle 2 items per page
+- [ ] **create database maintenance tool** to clean up unused items, merge duplicates, etc..
+    
 
 ## 📅 Phase X: MISC and future ideas, even dreaming
+- [ ] **Support full-width items in PDF** fallback for items that need to span both columns.
 - [ ] **Create automated daily logs and summary** of the activity of the ERP command center.
 - [ ] **auto clean database** clean images not used. Clean items that are not used for a certain amount of time. 
 - [ ] **real usage** get the real usage of features to improve the app.

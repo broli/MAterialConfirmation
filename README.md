@@ -12,6 +12,9 @@ The **PKB Material Confirmation System** is a bespoke operational tool designed 
 
 Our mission is to eliminate manual errors and repetitive administrative tasks, ensuring that every measurement, color selection, and product specification is perfectly aligned between the client's vision and the project's execution.
 
+> [!TIP]
+> **New to the system?** Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v2.6 features.
+
 ---
 
 ## 📈 The Evolution: From Phase 1 to Phase 2

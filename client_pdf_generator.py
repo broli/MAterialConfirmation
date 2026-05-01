@@ -95,6 +95,97 @@ class PDFGenerator:
             print(f"  [!] Error optimizing custom image: {e}")
             return None
 
+    def _get_item_layout_data(self, item, pdf):
+        printable = item.get("printable", {})
+        target_w = 90
+        target_h = 0
+        opt_image_path = None
+        
+        image_file = printable.get("image_file")
+        if image_file:
+            opt_image_path = self.optimize_image(image_file)
+            if opt_image_path:
+                try:
+                    with Image.open(opt_image_path) as img:
+                        img_w, img_h = img.size
+                    ratio = img_h / img_w
+                    target_h = target_w * ratio
+                    if target_h > 100:
+                        target_h = 100
+                        target_w = target_h / ratio
+                except Exception as e:
+                    print(f"Error sizing image: {e}")
+                    pass
+                    
+        pdf.set_font("helvetica", "B", 12)
+        qty = item.get("quantity", item.get("qty", 1))
+        qty_str = f" (Qty: {qty})" if qty > 1 else ""
+        title = printable.get('description', 'Item Description')
+        
+        w = pdf.get_string_width(f"{title}{qty_str}")
+        lines = max(1, int(w / 90) + 1)
+        title_h = lines * 8
+        
+        specs_h = 6 if printable.get("finish") else 0
+        dims_h = 6 if printable.get("dimensions") else 0
+        
+        img_block_h = (target_h + 5) if opt_image_path else 10
+        total_h = title_h + specs_h + dims_h + img_block_h + 10
+        
+        return {
+            "opt_image_path": opt_image_path,
+            "target_w": target_w,
+            "target_h": target_h,
+            "total_h": total_h
+        }
+
+    def _render_item(self, pdf, item, layout_data, x_offset):
+        pdf.set_x(x_offset)
+        printable = item.get("printable", {})
+        
+        pdf.set_font("helvetica", "B", 12)
+        pdf.set_text_color(0, 51, 102)
+        qty = item.get("quantity", item.get("qty", 1))
+        qty_str = f" (Qty: {qty})" if qty > 1 else ""
+        
+        title = printable.get('description', 'Item Description')
+        # multi_cell automatically advances Y, we need to handle X manually
+        current_y = pdf.get_y()
+        pdf.set_xy(x_offset, current_y)
+        pdf.multi_cell(90, 8, f"{title}{qty_str}")
+        
+        pdf.set_font("helvetica", "", 10)
+        pdf.set_text_color(0, 0, 0)
+        
+        specs = []
+        if printable.get("finish"):
+            specs.append(f"Finish: {printable.get('finish')}")
+            
+        if specs:
+            pdf.set_x(x_offset)
+            pdf.cell(90, 6, " | ".join(specs), ln=True)
+        
+        dims = printable.get("dimensions", {})
+        if dims:
+            dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
+            pdf.set_x(x_offset)
+            # Use multi_cell for dimensions to prevent overflow
+            pdf.multi_cell(90, 6, f"Dimensions: {dim_string}")
+        
+        opt_image_path = layout_data["opt_image_path"]
+        if opt_image_path:
+            pdf.set_x(x_offset)
+            pdf.image(opt_image_path, w=layout_data["target_w"], h=layout_data["target_h"])
+            pdf.ln(5)
+        else:
+            pdf.set_x(x_offset)
+            pdf.set_font("helvetica", "B", 10)
+            pdf.set_text_color(255, 0, 0)
+            pdf.cell(90, 10, "[ Image missing from database assets ]", ln=True)
+            pdf.set_text_color(0, 0, 0)
+            
+        return pdf.get_y()
+
     def create_pdf(self, payload):
         client_info = payload.get("client_info", {})
         products = payload.get("products", [])
@@ -154,75 +245,39 @@ class PDFGenerator:
             pdf.ln(5)
             pdf.set_font("helvetica", "B", 16)
             pdf.set_text_color(1, 161, 219)
+            pdf.set_x(15)
             pdf.cell(0, 10, room_name.upper(), ln=True, align="L")
-            pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
+            pdf.line(15, pdf.get_y(), 205, pdf.get_y())
             pdf.ln(5)
             
-            for item in room_products:
-                printable = item.get("printable", {})
-                target_w = 90
-                target_h = 0
-                opt_image_path = None
+            # Process in pairs
+            for i in range(0, len(room_products), 2):
+                item_left = room_products[i]
+                item_right = room_products[i+1] if i+1 < len(room_products) else None
                 
-                image_file = printable.get("image_file")
-                if image_file:
-                    opt_image_path = self.optimize_image(image_file)
-                    if opt_image_path:
-                        with Image.open(opt_image_path) as img:
-                            img_w, img_h = img.size
-                        ratio = img_h / img_w
-                        target_h = target_w * ratio
-                        
-                        if target_h > 100:
-                            target_h = 100
-                            target_w = target_h / ratio
+                layout_left = self._get_item_layout_data(item_left, pdf)
+                layout_right = self._get_item_layout_data(item_right, pdf) if item_right else None
                 
-                block_height = 8 + 6 + 15  
-                if printable.get("dimensions", {}):
-                    block_height += 6
-                if opt_image_path:
-                    block_height += target_h + 5
-                else:
-                    block_height += 10
-                block_height += 10 
-                
-                if pdf.get_y() + block_height > 260:
-                    pdf.add_page()
-                
-                pdf.set_font("helvetica", "B", 12)
-                pdf.set_text_color(0, 51, 102)
-                qty = item.get("quantity", item.get("qty", 1))
-                qty_str = f" (Qty: {qty})" if qty > 1 else ""
-                
-                title = printable.get('description', 'Item Description')
-                pdf.multi_cell(0, 8, f"{title}{qty_str}")
-                
-                pdf.set_font("helvetica", "", 10)
-                pdf.set_text_color(0, 0, 0)
-                
-                specs = []
-                if printable.get("finish"):
-                    specs.append(f"Finish: {printable.get('finish')}")
+                max_est_h = layout_left["total_h"]
+                if layout_right and layout_right["total_h"] > max_est_h:
+                    max_est_h = layout_right["total_h"]
                     
-                if specs:
-                    pdf.cell(0, 6, " | ".join(specs), ln=True)
+                # Safe margin at bottom
+                if pdf.get_y() + max_est_h > 260:
+                    pdf.add_page()
+                    
+                start_y = pdf.get_y()
                 
-                dims = printable.get("dimensions", {})
-                if dims:
-                    dim_string = " | ".join([f"{k.replace('_', ' ').title()}: {v}" for k, v in dims.items()])
-                    pdf.cell(0, 6, f"Dimensions: {dim_string}", ln=True)
+                end_y_left = self._render_item(pdf, item_left, layout_left, 15)
                 
-                if opt_image_path:
-                    pdf.image(opt_image_path, w=target_w, h=target_h)
-                    pdf.ln(5)
-                else:
-                    pdf.set_font("helvetica", "B", 10)
-                    pdf.set_text_color(255, 0, 0)
-                    pdf.cell(0, 10, "[ Image missing from database assets ]", ln=True)
-                    pdf.set_text_color(0, 0, 0)
-                
-                pdf.ln(3)
-                pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 190, pdf.get_y())
+                end_y_right = start_y
+                if item_right:
+                    pdf.set_y(start_y)
+                    end_y_right = self._render_item(pdf, item_right, layout_right, 115)
+                    
+                final_y = max(end_y_left, end_y_right) + 5
+                pdf.set_y(final_y)
+                pdf.line(15, pdf.get_y(), 205, pdf.get_y())
                 pdf.ln(3) 
                 
         # --- CUSTOM PAGES ---
