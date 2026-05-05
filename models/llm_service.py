@@ -104,7 +104,7 @@ class LocalLLMClient:
         """Dynamically fetch the model from config unless overridden during init."""
         if self._model_override is not None:
             return self._model_override
-        from config_manager import ConfigManager
+        from models.config_manager import ConfigManager
         return ConfigManager.get("llm_model")
 
     # ──────────────────────────────────────────────────────────────────────────

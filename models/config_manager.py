@@ -30,7 +30,8 @@ class ConfigManager:
         "settings_window_width": 550,
         "settings_window_height": 650,
         "settings_window_x": 200,
-        "settings_window_y": 200
+        "settings_window_y": 200,
+        "last_pdf_dir": ""
     }
     
     @classmethod

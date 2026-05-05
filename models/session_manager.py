@@ -1,6 +1,6 @@
 import yaml
 import os
-from catalog_loader import CatalogLoader
+from models.catalog_loader import CatalogLoader
 
 class SessionManager:
     def __init__(self, catalog_loader_instance):
@@ -61,7 +61,7 @@ class SessionManager:
 
 # --- Test Execution ---
 if __name__ == "__main__":
-    from client_pdf_generator import PDFGenerator  # Import the PDF engine
+    from models.client_pdf_generator import PDFGenerator  # Import the PDF engine
     
     # 1. Boot up the Database (Module 1)
     print("--- 1. Loading Master Catalog ---")

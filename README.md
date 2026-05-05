@@ -58,7 +58,7 @@ The core of the system is the **Modular Output Engine**, which generates specifi
 ---
 
 ## 🛠️ Tech Stack
-* **GUI:** [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) (Modern Windows 11 aesthetics)
+* **GUI:** [PySide6 (Qt)](https://doc.qt.io/qtforpython-6/) + [qdarktheme](https://github.com/5yutan5/PyQtDarkTheme) (MVC architecture with modern dark theming)
 * **AI Engine:** [Ollama](https://ollama.com/) (REST API Integration) + [Instructor](https://github.com/jxnl/instructor) + [Pydantic](https://docs.pydantic.dev/)
 * **Matching:** RapidFuzz (String similarity)
 * **Data:** PyYAML (Git-friendly database)

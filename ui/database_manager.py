@@ -1,0 +1,205 @@
+import os
+from PySide6.QtWidgets import (QDialog, QWidget, QVBoxLayout, QHBoxLayout, 
+                               QLabel, QPushButton, QLineEdit, QComboBox, 
+                               QTableView, QFrame, QFileDialog, QMessageBox, 
+                               QScrollArea, QCheckBox, QTextEdit, QHeaderView)
+from PySide6.QtCore import Qt, QAbstractTableModel
+from models.config_manager import ConfigManager
+from models.product_service import ProductService
+
+class CatalogTableModel(QAbstractTableModel):
+    def __init__(self, catalog=None):
+        super().__init__()
+        self._catalog = catalog or {}
+        self._data = []
+        self._headers = ["Category", "ID", "SKU", "Brand", "Routing", "Description"]
+        self._update_internal_data()
+
+    def _update_internal_data(self):
+        self._data = []
+        for item_id, item in self._catalog.items():
+            self._data.append({
+                "category": item.get("category_file", "").replace(".yaml", ""),
+                "id": item_id,
+                "sku": item.get("sku", ""),
+                "brand": item.get("brand", ""),
+                "routing": item.get("routing_tag", ""),
+                "description": item.get("oneclick_description", "")
+            })
+        # Sort by category then ID
+        self._data.sort(key=lambda x: (x["category"], x["id"]))
+
+    def update_catalog(self, new_catalog):
+        self.beginResetModel()
+        self._catalog = new_catalog
+        self._update_internal_data()
+        self.endResetModel()
+
+    def rowCount(self, parent=None):
+        return len(self._data)
+
+    def columnCount(self, parent=None):
+        return len(self._headers)
+
+    def data(self, index, role):
+        if not index.isValid(): return None
+        if role == Qt.DisplayRole:
+            row = self._data[index.row()]
+            col = index.column()
+            if col == 0: return row["category"]
+            elif col == 1: return row["id"]
+            elif col == 2: return row["sku"]
+            elif col == 3: return row["brand"]
+            elif col == 4: return row["routing"]
+            elif col == 5: 
+                desc = row["description"]
+                return desc if len(desc) < 60 else desc[:57] + "..."
+        return None
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self._headers[section]
+        return None
+        
+    def get_item_id(self, row_idx):
+        if 0 <= row_idx < len(self._data):
+            return self._data[row_idx]["id"]
+        return None
+
+class ProductEditDialog(QDialog):
+    def __init__(self, parent, product_service, categories_path, assets_path, product=None):
+        super().__init__(parent)
+        self.product_service = product_service
+        self.categories_path = categories_path
+        self.assets_path = assets_path
+        self.product = product or {}
+        self.is_new = product is None
+        
+        self.setWindowTitle("Add/Edit Product" if self.is_new else f"Edit Product: {self.product.get('id')}")
+        self.resize(500, 600)
+        
+        layout = QVBoxLayout(self)
+        
+        # Fields
+        self.fields = {}
+        for key in ["id", "brand", "model", "product", "sku", "routing_tag", "oneclick_description", "category_file"]:
+            h = QHBoxLayout()
+            h.addWidget(QLabel(f"{key.replace('_', ' ').title()}:"))
+            edit = QLineEdit()
+            edit.setText(str(self.product.get(key, "")))
+            if key == "id" and not self.is_new:
+                edit.setReadOnly(True) # IDs are keys
+            h.addWidget(edit)
+            self.fields[key] = edit
+            layout.addLayout(h)
+
+        # Image
+        img_h = QHBoxLayout()
+        img_h.addWidget(QLabel("Image Path:"))
+        self.img_edit = QLineEdit(str(self.product.get("image", "")))
+        img_h.addWidget(self.img_edit)
+        btn_img = QPushButton("Browse")
+        btn_img.clicked.connect(self.browse_image)
+        img_h.addWidget(btn_img)
+        layout.addLayout(img_h)
+
+        layout.addStretch()
+
+        # Footer
+        footer = QHBoxLayout()
+        btn_save = QPushButton("Save")
+        btn_save.clicked.connect(self.save)
+        btn_cancel = QPushButton("Cancel")
+        btn_cancel.clicked.connect(self.reject)
+        footer.addStretch()
+        footer.addWidget(btn_save)
+        footer.addWidget(btn_cancel)
+        layout.addLayout(footer)
+
+    def browse_image(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg)")
+        if path:
+            self.img_edit.setText(os.path.basename(path))
+            # Note: In a real app we'd copy the file to assets_path here.
+
+    def save(self):
+        data = {k: v.text() for k, v in self.fields.items()}
+        data["image"] = self.img_edit.text()
+        
+        cat_file = data.get("category_file")
+        if not cat_file.endswith(".yaml"):
+            cat_file += ".yaml"
+            
+        try:
+            self.product_service.upsert_to_yaml(data, cat_file, self.categories_path)
+            self.accept()
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to save: {e}")
+
+class DatabaseManager(QDialog):
+    def __init__(self, controller, parent=None):
+        super().__init__(parent)
+        self.controller = controller
+        self.db_loader = controller.db_loader
+        self.product_service = ProductService()
+        self.categories_path = os.path.join(self.db_loader.base_path, "categories")
+        self.assets_path = os.path.join(self.db_loader.base_path, "assets")
+        
+        self.setWindowTitle("Catalog Manager (Qt)")
+        self.resize(1000, 700)
+        
+        # We will use a stacked layout approach by just hiding/showing frames
+        self.main_layout = QVBoxLayout(self)
+        
+        self._build_browser_view()
+        
+        # Load data
+        self.table_model = CatalogTableModel(self.controller.catalog)
+        self.table_view.setModel(self.table_model)
+        self.table_view.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
+        
+    def _build_browser_view(self):
+        self.browser_frame = QFrame()
+        layout = QVBoxLayout(self.browser_frame)
+        
+        header = QHBoxLayout()
+        header.addWidget(QLabel("<h2>Database Browser</h2>"))
+        header.addStretch()
+        
+        btn_add = QPushButton("Add New Item")
+        btn_add.setStyleSheet("background-color: #2e7d32; color: white;")
+        btn_add.clicked.connect(self.show_add_form)
+        header.addWidget(btn_add)
+        
+        layout.addLayout(header)
+        
+        self.table_view = QTableView()
+        self.table_view.setSelectionBehavior(QTableView.SelectRows)
+        self.table_view.setSelectionMode(QTableView.SingleSelection)
+        self.table_view.setAlternatingRowColors(True)
+        self.table_view.doubleClicked.connect(self.on_row_double_click)
+        layout.addWidget(self.table_view)
+        
+        self.main_layout.addWidget(self.browser_frame)
+
+    def on_row_double_click(self, index):
+        item_id = self.table_model.get_item_id(index.row())
+        if item_id:
+            self.show_edit_form(item_id)
+
+    def show_add_form(self):
+        dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path)
+        if dlg.exec():
+            self.refresh_data()
+
+    def show_edit_form(self, item_id):
+        # Find item in catalog
+        product = self.controller.find_product_by_id(item_id)
+        if product:
+            dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path, product)
+            if dlg.exec():
+                self.refresh_data()
+
+    def refresh_data(self):
+        self.controller.refresh_catalog()
+        self.table_model.update_catalog(self.controller.catalog)

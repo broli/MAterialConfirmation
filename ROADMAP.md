@@ -103,4 +103,4 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 * **Language:** Python 3.14+
 * **Environment:** Virtual Environment (`venv`)
 * **Editor:** VS Code 
-* **Key Libraries:** `PyYAML`, `fpdf2`, `Pillow`, `CustomTkinter`
+* **Key Libraries:** `PyYAML`, `fpdf2`, `Pillow`, `PySide6`, `qdarktheme`

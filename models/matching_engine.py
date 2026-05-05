@@ -29,7 +29,7 @@ from threading import Lock
 
 from rapidfuzz import process, fuzz
 from schema.contract_item import ContractItem
-from llm_service import LocalLLMClient
+from models.llm_service import LocalLLMClient
 
 
 # ---------------------------------------------------------------------------
@@ -468,6 +468,10 @@ class MatchService:
             MatchDebugLogger(log_dir) if debug_mode else None
         )
 
+    @property
+    def debug_mode(self) -> bool:
+        return self._debug_mode
+
     def check_ollama_ready(self) -> tuple[bool, str]:
         """
         Verify the Ollama connection and model availability.
@@ -503,21 +507,18 @@ class MatchService:
             to update the UI status bar from the calling thread.
         """
         total   = len(line_items)
-        counter = [0]   # mutable container — avoids nonlocal inside nested scopes
+        counter = [0]   # items completed
+        started = [0]   # items started
         lock    = Lock()
 
         def _resolve_and_tag(item: dict) -> dict:
             """Resolve one item and return it (used inside thread pool)."""
-            # Fire pre-call status so the bar updates BEFORE the slow Ollama call
-            if status_callback:
-                short_desc = item.get("raw_description", "")[:55]
-                category   = item.get("category", "")
-                label      = f"{category}: {short_desc}" if category else short_desc
-                with lock:
-                    n = counter[0] + 1   # optimistic "about to process #n"
-                status_callback(f"🔗 Matching {n}/{total}: {label}...")
-
-            item["_match"] = self._resolve(item)
+            with lock:
+                started[0] += 1
+                n = started[0]
+            
+            status_prefix = f"[{n}/{total}]"
+            item["_match"] = self._resolve(item, status_callback, status_prefix)
             return item
 
         with ThreadPoolExecutor(max_workers=3) as pool:
@@ -586,7 +587,7 @@ class MatchService:
     # Internal helpers — not part of the public contract
     # ------------------------------------------------------------------
 
-    def _resolve(self, item: dict) -> dict:
+    def _resolve(self, item: dict, status_callback=None, status_prefix: str = "") -> dict:
         """
         Core resolution logic shared by ``enrich_items`` and ``resolve_match``.
         """
@@ -597,10 +598,16 @@ class MatchService:
         top5: list = []
         fast_path_used = False
 
+        short_desc = item.get("raw_description", "")[:50]
+        category   = item.get("category", "")
+        label      = f"{category}: {short_desc}" if category else short_desc
+
         if confirmed and "matched_id" in item:
             # User-confirmed — trust the stored decision.
             match_id   = item["matched_id"]
             confidence = 100.0
+            if status_callback:
+                status_callback(f"✅ {status_prefix} Restored: {label}")
         else:
             raw_desc = item.get("raw_description", "")
             
@@ -621,9 +628,14 @@ class MatchService:
                     fast_path_used = True
                     search_target = raw_desc
                     top5 = fast_results  # Log the fast path candidates
+                    if status_callback:
+                        status_callback(f"⚡ {status_prefix} DB Match (Fast): {label}")
             
             # --- 2. SLOW PATH (LLM Fallback) ---
             if not fast_path_used:
+                if status_callback:
+                    status_callback(f"🧠 {status_prefix} AI Match (Ollama): {label}")
+                
                 hint_section  = item.get("section") or None
                 hint_category = item.get("category") or None
                 try:

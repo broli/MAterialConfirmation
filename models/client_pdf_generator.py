@@ -1,7 +1,7 @@
 import os
 from fpdf import FPDF
 from PIL import Image
-from config_manager import ConfigManager
+from models.config_manager import ConfigManager
 
 class MaterialConfirmationPDF(FPDF):
     def __init__(self, client_info, assets_path):

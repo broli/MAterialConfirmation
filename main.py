@@ -1,5 +1,10 @@
 import os
-from erp_command_center import ERPCommandCenter
+import sys
+from PySide6.QtWidgets import QApplication
+import qdarktheme
+
+from core.app_controller import AppController
+from ui.main_window import MainWindow
 
 if __name__ == "__main__":
     # Ensure necessary folders exist
@@ -10,5 +15,16 @@ if __name__ == "__main__":
     os.makedirs("logs", exist_ok=True)
     os.makedirs("output", exist_ok=True)
     
-    app = ERPCommandCenter()
-    app.mainloop()
+    app = QApplication(sys.argv)
+    
+    # Apply dark theme
+    app.setStyleSheet(qdarktheme.load_stylesheet("dark"))
+    
+    # Initialize Core Logic
+    controller = AppController()
+    
+    # Initialize Main Window
+    window = MainWindow(controller)
+    window.show()
+    
+    sys.exit(app.exec())

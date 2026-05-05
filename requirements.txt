@@ -26,3 +26,5 @@ instructor
 pydantic
 openai
 requests
+PySide6
+pyqtdarktheme

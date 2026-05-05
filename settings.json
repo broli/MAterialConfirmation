@@ -21,5 +21,11 @@
     "settings_window_width": 550,
     "settings_window_height": 650,
     "settings_window_x": 200,
-    "settings_window_y": 200
+    "settings_window_y": 200,
+    "last_pdf_dir": "C:/Users/carlo/OneDrive - Carpet Wagon/Temp/builk",
+    "main_window_maximized": false,
+    "main_window_width": 1200,
+    "main_window_height": 800,
+    "main_window_x": 304,
+    "main_window_y": 99
 }
