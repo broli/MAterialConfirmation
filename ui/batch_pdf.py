@@ -57,11 +57,8 @@ class BatchPdfIngestWindow(QDialog):
         # Left Pane
         left_frame = QFrame()
         left_layout = QVBoxLayout(left_frame)
-        left_layout.addWidget(QLabel("<b>1. Select Job Folder</b>"))
-        
-        self.btn_browse = QPushButton("Browse for Agreement...")
-        self.btn_browse.clicked.connect(self.load_pdf)
-        left_layout.addWidget(self.btn_browse)
+        left_layout.addWidget(QLabel("<b>1. Unmatched Items Queue</b>"))
+
         
         self.table_view = QTableView()
         self.table_model = QueueTableModel(self.unmatched_items)
@@ -130,14 +127,6 @@ class BatchPdfIngestWindow(QDialog):
         
     def log_to_console(self, msg):
         pass # Console removed
-
-        
-    def load_pdf(self):
-        pdf_path, _ = QFileDialog.getOpenFileName(self, "Select Contract PDF", "", "PDF Files (*.pdf)")
-        if not pdf_path: return
-        self.log_to_console(f"Selected: {os.path.basename(pdf_path)}")
-        self.progress_bar.show()
-        # In full implementation, this will route to AppController worker
         
     def _get_existing_categories(self):
         categories_path = "database/categories"

@@ -11,23 +11,44 @@ class CatalogTableModel(QAbstractTableModel):
     def __init__(self, catalog=None):
         super().__init__()
         self._catalog = catalog or {}
+        self._filter_text = ""
         self._data = []
         self._headers = ["Category", "ID", "SKU", "Brand", "Routing", "Description"]
         self._update_internal_data()
 
+
     def _update_internal_data(self):
         self._data = []
+        filter_lower = self._filter_text.lower()
+        
         for item_id, item in self._catalog.items():
-            self._data.append({
-                "category": item.get("category_file", "").replace(".yaml", ""),
-                "id": item_id,
-                "sku": item.get("sku", ""),
-                "brand": item.get("brand", ""),
-                "routing": item.get("routing_tag", ""),
-                "description": item.get("oneclick_description", "")
-            })
+            cat = item.get("category_file", "").replace(".yaml", "")
+            sku = item.get("sku", "")
+            brand = item.get("brand", "")
+            routing = item.get("routing_tag", "")
+            desc = item.get("oneclick_description", "")
+            
+            # Search across all fields
+            search_blob = f"{cat} {item_id} {sku} {brand} {routing} {desc}".lower()
+            
+            if not self._filter_text or filter_lower in search_blob:
+                self._data.append({
+                    "category": cat,
+                    "id": item_id,
+                    "sku": sku,
+                    "brand": brand,
+                    "routing": routing,
+                    "description": desc
+                })
         # Sort by category then ID
         self._data.sort(key=lambda x: (x["category"], x["id"]))
+
+    def set_filter(self, text):
+        self.beginResetModel()
+        self._filter_text = text
+        self._update_internal_data()
+        self.endResetModel()
+
 
     def update_catalog(self, new_catalog):
         self.beginResetModel()
@@ -173,7 +194,19 @@ class DatabaseManager(QDialog):
         
         layout.addLayout(header)
         
+        # Search Bar
+        search_layout = QHBoxLayout()
+        self.search_bar = QLineEdit()
+        self.search_bar.setPlaceholderText("🔍 Search by ID, SKU, Brand, or Description...")
+        self.search_bar.setClearButtonEnabled(True) # Standard looking clear button
+        self.search_bar.setMinimumHeight(35)
+        self.search_bar.setStyleSheet("font-size: 14px; padding-left: 10px;")
+        self.search_bar.textChanged.connect(self.on_search_changed)
+        search_layout.addWidget(self.search_bar)
+        layout.addLayout(search_layout)
+        
         self.table_view = QTableView()
+
         self.table_view.setSelectionBehavior(QTableView.SelectRows)
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.setAlternatingRowColors(True)
@@ -195,6 +228,20 @@ class DatabaseManager(QDialog):
     def show_edit_form(self, item_id):
         # Find item in catalog
         product = self.controller.find_product_by_id(item_id)
+
+    def on_row_double_click(self, index):
+        item_id = self.table_model.get_item_id(index.row())
+        if item_id:
+            self.show_edit_form(item_id)
+
+    def show_add_form(self):
+        dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path)
+        if dlg.exec():
+            self.refresh_data()
+
+    def show_edit_form(self, item_id):
+        # Find item in catalog
+        product = self.controller.find_product_by_id(item_id)
         if product:
             dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path, product)
             if dlg.exec():
@@ -202,4 +249,8 @@ class DatabaseManager(QDialog):
 
     def refresh_data(self):
         self.controller.refresh_catalog()
+        # Preserve filter if any
         self.table_model.update_catalog(self.controller.catalog)
+
+    def on_search_changed(self, text):
+        self.table_model.set_filter(text)
