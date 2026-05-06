@@ -46,6 +46,15 @@ class AppController(QObject):
         )
         msg = "ON — writing to logs/" if enabled else "OFF"
         self.status_updated.emit(f"Debug Logging: {msg}")
+        
+        # Diagnostic: Force create a file to verify write permissions and directory
+        if enabled:
+            try:
+                os.makedirs("logs", exist_ok=True)
+                with open("logs/debug_init.txt", "a", encoding="utf-8") as f:
+                    f.write(f"[{datetime.now().isoformat()}] Debug Mode Enabled\n")
+            except Exception as e:
+                self.status_updated.emit(f"❌ Log Error: {e}")
 
     def refresh_catalog(self):
         self.catalog = self.db_loader.load_all_categories()
@@ -166,6 +175,8 @@ class AppController(QObject):
             self.status_updated.emit(f"🔄 Unconfirmed: {match_id}")
             
         return True, item
+
+
 
     def resolve_match(self, item):
         return self.match_service.resolve_match(item)

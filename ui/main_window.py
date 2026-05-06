@@ -202,7 +202,8 @@ class MainWindow(QMainWindow):
         self.update_status("❌ Error occurred.")
 
     def toggle_debug(self, state):
-        self.controller.set_debug_mode(state == Qt.Checked)
+        # state 2 is Checked, 0 is Unchecked
+        self.controller.set_debug_mode(state == 2)
 
     def _reset_ui_after_ingestion(self):
         self.btn_load_dir.setEnabled(True)
