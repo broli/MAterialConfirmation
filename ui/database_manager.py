@@ -133,15 +133,17 @@ class ProductEditDialog(QDialog):
 
 
 class DatabaseManager(QDialog):
-    def __init__(self, controller, parent=None):
+    def __init__(self, controller, parent=None, picker_mode=False):
         super().__init__(parent)
         self.controller = controller
         self.db_loader = controller.db_loader
         self.product_service = ProductService()
         self.categories_path = os.path.join(self.db_loader.base_path, "categories")
         self.assets_path = os.path.join(self.db_loader.base_path, "assets")
+        self.picker_mode = picker_mode
+        self.selected_item_id = None
         
-        self.setWindowTitle("Catalog Manager (Qt)")
+        self.setWindowTitle("Catalog Manager (Qt)" if not picker_mode else "Select Item")
         self.resize(1000, 700)
         
         # We will use a stacked layout approach by just hiding/showing frames
@@ -188,26 +190,38 @@ class DatabaseManager(QDialog):
         self.table_view.doubleClicked.connect(self.on_row_double_click)
         layout.addWidget(self.table_view)
         
+        if self.picker_mode:
+            footer = QHBoxLayout()
+            btn_select = QPushButton("Select Highlighted Item")
+            btn_select.setStyleSheet("background-color: #1565c0; color: white;")
+            btn_select.clicked.connect(self.on_select_clicked)
+            footer.addStretch()
+            footer.addWidget(btn_select)
+            layout.addLayout(footer)
+            
+            # Hide the Add New Item button in picker mode if desired, but we can leave it.
+            btn_add.setVisible(False)
+            
         self.main_layout.addWidget(self.browser_frame)
 
     def on_row_double_click(self, index):
         item_id = self.table_model.get_item_id(index.row())
         if item_id:
-            self.show_edit_form(item_id)
+            if self.picker_mode:
+                self.selected_item_id = item_id
+                self.accept()
+            else:
+                self.show_edit_form(item_id)
 
-    def show_add_form(self):
-        dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path)
-        if dlg.exec():
-            self.refresh_data()
-
-    def show_edit_form(self, item_id):
-        # Find item in catalog
-        product = self.controller.find_product_by_id(item_id)
-
-    def on_row_double_click(self, index):
-        item_id = self.table_model.get_item_id(index.row())
-        if item_id:
-            self.show_edit_form(item_id)
+    def on_select_clicked(self):
+        indexes = self.table_view.selectionModel().selectedRows()
+        if indexes:
+            item_id = self.table_model.get_item_id(indexes[0].row())
+            if item_id:
+                self.selected_item_id = item_id
+                self.accept()
+        else:
+            QMessageBox.warning(self, "Warning", "Please select an item first.")
 
     def show_add_form(self):
         dlg = ProductEditDialog(self, self.product_service, self.categories_path, self.assets_path)

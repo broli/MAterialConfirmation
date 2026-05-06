@@ -1,22 +1,164 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                                QPushButton, QFrame, QScrollArea, QWidget, QSizePolicy)
+                                QPushButton, QFrame, QScrollArea, QWidget, QSizePolicy, QMessageBox)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QFont
 import os
 
 class ProductDetailDialog(QDialog):
-    def __init__(self, parent, item_data, match_data, controller):
+    def __init__(self, parent, start_idx, controller):
         super().__init__(parent)
-        self.item_data = item_data
-        self.match_data = match_data
         self.controller = controller
+        self.idx = start_idx
         
         self.setWindowTitle("Product Details & Match Info")
         self.setMinimumSize(700, 600)
         
-        main_layout = QVBoxLayout(self)
-        main_layout.setSpacing(10)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setSpacing(10)
         
+        # Navigation header
+        nav_layout = QHBoxLayout()
+        self.btn_prev = QPushButton("< Previous")
+        self.btn_prev.clicked.connect(self.go_prev)
+        nav_layout.addWidget(self.btn_prev)
+        
+        nav_layout.addStretch()
+        self.lbl_index = QLabel("")
+        nav_layout.addWidget(self.lbl_index)
+        nav_layout.addStretch()
+        
+        self.btn_next = QPushButton("Next >")
+        self.btn_next.clicked.connect(self.go_next)
+        nav_layout.addWidget(self.btn_next)
+        
+        self.main_layout.addLayout(nav_layout)
+        
+        # Content area
+        self.content_widget = QWidget()
+        self.content_layout = QVBoxLayout(self.content_widget)
+        self.content_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.addWidget(self.content_widget, 1)
+        
+        # Footer
+        footer = QHBoxLayout()
+        
+        self.btn_change = QPushButton("Change")
+        self.btn_change.setFixedWidth(100)
+        self.btn_change.setStyleSheet("background-color: #424242; color: white;")
+        self.btn_change.clicked.connect(self.on_change)
+        
+        self.btn_confirm = QPushButton("Confirm")
+        self.btn_confirm.setFixedWidth(120)
+        self.btn_confirm.clicked.connect(self.on_confirm)
+        
+        btn_close = QPushButton("Close")
+        btn_close.setFixedWidth(100)
+        btn_close.clicked.connect(self.accept)
+        
+        footer.addWidget(self.btn_change)
+        footer.addWidget(self.btn_confirm)
+        footer.addStretch()
+        footer.addWidget(btn_close)
+        
+        self.main_layout.addLayout(footer)
+        
+        self.load_item(self.idx)
+
+    def clear_layout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                else:
+                    self.clear_layout(item.layout())
+
+    def get_valid_items(self):
+        # returns a list of valid indices based on hide_ignored
+        items = self.controller.session_data.get("line_items", [])
+        hide_ignored = self.parent().hide_ignored_var.isChecked()
+        valid = []
+        for i, item in enumerate(items):
+            is_ignored = item.get("_match", {}).get("is_ignored", False)
+            if hide_ignored and is_ignored:
+                continue
+            valid.append(i)
+        return valid
+
+    def go_prev(self):
+        valid = self.get_valid_items()
+        if self.idx in valid:
+            curr = valid.index(self.idx)
+            if curr > 0:
+                self.load_item(valid[curr-1])
+        else:
+            # If current is somehow not valid, just find the closest previous valid
+            for i in reversed(valid):
+                if i < self.idx:
+                    self.load_item(i)
+                    break
+
+    def go_next(self):
+        valid = self.get_valid_items()
+        if self.idx in valid:
+            curr = valid.index(self.idx)
+            if curr < len(valid) - 1:
+                self.load_item(valid[curr+1])
+        else:
+            for i in valid:
+                if i > self.idx:
+                    self.load_item(i)
+                    break
+
+    def on_change(self):
+        if self.parent().change_item_match(self.idx):
+            self.load_item(self.idx)
+
+    def on_confirm(self):
+        items = self.controller.session_data.get("line_items", [])
+        if 0 <= self.idx < len(items):
+            item = items[self.idx]
+            match_id = item.get("_match", {}).get("match_id")
+            self.parent().toggle_confirm(self.idx, match_id)
+            self.load_item(self.idx)
+
+    def load_item(self, idx):
+        self.idx = idx
+        self.clear_layout(self.content_layout)
+        
+        items = self.controller.session_data.get("line_items", [])
+        if idx < 0 or idx >= len(items):
+            return
+            
+        item_data = items[idx]
+        match_data = item_data.get("_match", {})
+        
+        # update index label and buttons
+        valid = self.get_valid_items()
+        self.lbl_index.setText(f"Item {idx + 1} of {len(items)}")
+        
+        if self.idx in valid:
+            curr = valid.index(self.idx)
+            self.btn_prev.setEnabled(curr > 0)
+            self.btn_next.setEnabled(curr < len(valid) - 1)
+        else:
+            self.btn_prev.setEnabled(any(i < self.idx for i in valid))
+            self.btn_next.setEnabled(any(i > self.idx for i in valid))
+            
+        # Update confirm button
+        confirmed = item_data.get("confirmed", False)
+        is_ignored = match_data.get("is_ignored", False)
+        if confirmed:
+            btn_color = "#757575" if is_ignored else "#2e7d32"
+            self.btn_confirm.setText("Unconfirm")
+        else:
+            btn_color = "#1565c0"
+            self.btn_confirm.setText("Confirm")
+            
+        self.btn_confirm.setStyleSheet(f"background-color: {btn_color}; color: white; font-weight: bold;")
+        self.btn_confirm.setEnabled(True)
+
         # 1. Raw PDF Info (Tighter)
         raw_group = QFrame()
         raw_group.setStyleSheet("background-color: #1e1e1e; border-left: 4px solid #555; border-radius: 4px;")
@@ -39,7 +181,7 @@ class ProductDetailDialog(QDialog):
         lbl_meta.setStyleSheet("color: #888; font-size: 11px;")
         raw_l.addWidget(lbl_meta)
         
-        main_layout.addWidget(raw_group)
+        self.content_layout.addWidget(raw_group)
         
         # 2. Match Info (Scrollable and detailed)
         match_id = match_data.get("match_id")
@@ -133,14 +275,4 @@ class ProductDetailDialog(QDialog):
         else:
             match_l.addWidget(QLabel("No database match found for this item."))
             
-        main_layout.addWidget(match_group, 1)
-        
-        # Footer
-        footer = QHBoxLayout()
-        btn_close = QPushButton("Close")
-        btn_close.setFixedWidth(100)
-        btn_close.clicked.connect(self.accept)
-        footer.addStretch()
-        footer.addWidget(btn_close)
-        main_layout.addLayout(footer)
-
+        self.content_layout.addWidget(match_group, 1)

@@ -268,9 +268,7 @@ class MainWindow(QMainWindow):
     def show_item_detail(self, idx):
         items = self.controller.session_data.get("line_items", [])
         if 0 <= idx < len(items):
-            item = items[idx]
-            match_meta = item.get("_match", {})
-            ProductDetailDialog(self, item, match_meta, self.controller).exec()
+            ProductDetailDialog(self, idx, self.controller).exec()
 
     def populate_ui(self, session_data=None):
         if self.ingestion_dialog:
@@ -340,7 +338,7 @@ class MainWindow(QMainWindow):
             btn_change = QPushButton("Change")
             btn_change.setFixedWidth(80)
             btn_change.setStyleSheet("background-color: #424242; color: white;")
-            # Logic for change to be implemented later
+            btn_change.clicked.connect(lambda checked, i_idx=i: self.change_item_match(i_idx))
             right_l.addWidget(btn_change)
             
             btn_verify = QPushButton(btn_text)
@@ -372,6 +370,26 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Warning", result)
         else:
             self.populate_ui()
+
+    def change_item_match(self, idx):
+        picker = DatabaseManager(self.controller, self, picker_mode=True)
+        if picker.exec() == QDialog.Accepted and picker.selected_item_id:
+            items = self.controller.session_data.get("line_items", [])
+            if 0 <= idx < len(items):
+                item = items[idx]
+                if "_match" not in item:
+                    item["_match"] = {}
+                # Ensure we also get the newly selected item from the catalog to re-resolve confidence, color, ignored state.
+                item["_match"]["match_id"] = picker.selected_item_id
+                
+                # Resolving match completely updates meta based on new match
+                updated_meta = self.controller.resolve_match(item)
+                item["_match"] = updated_meta
+                item["confirmed"] = False
+                
+                self.populate_ui()
+                return True
+        return False
 
     def open_settings(self):
         SettingsWindow(self).exec()
