@@ -142,15 +142,15 @@ class OneClickIngestor:
         for h in logger.handlers[:]:
             logger.removeHandler(h)
 
-        if self.debug_mode:
-            log_dir = os.path.join(self.target_dir, "Debug")
-            os.makedirs(log_dir, exist_ok=True)
-            log_path = os.path.join(log_dir, "ingestion_debug.log")
-            logger.setLevel(logging.DEBUG)
-        else:
-            os.makedirs("logs", exist_ok=True)
-            log_path = "logs/ingestion_debug.log"
-            logger.setLevel(logging.INFO)
+        if not self.debug_mode:
+            logger.addHandler(logging.NullHandler())
+            logger.setLevel(logging.CRITICAL)
+            return logger
+
+        log_dir = os.path.join(self.target_dir, "Debug")
+        os.makedirs(log_dir, exist_ok=True)
+        log_path = os.path.join(log_dir, "ingestion_debug.log")
+        logger.setLevel(logging.DEBUG)
 
         fh = logging.FileHandler(log_path, encoding="utf-8")
         fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))

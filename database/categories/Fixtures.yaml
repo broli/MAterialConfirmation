@@ -162,3 +162,18 @@
       Width: 24 - 46
       Height: '78'
     image_file: ifvjdlptrdws3aw0qyux.png
+- id: LSD-SS-W
+  sku: LSD-SS-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath BCI Elite Accessories Shelves White Soap Dish Shelf
+    30" LSD-SS- W: White Soap Dish Shelf 30 In'
+  printable:
+    finish: White
+    description: SOAP DISH SHELF
+    dimensions:
+      Width: 30"
+      Depth: 5"
+    image_file: soapdishhelfve_l.jpg

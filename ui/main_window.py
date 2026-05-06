@@ -82,7 +82,7 @@ class MainWindow(QMainWindow):
         
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         
-        self.debug_var = QCheckBox("Debug Mode (Log Parsing)")
+        self.debug_var = QCheckBox("Enable Developer Logging")
         self.debug_var.stateChanged.connect(self.toggle_debug)
         layout.addWidget(self.debug_var)
         

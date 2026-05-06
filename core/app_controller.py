@@ -200,7 +200,7 @@ class AppController(QObject):
         output_dir = os.path.join(self.target_pdf_dir, "ERP_Automated_Output")
         os.makedirs(output_dir, exist_ok=True)
             
-        generator = PDFGenerator(output_path=output_dir)
+        generator = PDFGenerator(output_path=output_dir, debug_mode=self.match_service.debug_mode)
         out_file = generator.create_pdf(payload)
         self.status_updated.emit(f"✅ PDF saved to: {os.path.basename(out_file)}")
         return True, out_file
@@ -218,7 +218,7 @@ class AppController(QObject):
             "project_po": self.session_data.get("project_po", ""),
             "products": payload["products"]
         }
-        generator = ExcelRoutingEngine(output_dir=output_dir)
+        generator = ExcelRoutingEngine(output_dir=output_dir, debug_mode=self.match_service.debug_mode)
         out_file = generator.generate_excel(excel_payload)
         if out_file:
             self.status_updated.emit(f"✅ Excel saved to: {os.path.basename(out_file)}")

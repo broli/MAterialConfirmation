@@ -117,3 +117,20 @@
       Width: '60'
       Depth: '36'
     image_file: white-dreamline-shower-pans-dlt-1136600-64_1200.png
+- id: RT-603015CL-L-W
+  sku: RT-603015CL-L-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Tubs BCI Tubs Replacement Tubs (Standard Sizes) 60X30X15
+    Classic White Left RT-603015CL-L-W: Acrylic Replacement Tub 60X30X15 LH Classic,
+    White'
+  printable:
+    finish: White
+    description: LH CLASSIC
+    dimensions:
+      Length: 60"
+      Width: 30"
+      Height: '15'
+    image_file: BCI rt-603015cl-r-w_l.png

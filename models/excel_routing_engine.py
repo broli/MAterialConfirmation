@@ -3,7 +3,8 @@ import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
 
 class ExcelRoutingEngine:
-    def __init__(self, template_path="database/templates/2. Order form V7.xlsx", output_dir="output"):
+    def __init__(self, template_path="database/templates/2. Order form V7.xlsx", output_dir="output", debug_mode=False):
+        self.debug_mode = debug_mode
         self.template_path = template_path
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
