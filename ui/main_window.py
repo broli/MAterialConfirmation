@@ -1,5 +1,5 @@
 import os
-from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
+from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                                QLabel, QPushButton, QLineEdit, QCheckBox, 
                                QScrollArea, QFrame, QFileDialog, QMessageBox, QSizePolicy, QSpacerItem)
 from PySide6.QtCore import Qt, QSize
@@ -123,36 +123,30 @@ class MainWindow(QMainWindow):
         
         w_layout.addWidget(info_frame)
         
-        # Split Panels
-        panels_layout = QHBoxLayout()
+        # Unified Workspace Area
+        workspace_frame = QFrame()
+        workspace_vbox = QVBoxLayout(workspace_frame)
         
-        # Left Panel (Extracted)
-        left_group = QFrame()
-        left_vbox = QVBoxLayout(left_group)
-        left_vbox.addWidget(QLabel("<b>Extracted Contract Lines</b>"))
-        self.left_scroll = QScrollArea()
-        self.left_scroll.setWidgetResizable(True)
-        self.left_content = QWidget()
-        self.left_content_layout = QVBoxLayout(self.left_content)
-        self.left_content_layout.setAlignment(Qt.AlignTop)
-        self.left_scroll.setWidget(self.left_content)
-        left_vbox.addWidget(self.left_scroll)
-        panels_layout.addWidget(left_group)
+        # Headers Row
+        headers_layout = QHBoxLayout()
+        lbl_left = QLabel("<b>Extracted Contract Lines</b>")
+        lbl_right = QLabel("<b>Suggested DB Match (Action Required)</b>")
+        headers_layout.addWidget(lbl_left, 1)
+        headers_layout.addWidget(lbl_right, 1)
+        workspace_vbox.addLayout(headers_layout)
         
-        # Right Panel (Matches)
-        right_group = QFrame()
-        right_vbox = QVBoxLayout(right_group)
-        right_vbox.addWidget(QLabel("<b>Suggested DB Match (Action Required)</b>"))
-        self.right_scroll = QScrollArea()
-        self.right_scroll.setWidgetResizable(True)
-        self.right_content = QWidget()
-        self.right_content_layout = QVBoxLayout(self.right_content)
-        self.right_content_layout.setAlignment(Qt.AlignTop)
-        self.right_scroll.setWidget(self.right_content)
-        right_vbox.addWidget(self.right_scroll)
-        panels_layout.addWidget(right_group)
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.workspace_content = QWidget()
+        self.workspace_grid = QGridLayout(self.workspace_content)
+        self.workspace_grid.setAlignment(Qt.AlignTop)
+        self.workspace_grid.setColumnStretch(0, 1)
+        self.workspace_grid.setColumnStretch(1, 1)
+        self.scroll_area.setWidget(self.workspace_content)
         
-        w_layout.addLayout(panels_layout)
+        workspace_vbox.addWidget(self.scroll_area)
+        w_layout.addWidget(workspace_frame, 1)
+        
         self.main_layout.addWidget(workspace, 1)
 
     def _setup_footer(self):
@@ -288,12 +282,12 @@ class MainWindow(QMainWindow):
         self.entry_client.setText(session_data.get("client_name", ""))
         self.entry_po.setText(session_data.get("project_po", ""))
         
-        self.clear_layout(self.left_content_layout)
-        self.clear_layout(self.right_content_layout)
+        self.clear_layout(self.workspace_grid)
         
         items = session_data.get("line_items", [])
         hide_ignored = self.hide_ignored_var.isChecked()
         
+        grid_row = 0
         for i, item in enumerate(items):
             meta = item.get("_match", {})
             match_id = meta.get("match_id")
@@ -305,8 +299,7 @@ class MainWindow(QMainWindow):
             if is_ignored and hide_ignored:
                 continue
                 
-            # Left Panel
-
+            # --- Column 0: Contract Line ---
             left_row = ClickableRow(i, self.show_item_detail)
             left_l = QHBoxLayout(left_row)
             left_l.setContentsMargins(5, 5, 5, 5)
@@ -319,9 +312,9 @@ class MainWindow(QMainWindow):
             lbl_desc.setWordWrap(True)
             left_l.addWidget(lbl_desc, 1)
             
-            self.left_content_layout.addWidget(left_row)
+            self.workspace_grid.addWidget(left_row, grid_row, 0)
             
-            # Right Panel
+            # --- Column 1: Match Details ---
             right_row = ClickableRow(i, self.show_item_detail)
             right_l = QHBoxLayout(right_row)
             right_l.setContentsMargins(5, 5, 5, 5)
@@ -331,23 +324,33 @@ class MainWindow(QMainWindow):
             right_l.addWidget(indicator)
             
             if confirmed:
-                info_str = f"{i+1}. IGNORED: {match_id}" if is_ignored else f"{i+1}. CONFIRMED: {match_id}"
+                info_str = f"IGNORED: {match_id}" if is_ignored else f"CONFIRMED: {match_id}"
                 btn_color = "#757575" if is_ignored else "#2e7d32"
                 btn_text = "Unconfirm"
             else:
-                info_str = f"{i+1}. Match: {match_id} ({conf:.1f}%)" if match_id else f"{i+1}. No Match Found"
+                info_str = f"Match: {match_id} ({conf:.1f}%)" if match_id else "No Match Found"
                 btn_color = "#1565c0"
                 btn_text = "Confirm"
                 
             info_lbl = QLabel(info_str)
             right_l.addWidget(info_lbl, 1)
             
+            # New "Change" Button
+            btn_change = QPushButton("Change")
+            btn_change.setFixedWidth(80)
+            btn_change.setStyleSheet("background-color: #424242; color: white;")
+            # Logic for change to be implemented later
+            right_l.addWidget(btn_change)
+            
             btn_verify = QPushButton(btn_text)
-            btn_verify.setStyleSheet(f"background-color: {btn_color}; color: white;")
+            btn_verify.setFixedWidth(100)
+            btn_verify.setStyleSheet(f"background-color: {btn_color}; color: white; font-weight: bold;")
             btn_verify.clicked.connect(lambda checked, idx=i, mid=match_id: self.toggle_confirm(idx, mid))
             right_l.addWidget(btn_verify)
             
-            self.right_content_layout.addWidget(right_row)
+            self.workspace_grid.addWidget(right_row, grid_row, 1)
+            
+            grid_row += 1
 
         # Update Process Unmatched button state
         unmatched = self.controller.get_unmatched_items()

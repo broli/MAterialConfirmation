@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (QDialog, QWidget, QVBoxLayout, QHBoxLayout,
 from PySide6.QtCore import Qt, QAbstractTableModel
 from models.config_manager import ConfigManager
 from models.product_service import ProductService
+from ui.components.product_form import ProductFormWidget
 
 class CatalogTableModel(QAbstractTableModel):
     def __init__(self, catalog=None):
@@ -97,35 +98,15 @@ class ProductEditDialog(QDialog):
         self.is_new = product is None
         
         self.setWindowTitle("Add/Edit Product" if self.is_new else f"Edit Product: {self.product.get('id')}")
-        self.resize(500, 600)
+        self.resize(600, 700)
         
         layout = QVBoxLayout(self)
         
-        # Fields
-        self.fields = {}
-        for key in ["id", "brand", "model", "product", "sku", "routing_tag", "oneclick_description", "category_file"]:
-            h = QHBoxLayout()
-            h.addWidget(QLabel(f"{key.replace('_', ' ').title()}:"))
-            edit = QLineEdit()
-            edit.setText(str(self.product.get(key, "")))
-            if key == "id" and not self.is_new:
-                edit.setReadOnly(True) # IDs are keys
-            h.addWidget(edit)
-            self.fields[key] = edit
-            layout.addLayout(h)
-
-        # Image
-        img_h = QHBoxLayout()
-        img_h.addWidget(QLabel("Image Path:"))
-        self.img_edit = QLineEdit(str(self.product.get("image", "")))
-        img_h.addWidget(self.img_edit)
-        btn_img = QPushButton("Browse")
-        btn_img.clicked.connect(self.browse_image)
-        img_h.addWidget(btn_img)
-        layout.addLayout(img_h)
-
-        layout.addStretch()
-
+        # Form Widget
+        self.form = ProductFormWidget(self, categories_path=self.categories_path)
+        self.form.load_data(self.product, self.product.get("category_file", ""))
+        layout.addWidget(self.form)
+        
         # Footer
         footer = QHBoxLayout()
         btn_save = QPushButton("Save")
@@ -137,25 +118,19 @@ class ProductEditDialog(QDialog):
         footer.addWidget(btn_cancel)
         layout.addLayout(footer)
 
-    def browse_image(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg)")
-        if path:
-            self.img_edit.setText(os.path.basename(path))
-            # Note: In a real app we'd copy the file to assets_path here.
-
     def save(self):
-        data = {k: v.text() for k, v in self.fields.items()}
-        data["image"] = self.img_edit.text()
+        data, category = self.form.get_data()
         
-        cat_file = data.get("category_file")
-        if not cat_file.endswith(".yaml"):
-            cat_file += ".yaml"
+        if not data.get("id"):
+            QMessageBox.warning(self, "Validation Error", "ID is required.")
+            return
             
         try:
-            self.product_service.upsert_to_yaml(data, cat_file, self.categories_path)
+            self.product_service.upsert_to_yaml(data, category, self.categories_path, self.assets_path)
             self.accept()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save: {e}")
+
 
 class DatabaseManager(QDialog):
     def __init__(self, controller, parent=None):

@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (QDialog, QWidget, QVBoxLayout, QHBoxLayout,
                                QTableView, QFrame, QFileDialog, QMessageBox, QProgressBar, QTextEdit)
 from PySide6.QtCore import Qt, QAbstractTableModel
 from core.app_controller import AppController
+from ui.components.product_form import ProductFormWidget
 
 class QueueTableModel(QAbstractTableModel):
     def __init__(self, data=None):
@@ -74,46 +75,11 @@ class BatchPdfIngestWindow(QDialog):
         right_layout = QVBoxLayout(right_frame)
         right_layout.addWidget(QLabel("<b>2. Modify extracted details</b>"))
         
-        form_layout = QHBoxLayout()
-        form_left = QVBoxLayout()
-        form_right = QVBoxLayout()
+        self.form = ProductFormWidget(self, categories_path=os.path.join(self.controller.db_loader.base_path, "categories"))
+        right_layout.addWidget(self.form)
         
-        form_left.addWidget(QLabel("Category File *"))
-        self.cat_entry = QComboBox()
-        self.cat_entry.addItems(self._get_existing_categories())
-        form_left.addWidget(self.cat_entry)
-        
-        form_left.addWidget(QLabel("Unique ID *"))
-        self.id_entry = QLineEdit()
-        form_left.addWidget(self.id_entry)
-        
-        form_left.addWidget(QLabel("Brand"))
-        self.brand_entry = QLineEdit()
-        form_left.addWidget(self.brand_entry)
-        
-        form_left.addWidget(QLabel("OneClick Description *"))
-        self.oneclick_entry = QLineEdit()
-        form_left.addWidget(self.oneclick_entry)
-        
-        form_left.addWidget(QLabel("Routing Tag *"))
-        self.routing_entry = QComboBox()
-        self.routing_entry.addItems(["IGNORE", "WAREHOUSE", "PROCURE", "WH_OR_PROCURE"])
-        form_left.addWidget(self.routing_entry)
-        
-        form_right.addWidget(QLabel("Finish (Color)"))
-        self.finish_entry = QLineEdit()
-        form_right.addWidget(self.finish_entry)
-        
-        form_right.addWidget(QLabel("Marketing Description"))
-        self.desc_entry = QLineEdit()
-        form_right.addWidget(self.desc_entry)
-        
-        form_layout.addLayout(form_left)
-        form_layout.addLayout(form_right)
-        right_layout.addLayout(form_layout)
-        
-        self.btn_save = QPushButton("Save")
-        self.btn_save.setStyleSheet("background-color: #2e7d32; color: white;")
+        self.btn_save = QPushButton("Save to Database")
+        self.btn_save.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
         self.btn_save.clicked.connect(self.initiate_save)
         right_layout.addWidget(self.btn_save)
         
@@ -128,16 +94,51 @@ class BatchPdfIngestWindow(QDialog):
     def log_to_console(self, msg):
         pass # Console removed
         
-    def _get_existing_categories(self):
-        categories_path = "database/categories"
-        if not os.path.exists(categories_path): return []
-        return [f for f in os.listdir(categories_path) if f.endswith('.yaml')]
-
     def on_table_click(self, index):
         item = self.table_model.get_item(index.row())
         if item:
-            self.oneclick_entry.setText(item.get("raw_description", ""))
-            self.log_to_console(f"Selected item: {item.get('raw_description')}")
+            # Map LLM extractions to the expected database schema
+            mapped_data = {
+                "id": "", # ID should be assigned manually by user
+                "sku": item.get("sku", ""),
+                "brand": item.get("brand", ""),
+                "oneclick_description": item.get("raw_description", ""),
+                "routing_tag": "WAREHOUSE",
+            }
+            
+            # Map LLM-extracted printable properties
+            printable = {}
+            if item.get("finish"): printable["finish"] = item["finish"]
+            if item.get("base_item"): printable["description"] = item["base_item"]
+            if item.get("dimensions"): printable["dimensions"] = item["dimensions"]
+            
+            if printable:
+                mapped_data["printable"] = printable
+                
+            self.form.load_data(mapped_data)
             
     def initiate_save(self):
-        QMessageBox.information(self, "Save", "Save logic to be wired to ProductService.")
+        data, category = self.form.get_data()
+        
+        if not data.get("id"):
+            QMessageBox.warning(self, "Validation Error", "ID is required.")
+            return
+            
+        try:
+            from models.product_service import ProductService
+            categories_path = os.path.join(self.controller.db_loader.base_path, "categories")
+            assets_path = os.path.join(self.controller.db_loader.base_path, "assets")
+            ProductService.upsert_to_yaml(data, category, categories_path, assets_path)
+            QMessageBox.information(self, "Success", "Item saved successfully!")
+            
+            # Remove from unmatched queue visually
+            rows = self.table_view.selectionModel().selectedRows()
+            if rows:
+                row = rows[0].row()
+                self.unmatched_items.pop(row)
+                self.table_model.update_data(self.unmatched_items)
+                self.form.load_data({}) # Clear form
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to save: {e}")
+

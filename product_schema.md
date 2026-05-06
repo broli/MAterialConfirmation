@@ -53,16 +53,19 @@ The `dimensions` field is dynamic. Only include the keys relevant to the specifi
 Standard case for furniture where Width, Height, and Depth are critical.
 ```yaml
 - id: PKB-VAN-48-GRY
+  sku: VAN-48-GRY-WYN
   brand: "Wyndham"
-  model: "Icon"
-  type: "Freestanding Vanity"
-  finish: "Dark Gray"
-  dimensions: 
-    width: '48"'
-    height: '34"'
-    depth: '22"'
-  description: "Modern vanity with integrated porcelain sink and soft-close drawers."
-  image_file: "wyndham_icon_48.jpg"
+  provider: ""
+  routing_tag: "WAREHOUSE"
+  oneclick_description: "Wyndham Icon 48 inch Freestanding Vanity Dark Gray"
+  printable:
+    finish: "Dark Gray"
+    description: "Modern vanity with integrated porcelain sink and soft-close drawers."
+    dimensions: 
+      width: '48"'
+      height: '34"'
+      depth: '22"'
+    image_file: "wyndham_icon_48.jpg"
 ```
 
 🛠️ Validation Checklist

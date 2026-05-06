@@ -34,7 +34,7 @@ class ProductService:
     # ─────────────────────────────────────────────────────────────────────────
 
     @staticmethod
-    def upsert_to_yaml(product: dict, cat_file: str, categories_path: str) -> None:
+    def upsert_to_yaml(product: dict, cat_file: str, categories_path: str, assets_path: str = None) -> None:
         """
         Write (or overwrite) a product into the given category YAML file.
 
@@ -51,7 +51,16 @@ class ProductService:
             auto-appended if missing.
         categories_path : str
             Absolute path to the ``database/categories/`` directory.
+        assets_path : str
+            Absolute path to the ``database/assets/`` directory (used for copying images).
         """
+        # Handle absolute paths for images
+        if assets_path and "printable" in product:
+            img = product["printable"].get("image_file", "")
+            if img and os.path.isabs(img) and os.path.exists(img):
+                new_img = ProductService.copy_image_to_assets(img, assets_path)
+                product["printable"]["image_file"] = new_img
+
         if not cat_file.endswith(".yaml"):
             cat_file += ".yaml"
 
@@ -126,103 +135,4 @@ class ProductService:
             shutil.copy(source_path, dest)
         return filename
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Dimension row UI helpers
-    # ─────────────────────────────────────────────────────────────────────────
-
-    _DIM_OPTIONS = ["Width", "Length", "Height", "Depth", "Thickness", "Diameter", "Size"]
-
-    @staticmethod
-    def build_dimension_rows(
-        parent_frame: ctk.CTkFrame,
-        existing_dims: dict | None = None,
-        row_store: list | None = None,
-    ) -> list:
-        """
-        Dynamically render dimension input rows inside *parent_frame*.
-
-        Each row consists of a read-only ComboBox (measurement type) and a
-        free-text Entry (value + unit).  A red "X" button removes the row.
-
-        Parameters
-        ----------
-        parent_frame : ctk.CTkFrame
-            The frame to pack rows into.
-        existing_dims : dict | None
-            Pre-populate rows from an existing ``dimensions`` dict.
-            Pass ``None`` or ``{}`` to start with no rows.
-        row_store : list | None
-            An existing list to append ``(combo, entry)`` tuples to.
-            If ``None``, a new list is created and returned.
-
-        Returns
-        -------
-        list
-            List of ``(combo_widget, entry_widget)`` tuples for later reading.
-        """
-        if row_store is None:
-            row_store = []
-
-        items = existing_dims.items() if existing_dims else []
-
-        def _add_row(key: str = "", value: str = "") -> None:
-            options = list(ProductService._DIM_OPTIONS)
-            if key and key not in options:
-                options.append(key)
-
-            row_frame = ctk.CTkFrame(parent_frame, fg_color="transparent")
-            row_frame.pack(fill="x", pady=2, padx=5)
-
-            combo = ctk.CTkComboBox(row_frame, values=options, width=120, state="readonly")
-            combo.set(key if key else options[0])
-            combo.pack(side="left", padx=5)
-
-            entry = ctk.CTkEntry(row_frame, placeholder_text='e.g. 60" or 3 sqft', width=150)
-            if value:
-                entry.insert(0, str(value))
-            entry.pack(side="left", padx=5, expand=True, fill="x")
-
-            def _remove(c=combo, f=row_frame):
-                f.destroy()
-                nonlocal row_store
-                row_store[:] = [r for r in row_store if r[0] is not c]
-
-            ctk.CTkButton(
-                row_frame, text="X", width=30,
-                fg_color="red", hover_color="darkred",
-                command=_remove,
-            ).pack(side="right", padx=5)
-
-            row_store.append((combo, entry))
-
-        for k, v in items:
-            _add_row(k, str(v) if v else "")
-
-        # Expose the _add_row helper on the frame so callers can wire the
-        # "+ Add Measurement" button without duplicating the logic.
-        parent_frame._add_dimension_row = _add_row  # type: ignore[attr-defined]
-        return row_store
-
-    @staticmethod
-    def read_dimension_rows(row_store: list) -> dict:
-        """
-        Collect current values from a list of ``(combo, entry)`` tuples.
-
-        Parameters
-        ----------
-        row_store : list
-            List of ``(combo_widget, entry_widget)`` tuples as returned by
-            ``build_dimension_rows``.
-
-        Returns
-        -------
-        dict
-            ``{ "Width": "60\"", "Depth": "18\"", ... }`` — empty pairs skipped.
-        """
-        dims: dict = {}
-        for combo, entry in row_store:
-            k = combo.get().strip()
-            v = entry.get().strip()
-            if k and v:
-                dims[k] = v
-        return dims
+    # Old tkinter dimension helpers removed for PySide6 transition.

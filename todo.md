@@ -6,8 +6,8 @@
     - [x] Modify `CatalogTableModel` to support filtering
     - [x] Add search UI to `DatabaseManager`
 
-- [ ] Update GUI create a single gui for add/remove/edit items from the database
-- [ ] Update GUI reuse the single gui from above trough out the app
+- [x] Update GUI create a single gui for add/remove/edit items from the database
+- [x] Update GUI reuse the single gui from above trough out the app
 
 
 - [/] **End-to-End Testing**: Conduct rigorous testing of the full ingestion -> matching -> confirmation -> export pipeline.
