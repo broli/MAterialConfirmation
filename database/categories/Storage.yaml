@@ -148,3 +148,16 @@
     description: Single Tier Corner Shelf
     dimensions: {}
     image_file: cc-st-san_l.jpg
+- id: CC-4-G
+  sku: CC-4-G
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath BCI Accessories Shelves Gray Corner Caddy Four Shelf
+    CC-4-G: 4- Shelf Corner Caddy Gray'
+  printable:
+    finish: Gray
+    description: 4-Shelf Corner Caddy
+    dimensions: {}
+    image_file: cc-4-cs_g_l.jpg

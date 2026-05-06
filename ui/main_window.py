@@ -11,6 +11,86 @@ from ui.database_manager import DatabaseManager
 from ui.batch_pdf import BatchPdfIngestWindow
 from ui.ingestion_progress import IngestionProgressDialog
 from ui.product_detail import ProductDetailDialog
+from ui.components.product_form import ProductFormWidget
+
+class TempItemEditDialog(QDialog):
+    def __init__(self, parent, categories_path="database/categories", item_data=None):
+        super().__init__(parent)
+        self.categories_path = categories_path
+        self.item_data = item_data or {}
+        
+        self.setWindowTitle("Add Temporary Item" if not item_data else "Edit Temporary Item")
+        self.resize(600, 750)
+        
+        layout = QVBoxLayout(self)
+        
+        # Temp Item specific fields
+        top_group = QFrame()
+        top_layout = QHBoxLayout(top_group)
+        
+        top_layout.addWidget(QLabel("Room:"))
+        self.room_entry = QLineEdit(self.item_data.get("room", "General"))
+        top_layout.addWidget(self.room_entry)
+        
+        top_layout.addWidget(QLabel("Qty:"))
+        self.qty_entry = QLineEdit(str(self.item_data.get("qty", 1)))
+        self.qty_entry.setMaximumWidth(60)
+        top_layout.addWidget(self.qty_entry)
+        
+        layout.addWidget(top_group)
+        
+        # Product Form
+        self.form = ProductFormWidget(self, categories_path=self.categories_path)
+        
+        # Map item_data to product form
+        prod_data = self.item_data.get("temp_product_data", {})
+        if not prod_data and not self.item_data:
+            # Default values for new temp item
+            prod_data = {
+                "id": "TEMP",
+                "sku": "TEMP",
+                "brand": "Custom",
+                "routing_tag": "GENERAL",
+            }
+        self.form.load_data(prod_data, prod_data.get("category_file", ""))
+        layout.addWidget(self.form)
+        
+        # Footer
+        footer = QHBoxLayout()
+        btn_save = QPushButton("Save")
+        btn_save.setStyleSheet("background-color: #2e7d32; color: white;")
+        btn_save.clicked.connect(self.save)
+        btn_cancel = QPushButton("Cancel")
+        btn_cancel.clicked.connect(self.reject)
+        
+        footer.addStretch()
+        footer.addWidget(btn_save)
+        footer.addWidget(btn_cancel)
+        layout.addLayout(footer)
+
+    def save(self):
+        prod_data, cat_file = self.form.get_data()
+        
+        qty_str = self.qty_entry.text().strip()
+        try:
+            qty = int(qty_str) if qty_str else 1
+        except ValueError:
+            qty = 1
+            
+        self.result_data = {
+            "room": self.room_entry.text().strip() or "General",
+            "qty": qty,
+            "raw_description": prod_data.get("oneclick_description", "Temporary Item"),
+            "temp_product_data": prod_data,
+            "confirmed": True,
+            "is_temp": True,
+            "_match": {
+                "match_id": prod_data.get("id", "TEMP"),
+                "confidence": 100,
+                "color_hex": "#000000"
+            }
+        }
+        self.accept()
 
 class ClickableRow(QFrame):
     def __init__(self, index, callback):
@@ -156,6 +236,11 @@ class MainWindow(QMainWindow):
         self.btn_save_session = QPushButton("💾 Save Session")
         self.btn_save_session.clicked.connect(self.save_session)
         layout.addWidget(self.btn_save_session)
+        
+        self.btn_add_temp = QPushButton("➕ Add Temp Item")
+        self.btn_add_temp.setStyleSheet("background-color: #f57f17; color: white; font-weight: bold;")
+        self.btn_add_temp.clicked.connect(self.open_add_temp_item)
+        layout.addWidget(self.btn_add_temp)
         
         self.btn_process_unmatched = QPushButton("⚙️ Process Unrecognized Items")
         self.btn_process_unmatched.setEnabled(False) # Disabled by default
@@ -358,11 +443,15 @@ class MainWindow(QMainWindow):
             info_lbl = QLabel(info_str)
             right_l.addWidget(info_lbl, 1)
             
-            # New "Change" Button
-            btn_change = QPushButton("Change")
+            # New "Change" / "Edit Temp" Button
+            is_temp = item.get("is_temp", False)
+            btn_change = QPushButton("Edit Temp" if is_temp else "Change")
             btn_change.setFixedWidth(80)
             btn_change.setStyleSheet("background-color: #424242; color: white;")
-            btn_change.clicked.connect(lambda checked, i_idx=i: self.change_item_match(i_idx))
+            if is_temp:
+                btn_change.clicked.connect(lambda checked, i_idx=i: self.edit_temp_item(i_idx))
+            else:
+                btn_change.clicked.connect(lambda checked, i_idx=i: self.change_item_match(i_idx))
             right_l.addWidget(btn_change)
             
             btn_verify = QPushButton(btn_text)
@@ -414,6 +503,23 @@ class MainWindow(QMainWindow):
                 self.populate_ui()
                 return True
         return False
+
+    def open_add_temp_item(self):
+        dialog = TempItemEditDialog(self)
+        if dialog.exec() == QDialog.Accepted and hasattr(dialog, 'result_data'):
+            if "line_items" not in self.controller.session_data:
+                self.controller.session_data["line_items"] = []
+            self.controller.session_data["line_items"].append(dialog.result_data)
+            self.populate_ui()
+
+    def edit_temp_item(self, idx):
+        items = self.controller.session_data.get("line_items", [])
+        if 0 <= idx < len(items):
+            item = items[idx]
+            dialog = TempItemEditDialog(self, item_data=item)
+            if dialog.exec() == QDialog.Accepted and hasattr(dialog, 'result_data'):
+                items[idx] = dialog.result_data
+                self.populate_ui()
 
     def update_item_qty(self, idx, delta):
         items = self.controller.session_data.get("line_items", [])

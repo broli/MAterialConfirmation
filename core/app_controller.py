@@ -192,7 +192,12 @@ class AppController(QObject):
         }
         
         for item in self.session_data.get("line_items", []):
-            if item.get("confirmed") and item.get("matched_id"):
+            if item.get("is_temp"):
+                db_item = item.get("temp_product_data", {}).copy()
+                db_item["qty"] = item.get("qty", 1)
+                db_item["room"] = item.get("room", "General")
+                payload["products"].append(db_item)
+            elif item.get("confirmed") and item.get("matched_id"):
                 db_item = self.catalog.get(item["matched_id"], {}).copy()
                 if db_item:
                     if db_item.get("routing_tag", "").strip().upper() == "IGNORE":

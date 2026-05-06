@@ -112,8 +112,15 @@ class ProductDetailDialog(QDialog):
                     break
 
     def on_change(self):
-        if self.parent().change_item_match(self.idx):
-            self.load_item(self.idx)
+        items = self.controller.session_data.get("line_items", [])
+        if 0 <= self.idx < len(items):
+            item = items[self.idx]
+            if item.get("is_temp"):
+                self.parent().edit_temp_item(self.idx)
+                self.load_item(self.idx)
+            else:
+                if self.parent().change_item_match(self.idx):
+                    self.load_item(self.idx)
 
     def on_qty_change(self, delta):
         if self.parent().update_item_qty(self.idx, delta):
@@ -160,14 +167,19 @@ class ProductDetailDialog(QDialog):
         # Update confirm button
         confirmed = item_data.get("confirmed", False)
         is_ignored = match_data.get("is_ignored", False)
-        if confirmed:
+        
+        if item_data.get("is_temp"):
+            self.btn_change.setText("Edit Temp")
+        else:
+            self.btn_change.setText("Change")
+            
+        if item_data.get("confirmed", False):
             btn_color = "#757575" if is_ignored else "#2e7d32"
             self.btn_confirm.setText("Unconfirm")
+            self.btn_confirm.setStyleSheet(f"background-color: {btn_color}; color: white; font-size: 16px; font-weight: bold;")
         else:
-            btn_color = "#1565c0"
             self.btn_confirm.setText("Confirm")
-            
-        self.btn_confirm.setStyleSheet(f"background-color: {btn_color}; color: white; font-weight: bold;")
+            self.btn_confirm.setStyleSheet("background-color: #1565c0; color: white; font-size: 16px; font-weight: bold;")
         self.btn_confirm.setEnabled(True)
 
         # 1. Raw PDF Info (Tighter)

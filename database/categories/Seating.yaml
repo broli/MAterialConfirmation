@@ -16,3 +16,16 @@
       height: '20.5'
       depth: '1.75'
     image_file: lcnr-ss-w_l.jpg
+- id: LBS- LH-W
+  sku: LBS- LH-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath BCI Elite Accessories Seats White Bench Shower Seat
+    - Left LBS- LH-W: White LH Bench Shower Seat, Bracket & Supertach'
+  printable:
+    finish: White
+    description: H Bench Shower Seat
+    dimensions: {}
+    image_file: lbs-lh-w_l.jpg

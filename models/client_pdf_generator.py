@@ -59,7 +59,8 @@ class PDFGenerator:
         if not os.path.exists(original_path):
             return None
         
-        temp_file_path = os.path.join(self.temp_path, f"opt_{image_filename}")
+        filename = os.path.basename(image_filename)
+        temp_file_path = os.path.join(self.temp_path, f"opt_{filename}")
         
         try:
             with Image.open(original_path) as img:
