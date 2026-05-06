@@ -164,9 +164,11 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.btn_save_session)
         
         self.btn_process_unmatched = QPushButton("⚙️ Process Unrecognized Items")
-        self.btn_process_unmatched.setStyleSheet("background-color: #ef6c00; color: white;")
+        self.btn_process_unmatched.setEnabled(False) # Disabled by default
+        self.btn_process_unmatched.setStyleSheet("background-color: #424242; color: #888;")
         self.btn_process_unmatched.clicked.connect(self.open_batch_pdf)
         layout.addWidget(self.btn_process_unmatched)
+
         
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         
@@ -304,6 +306,7 @@ class MainWindow(QMainWindow):
                 continue
                 
             # Left Panel
+
             left_row = ClickableRow(i, self.show_item_detail)
             left_l = QHBoxLayout(left_row)
             left_l.setContentsMargins(5, 5, 5, 5)
@@ -345,6 +348,19 @@ class MainWindow(QMainWindow):
             right_l.addWidget(btn_verify)
             
             self.right_content_layout.addWidget(right_row)
+
+        # Update Process Unmatched button state
+        unmatched = self.controller.get_unmatched_items()
+        count = len(unmatched)
+        if count > 0:
+            self.btn_process_unmatched.setEnabled(True)
+            self.btn_process_unmatched.setText(f"⚙️ Process Unrecognized Items ({count})")
+            self.btn_process_unmatched.setStyleSheet("background-color: #0277bd; color: white; font-weight: bold;")
+        else:
+            self.btn_process_unmatched.setEnabled(False)
+            self.btn_process_unmatched.setText("⚙️ Process Unrecognized Items")
+            self.btn_process_unmatched.setStyleSheet("background-color: #424242; color: #888;")
+
 
     def toggle_confirm(self, idx, match_id):
         success, result = self.controller.toggle_item_confirmation(idx, match_id)
