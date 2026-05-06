@@ -1,7 +1,7 @@
 import os
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                                QLabel, QPushButton, QLineEdit, QCheckBox, 
-                               QScrollArea, QFrame, QFileDialog, QMessageBox, QSizePolicy, QSpacerItem)
+                               QScrollArea, QFrame, QFileDialog, QMessageBox, QDialog, QSizePolicy, QSpacerItem)
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QIcon
 
@@ -20,9 +20,9 @@ class ClickableRow(QFrame):
         self.setCursor(Qt.PointingHandCursor)
         
     def mousePressEvent(self, event):
+        super().mousePressEvent(event)
         if event.button() == Qt.LeftButton:
             self.callback(self.index)
-        super().mousePressEvent(event)
 
 class MainWindow(QMainWindow):
     def __init__(self, controller):
@@ -303,9 +303,33 @@ class MainWindow(QMainWindow):
             left_l = QHBoxLayout(left_row)
             left_l.setContentsMargins(5, 5, 5, 5)
             
-            prefix_txt = f"{i+1}. [{item.get('room', 'Misc')}] Qty: {item.get('qty', 1)}"
-            lbl_prefix = QLabel(f"<b>{prefix_txt}</b>")
-            left_l.addWidget(lbl_prefix)
+            # prefix_txt = f"{i+1}. [{item.get('room', 'Misc')}] Qty: {item.get('qty', 1)}"
+            # lbl_prefix = QLabel(f"<b>{prefix_txt}</b>")
+            # left_l.addWidget(lbl_prefix)
+            
+            lbl_num = QLabel(f"<b>{i+1}. [{item.get('room', 'Misc')}]</b>")
+            left_l.addWidget(lbl_num)
+            
+            qty_layout = QHBoxLayout()
+            qty_layout.setSpacing(2)
+            
+            btn_minus = QPushButton("-")
+            btn_minus.setFixedSize(22, 22)
+            btn_minus.setStyleSheet("background-color: #1976d2; color: white; border-radius: 11px; font-weight: bold; font-size: 14px;")
+            btn_minus.clicked.connect(lambda checked, idx=i: self.update_item_qty(idx, -1))
+            
+            qty_val = item.get('qty', 1)
+            lbl_qty = QLabel(f"Qty: <b>{qty_val}</b>")
+            
+            btn_plus = QPushButton("+")
+            btn_plus.setFixedSize(22, 22)
+            btn_plus.setStyleSheet("background-color: #1976d2; color: white; border-radius: 11px; font-weight: bold; font-size: 14px;")
+            btn_plus.clicked.connect(lambda checked, idx=i: self.update_item_qty(idx, 1))
+            
+            qty_layout.addWidget(btn_minus)
+            qty_layout.addWidget(lbl_qty)
+            qty_layout.addWidget(btn_plus)
+            left_l.addLayout(qty_layout)
             
             lbl_desc = QLabel(f"| {item.get('raw_description', '')}")
             lbl_desc.setWordWrap(True)
@@ -389,6 +413,18 @@ class MainWindow(QMainWindow):
                 
                 self.populate_ui()
                 return True
+        return False
+
+    def update_item_qty(self, idx, delta):
+        items = self.controller.session_data.get("line_items", [])
+        if 0 <= idx < len(items):
+            item = items[idx]
+            current_qty = item.get("qty", 1)
+            # Ensure quantity doesn't go below 1 (or 0 if allowed, let's say 1)
+            new_qty = max(1, current_qty + delta)
+            item["qty"] = new_qty
+            self.populate_ui()
+            return True
         return False
 
     def open_settings(self):

@@ -115,13 +115,24 @@ class ProductDetailDialog(QDialog):
         if self.parent().change_item_match(self.idx):
             self.load_item(self.idx)
 
+    def on_qty_change(self, delta):
+        if self.parent().update_item_qty(self.idx, delta):
+            self.load_item(self.idx)
+
     def on_confirm(self):
         items = self.controller.session_data.get("line_items", [])
         if 0 <= self.idx < len(items):
             item = items[self.idx]
+            was_confirmed = item.get("confirmed", False)
             match_id = item.get("_match", {}).get("match_id")
+            
             self.parent().toggle_confirm(self.idx, match_id)
-            self.load_item(self.idx)
+            
+            # If we just confirmed it, move to next item
+            if not was_confirmed:
+                self.go_next()
+            else:
+                self.load_item(self.idx)
 
     def load_item(self, idx):
         self.idx = idx
@@ -176,10 +187,34 @@ class ProductDetailDialog(QDialog):
         lbl_raw_desc.setStyleSheet("font-size: 13px; color: #eee;")
         raw_l.addWidget(lbl_raw_desc)
         
-        meta_txt = f"<b>Room:</b> {item_data.get('room', 'N/A')} | <b>Qty:</b> {item_data.get('qty', 1)} {item_data.get('unit', '')}"
+        meta_layout = QHBoxLayout()
+        meta_txt = f"<b>Room:</b> {item_data.get('room', 'N/A')} | <b>Qty:</b>"
         lbl_meta = QLabel(meta_txt)
         lbl_meta.setStyleSheet("color: #888; font-size: 11px;")
-        raw_l.addWidget(lbl_meta)
+        meta_layout.addWidget(lbl_meta)
+        
+        btn_minus = QPushButton("-")
+        btn_minus.setFixedSize(22, 22)
+        btn_minus.setStyleSheet("background-color: #1976d2; color: white; border-radius: 11px; font-weight: bold; font-size: 14px;")
+        btn_minus.clicked.connect(lambda: self.on_qty_change(-1))
+        meta_layout.addWidget(btn_minus)
+        
+        lbl_qty_val = QLabel(f"<b>{item_data.get('qty', 1)}</b>")
+        lbl_qty_val.setStyleSheet("color: #eee; font-size: 13px;")
+        meta_layout.addWidget(lbl_qty_val)
+        
+        btn_plus = QPushButton("+")
+        btn_plus.setFixedSize(22, 22)
+        btn_plus.setStyleSheet("background-color: #1976d2; color: white; border-radius: 11px; font-weight: bold; font-size: 14px;")
+        btn_plus.clicked.connect(lambda: self.on_qty_change(1))
+        meta_layout.addWidget(btn_plus)
+        
+        lbl_unit = QLabel(item_data.get('unit', ''))
+        lbl_unit.setStyleSheet("color: #888; font-size: 11px;")
+        meta_layout.addWidget(lbl_unit)
+        meta_layout.addStretch()
+        
+        raw_l.addLayout(meta_layout)
         
         self.content_layout.addWidget(raw_group)
         
