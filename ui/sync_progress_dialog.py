@@ -104,7 +104,6 @@ class SyncProgressDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Publishing Database" if is_publish else "Syncing Database")
         self.setFixedSize(400, 150)
-        self.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint)
         self.is_publish = is_publish
         
         layout = QVBoxLayout(self)
@@ -121,6 +120,13 @@ class SyncProgressDialog(QDialog):
         self.btn_close.setEnabled(False)
         self.btn_close.clicked.connect(self.accept)
         layout.addWidget(self.btn_close, alignment=Qt.AlignCenter)
+
+    def closeEvent(self, event):
+        # Prevent closing while syncing
+        if not self.btn_close.isEnabled():
+            event.ignore()
+        else:
+            super().closeEvent(event)
 
     def start_sync(self, owner, repo, token, local_path):
         self.worker = SyncWorker(owner, repo, token, local_path, self.is_publish)
@@ -141,7 +147,12 @@ class SyncProgressDialog(QDialog):
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(100)
         self.btn_close.setEnabled(True)
-        self.setWindowFlags(self.windowFlags() | Qt.WindowCloseButtonHint)
+        
+        # Ensure window is visible and on top
+        self.show()
+        self.raise_()
+        self.activateWindow()
+        
         if not success:
             self.lbl_status.setStyleSheet("color: red;")
         else:

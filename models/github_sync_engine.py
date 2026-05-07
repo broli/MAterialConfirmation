@@ -4,6 +4,7 @@ import base64
 import requests
 import zipfile
 import io
+from models.config_manager import ConfigManager
 
 class GithubSyncEngine:
     def __init__(self, owner, repo, token=None):
@@ -18,8 +19,10 @@ class GithubSyncEngine:
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
 
-    def get_latest_commit(self, branch="main"):
+    def get_latest_commit(self, branch=None):
         """Get the SHA of the latest commit on the given branch."""
+        if branch is None:
+            branch = ConfigManager.get("github_branch") or "main"
         url = f"{self.base_url}/commits/{branch}"
         resp = requests.get(url, headers=self.headers)
         if resp.status_code == 200:
@@ -37,7 +40,8 @@ class GithubSyncEngine:
 
     def download_file(self, file_path, target_path):
         """Download a single raw file from the repository."""
-        url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/main/{file_path}"
+        branch = ConfigManager.get("github_branch") or "main"
+        url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{branch}/{file_path}"
         resp = requests.get(url, headers=self.headers)
         if resp.status_code == 200:
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
@@ -48,7 +52,8 @@ class GithubSyncEngine:
 
     def download_full_zip(self, extract_path, progress_callback=None):
         """Download the entire repository as a zip and extract it."""
-        url = f"{self.base_url}/zipball/main"
+        branch = ConfigManager.get("github_branch") or "main"
+        url = f"{self.base_url}/zipball/{branch}"
         resp = requests.get(url, headers=self.headers, stream=True)
         if resp.status_code == 200:
             total_size = int(resp.headers.get('content-length', 0))
@@ -96,20 +101,35 @@ class GithubSyncEngine:
             return False, "No token provided."
 
         # 1. Get latest commit SHA & Tree SHA
-        latest_commit_sha = self.get_latest_commit("main")
-        if not latest_commit_sha:
-            return False, "Could not fetch latest commit. Repository might be empty or token invalid."
+        branch = ConfigManager.get("github_branch") or "main"
+        latest_commit_sha = self.get_latest_commit(branch)
+        
+        base_tree_sha = None
+        if latest_commit_sha:
+            commit_resp = requests.get(f"{self.base_url}/git/commits/{latest_commit_sha}", headers=self.headers)
+            if commit_resp.status_code == 200:
+                base_tree_sha = commit_resp.json()["tree"]["sha"]
 
-        commit_resp = requests.get(f"{self.base_url}/git/commits/{latest_commit_sha}", headers=self.headers)
-        base_tree_sha = commit_resp.json()["tree"]["sha"]
-
-        # 2. Collect all local files in categories and assets
+        # 2. Collect all local files in categories and assets (exclude backups and hidden files)
         local_files = []
-        for root, _, files in os.walk(local_db_path):
+        for root, dirs, files in os.walk(local_db_path):
+            # Exclude backup folders and hidden directories
+            dirs[:] = [d for d in dirs if not d.startswith(".") and "backup" not in d.lower()]
+            
             for file in files:
+                if file.startswith(".") or "backup" in file.lower():
+                    continue
+                
+                # Only include relevant file types for the database
+                if not file.lower().endswith(('.yaml', '.png', '.jpg', '.jpeg', '.txt', '.json')):
+                    continue
+
                 abs_path = os.path.join(root, file)
                 rel_path = os.path.relpath(abs_path, local_db_path).replace("\\", "/")
                 local_files.append((rel_path, abs_path))
+
+        if not local_files:
+            return False, "No files found to publish in the database folder."
 
         # 3. Create Tree structure
         tree = []
@@ -120,7 +140,7 @@ class GithubSyncEngine:
             
             blob_sha = self._create_blob(abs_path)
             if not blob_sha:
-                return False, f"Failed to process file: {rel_path}"
+                return False, f"Failed to create blob for: {rel_path}"
                 
             tree.append({
                 "path": rel_path,
@@ -133,29 +153,45 @@ class GithubSyncEngine:
         if progress_callback:
             progress_callback(total, total, "Finalizing commit...")
             
-        tree_resp = requests.post(f"{self.base_url}/git/trees", headers=self.headers, json={"base_tree": base_tree_sha, "tree": tree})
+        tree_data = {"tree": tree}
+        if base_tree_sha:
+            tree_data["base_tree"] = base_tree_sha
+            
+        tree_resp = requests.post(f"{self.base_url}/git/trees", headers=self.headers, json=tree_data)
         if tree_resp.status_code != 201:
-            return False, "Failed to create git tree."
+            return False, f"Failed to create git tree: {tree_resp.status_code} {tree_resp.text}"
         new_tree_sha = tree_resp.json()["sha"]
 
         # 5. Create Commit
         commit_data = {
             "message": commit_message,
-            "tree": new_tree_sha,
-            "parents": [latest_commit_sha]
+            "tree": new_tree_sha
         }
+        if latest_commit_sha:
+            commit_data["parents"] = [latest_commit_sha]
+            
         new_commit_resp = requests.post(f"{self.base_url}/git/commits", headers=self.headers, json=commit_data)
         if new_commit_resp.status_code != 201:
-            return False, "Failed to create commit."
+            return False, f"Failed to create commit: {new_commit_resp.status_code} {new_commit_resp.text}"
         new_commit_sha = new_commit_resp.json()["sha"]
 
         # 6. Update branch reference
-        update_ref_resp = requests.patch(
-            f"{self.base_url}/git/refs/heads/main", 
-            headers=self.headers, 
-            json={"sha": new_commit_sha, "force": True}
-        )
-        if update_ref_resp.status_code != 200:
-            return False, "Failed to update branch reference."
+        if latest_commit_sha:
+            # Update existing branch
+            update_ref_resp = requests.patch(
+                f"{self.base_url}/git/refs/heads/{branch}", 
+                headers=self.headers, 
+                json={"sha": new_commit_sha, "force": True}
+            )
+        else:
+            # Create new branch
+            update_ref_resp = requests.post(
+                f"{self.base_url}/git/refs", 
+                headers=self.headers, 
+                json={"ref": f"refs/heads/{branch}", "sha": new_commit_sha}
+            )
+            
+        if update_ref_resp.status_code not in [200, 201]:
+            return False, f"Failed to update/create branch reference: {update_ref_resp.status_code} {update_ref_resp.text}"
 
         return True, new_commit_sha

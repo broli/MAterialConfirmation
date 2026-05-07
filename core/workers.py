@@ -59,14 +59,21 @@ class IngestionWorker(QObject):
             # Step 1: Check Ollama connection
             self.signals.progress.emit("🔍 Checking AI service...")
             ready, err = self.match_service.check_ollama_ready()
+            
+            from models.config_manager import ConfigManager
+            role = ConfigManager.get("role") or "user"
+            
             if not ready:
-                self.signals.error.emit((
-                    ConnectionError, 
-                    ConnectionError(f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."), 
-                    ""
-                ))
-                self.signals.finished.emit()
-                return
+                if role == "admin":
+                    self.signals.error.emit((
+                        ConnectionError, 
+                        ConnectionError(f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."), 
+                        ""
+                    ))
+                    self.signals.finished.emit()
+                    return
+                else:
+                    self.signals.progress.emit("⚠️ AI service offline. Using strict database matching...")
 
             # Step 2: Extract data from PDF
             self.signals.progress.emit("📖 Extracting PDF...")

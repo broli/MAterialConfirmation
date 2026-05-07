@@ -41,7 +41,10 @@ class SettingsWindow(QDialog):
         self.loading_lbl.hide()
         self.progress.hide()
         
-        self.build_ollama_section(is_installed, is_running, models)
+        role = ConfigManager.get("role") or "user"
+        if role == "admin":
+            self.build_ollama_section(is_installed, is_running, models)
+            
         self.build_pdf_section()
         self.scroll_layout.addStretch()
 

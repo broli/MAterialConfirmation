@@ -6,6 +6,7 @@ class ConfigManager:
     Manages application settings stored in a local settings.json file.
     """
     CONFIG_FILE = "settings.json"
+    #GITHUB_READ_ONLY_TOKEN = "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"
     
     DEFAULT_SETTINGS = {
         "llm_model": "llama3.1",
@@ -33,9 +34,10 @@ class ConfigManager:
         "settings_window_y": 200,
         "last_pdf_dir": "",
         "role": "user",
-        "github_owner": "YOUR_COMPANY_GITHUB_USERNAME",
+        "github_owner": "BathPC",
         "github_repo": "material-confirmation-db",
-        "github_token": ""
+        "github_token": "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",
+        "github_branch": "main"
     }
     
     @classmethod

@@ -633,27 +633,43 @@ class MatchService:
             
             # --- 2. SLOW PATH (LLM Fallback) ---
             if not fast_path_used:
-                if status_callback:
-                    status_callback(f"🧠 {status_prefix} AI Match (Ollama): {label}")
+                from models.config_manager import ConfigManager
+                role = ConfigManager.get("role") or "user"
                 
-                hint_section  = item.get("section") or None
-                hint_category = item.get("category") or None
-                try:
-                    contract_item = self._llm.extract_product_fields(
-                        raw_desc,
-                        hint_category=hint_category,
-                        hint_section=hint_section,
-                    )
-                    if self._debug_mode:
-                        # Use the extended return value to capture candidates + ranking
-                        result = self._engine.match_item(contract_item, _return_candidates=True)
-                        match_id, _, confidence, candidates_after_filter, search_target, top5 = result
-                    else:
-                        match_id, _, confidence = self._engine.match_item(contract_item)
-                except Exception as e:
-                    print(f"[MatchService] LLM error for '{raw_desc[:60]}': {e}")
-                    match_id   = None
+                # Standard users ONLY use Fast Match to avoid Ollama connection overhead/errors
+                if role != "admin":
+                    match_id = None
                     confidence = 0.0
+                else:
+                    # Admins use Ollama, but ONLY if it is actually responding
+                    ready, _ = self.check_ollama_ready()
+                    if not ready:
+                        if status_callback:
+                            status_callback(f"⚠️ {status_prefix} Ollama Offline: {label}")
+                        match_id = None
+                        confidence = 0.0
+                    else:
+                        if status_callback:
+                            status_callback(f"🧠 {status_prefix} AI Match (Ollama): {label}")
+                        
+                        hint_section  = item.get("section") or None
+                        hint_category = item.get("category") or None
+                        try:
+                            contract_item = self._llm.extract_product_fields(
+                                raw_desc,
+                                hint_category=hint_category,
+                                hint_section=hint_section,
+                            )
+                            if self._debug_mode:
+                                # Use the extended return value to capture candidates + ranking
+                                result = self._engine.match_item(contract_item, _return_candidates=True)
+                                match_id, _, confidence, candidates_after_filter, search_target, top5 = result
+                            else:
+                                match_id, _, confidence = self._engine.match_item(contract_item)
+                        except Exception as e:
+                            print(f"[MatchService] LLM error for '{raw_desc[:60]}': {e}")
+                            match_id   = None
+                            confidence = 0.0
 
         # Routing tag check
         is_ignored = False

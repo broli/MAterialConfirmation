@@ -2,7 +2,7 @@ import os
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                                QLabel, QPushButton, QLineEdit, QCheckBox, 
                                QScrollArea, QFrame, QFileDialog, QMessageBox, QDialog, QSizePolicy, QSpacerItem)
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, QThread, Signal
 from PySide6.QtGui import QIcon
 
 from models.config_manager import ConfigManager
@@ -176,7 +176,8 @@ class MainWindow(QMainWindow):
         self.controller.ingestion_error.connect(self.show_error)
         
         # Start Ollama check
-        self.controller.check_ollama_background()
+        if ConfigManager.get("role") == "admin":
+            self.controller.check_ollama_background()
         
         # Start Update Check
         self.check_for_updates()
@@ -184,7 +185,7 @@ class MainWindow(QMainWindow):
     def check_for_updates(self):
         owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
         repo = ConfigManager.get("github_repo") or "material-confirmation-db"
-        token = ConfigManager.get("github_token") or ""
+        token = ConfigManager.get("github_token")
         local_path = self.controller.db_loader.base_path
         
         self.update_checker = UpdateChecker(owner, repo, token, local_path)
@@ -335,8 +336,10 @@ class MainWindow(QMainWindow):
         
     def _on_ollama_status(self, success: bool, err: str):
         if not success:
-            self.status_bar.setText("⚠️ Ollama Offline (Start Ollama to use AI extraction)")
-            self.status_bar.setStyleSheet("color: orange;")
+            role = ConfigManager.get("role") or "user"
+            if role == "admin":
+                self.status_bar.setText("⚠️ Ollama Offline (Start Ollama to use AI extraction)")
+                self.status_bar.setStyleSheet("color: orange;")
             
     def show_error(self, err_msg: str):
         if self.ingestion_dialog:
@@ -606,7 +609,7 @@ class MainWindow(QMainWindow):
     def open_sync_dialog(self, is_publish=False):
         owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
         repo = ConfigManager.get("github_repo") or "material-confirmation-db"
-        token = ConfigManager.get("github_token") or ""
+        token = ConfigManager.get("github_token")
         local_path = self.controller.db_loader.base_path
         
         if is_publish and not token:
