@@ -11,9 +11,7 @@ if __name__ == "__main__":
     os.makedirs("database/categories", exist_ok=True)
     os.makedirs("database/assets", exist_ok=True)
     os.makedirs("database/templates", exist_ok=True)
-    os.makedirs("sessions", exist_ok=True)
-    os.makedirs("logs", exist_ok=True)
-    os.makedirs("output", exist_ok=True)
+    
     
     app = QApplication(sys.argv)
     

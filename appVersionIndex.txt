@@ -6,10 +6,13 @@
 [README.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/README.md)
 - Line 1: # 🛠️ PKB Material Confirmation & Management System (v3.1)
 - Line 4: ![Version](https://img.shields.io/badge/version-3.1-blue?style=for-the-badge)
-- Line 16: Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v3.1 features.
+- Line 16: Check out the [USER_GUIDE.md](USER_GUIDE.md) and [ADMIN_GUIDE.md](ADMIN_GUIDE.md).
 
-[SYSTEM_USER_GUIDE.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/SYSTEM_USER_GUIDE.md)
+[USER_GUIDE.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/USER_GUIDE.md)
 - Line 1: # 📘 PKB ERP Command Center - User Guide (v3.1)
+
+[ADMIN_GUIDE.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/ADMIN_GUIDE.md)
+- Line 1: # 🔑 PKB ERP Command Center - Admin Guide (v3.1)
 
 [deploy.ps1](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/deploy.ps1)
 - Line 1: Deployment Script (v3.1)

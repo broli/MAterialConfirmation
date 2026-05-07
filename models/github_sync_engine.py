@@ -4,6 +4,7 @@ import base64
 import requests
 import zipfile
 import io
+import subprocess
 from models.config_manager import ConfigManager
 
 class GithubSyncEngine:
@@ -83,134 +84,80 @@ class GithubSyncEngine:
         return False
 
     # --- PUBLISH / PUSH LOGIC (Admin Only) ---
-    def _create_blob(self, file_path):
-        with open(file_path, "rb") as f:
-            content = base64.b64encode(f.read()).decode("utf-8")
-        url = f"{self.base_url}/git/blobs"
-        resp = requests.post(url, headers=self.headers, json={"content": content, "encoding": "base64"})
-        if resp.status_code == 201:
-            return resp.json()["sha"]
-        
-        # Raise exception so the worker captures the exact reason
-        raise Exception(f"GitHub Error {resp.status_code}: {resp.text}")
-
     def publish_changes(self, local_db_path, commit_message="Database update", progress_callback=None):
         """
-        Push local changes to the GitHub repository.
-        This handles creating blobs for new/modified files, building a new tree, and committing.
+        Push local changes to the GitHub repository using native git commands.
         """
         if not self.token:
             return False, "No token provided."
 
-        # 1. Get latest commit SHA & Tree SHA
         branch = ConfigManager.get("github_branch") or "main"
-        latest_commit_sha = self.get_latest_commit(branch)
         
-        if not latest_commit_sha:
-            # INITIALIZATION: Create a dummy file to initialize the repo Git database.
-            # The Git Data API (trees/commits) often fails with "Repository is empty" 
-            # if no commits exist yet. Using the Contents API bypasses this.
-            init_url = f"{self.base_url}/contents/README_PKB_DATABASE.txt"
-            init_data = {
-                "message": "Initial database repository setup",
-                "content": base64.b64encode(b"PKB Material Confirmation Database Repository").decode("utf-8"),
-                "branch": branch
-            }
-            init_resp = requests.put(init_url, headers=self.headers, json=init_data)
-            if init_resp.status_code not in [200, 201]:
-                return False, f"Failed to initialize repository: {init_resp.text}"
-            
-            # Now that it's initialized, get the SHA so the rest of the logic works normally
-            latest_commit_sha = self.get_latest_commit(branch)
+        # 1. Check if git is installed
+        try:
+            subprocess.run(["git", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except Exception:
+            return False, "Git is not installed. Administrators must install Git to publish the database."
 
-        base_tree_sha = None
-        if latest_commit_sha:
-            commit_resp = requests.get(f"{self.base_url}/git/commits/{latest_commit_sha}", headers=self.headers)
-            if commit_resp.status_code == 200:
-                base_tree_sha = commit_resp.json()["tree"]["sha"]
+        # 2. Initialize git if necessary
+        git_dir = os.path.join(local_db_path, ".git")
+        if not os.path.exists(git_dir):
+            if progress_callback: progress_callback(0, 0, "Initializing git repository...")
+            subprocess.run(["git", "init"], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Create a basic .gitignore if it doesn't exist
+            gitignore_path = os.path.join(local_db_path, ".gitignore")
+            if not os.path.exists(gitignore_path):
+                with open(gitignore_path, "w") as f:
+                    f.write(".*\\n!*.gitignore\\nbackup*/\\n*backup*/\\nsessions/\\nlogs/\\noutput/\\nversion.txt\\n")
 
-        # 2. Collect all local files in categories and assets (exclude backups and hidden files)
-        local_files = []
-        for root, dirs, files in os.walk(local_db_path):
-            # Exclude backup folders and hidden directories
-            dirs[:] = [d for d in dirs if not d.startswith(".") and "backup" not in d.lower()]
-            
-            for file in files:
-                if file.startswith(".") or "backup" in file.lower():
-                    continue
+        # 3. Setup remote with token
+        remote_url = f"https://{self.token}@github.com/{self.owner}/{self.repo}.git"
+        
+        try:
+            # Check existing remote
+            remotes = subprocess.run(["git", "remote"], cwd=local_db_path, check=True, stdout=subprocess.PIPE, text=True).stdout
+            if "origin" in remotes:
+                subprocess.run(["git", "remote", "set-url", "origin", remote_url], cwd=local_db_path, check=True, stdout=subprocess.PIPE)
+            else:
+                subprocess.run(["git", "remote", "add", "origin", remote_url], cwd=local_db_path, check=True, stdout=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            return False, f"Failed to configure git remote: {e.stderr if hasattr(e, 'stderr') else str(e)}"
+
+        # 4. Configure user to avoid commit errors
+        subprocess.run(["git", "config", "user.name", "PKB Admin"], cwd=local_db_path)
+        subprocess.run(["git", "config", "user.email", "admin@pkb.local"], cwd=local_db_path)
+
+        # 5. Stage changes
+        if progress_callback: progress_callback(0, 0, "Staging files...")
+        try:
+            subprocess.run(["git", "add", "."], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            return False, f"Failed to stage files: {e.stderr.decode('utf-8') if e.stderr else 'Unknown error'}"
+
+        # 6. Commit changes
+        if progress_callback: progress_callback(0, 0, "Committing changes...")
+        try:
+            # Check if there are changes to commit
+            status = subprocess.run(["git", "status", "--porcelain"], cwd=local_db_path, stdout=subprocess.PIPE, text=True).stdout
+            if not status.strip():
+                return True, "No changes to publish."
                 
-                # Only include relevant file types for the database
-                if not file.lower().endswith(('.yaml', '.png', '.jpg', '.jpeg', '.txt', '.json')):
-                    continue
+            subprocess.run(["git", "commit", "-m", commit_message], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            return False, f"Failed to commit: {e.stderr.decode('utf-8') if e.stderr else 'Unknown error'}"
 
-                abs_path = os.path.join(root, file)
-                rel_path = os.path.relpath(abs_path, local_db_path).replace("\\", "/")
-                local_files.append((rel_path, abs_path))
+        # 7. Push changes
+        if progress_callback: progress_callback(0, 0, f"Pushing to {branch}...")
+        try:
+            # Try a regular push first, then force if it fails (e.g., first push or overwritten history)
+            push_res = subprocess.run(["git", "push", "-u", "origin", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if push_res.returncode != 0:
+                # If push fails, try force push (common for new repos or forceful syncs in this specific app design)
+                subprocess.run(["git", "push", "-u", "origin", branch, "--force"], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            return False, f"Failed to push to GitHub: {e.stderr.decode('utf-8') if e.stderr else 'Check your token and repository name.'}"
 
-        if not local_files:
-            return False, "No files found to publish in the database folder."
-
-        # 3. Create Tree structure
-        tree = []
-        total = len(local_files)
-        for i, (rel_path, abs_path) in enumerate(local_files):
-            if progress_callback:
-                progress_callback(i + 1, total, f"Preparing {os.path.basename(rel_path)}")
-            
-            blob_sha = self._create_blob(abs_path)
-            if not blob_sha:
-                return False, f"Failed to create blob for: {rel_path}"
-                
-            tree.append({
-                "path": rel_path,
-                "mode": "100644",
-                "type": "blob",
-                "sha": blob_sha
-            })
-
-        # 4. Post New Tree
-        if progress_callback:
-            progress_callback(total, total, "Finalizing commit...")
-            
-        tree_data = {"tree": tree}
-        if base_tree_sha:
-            tree_data["base_tree"] = base_tree_sha
-            
-        tree_resp = requests.post(f"{self.base_url}/git/trees", headers=self.headers, json=tree_data)
-        if tree_resp.status_code != 201:
-            return False, f"Failed to create git tree: {tree_resp.status_code} {tree_resp.text}"
-        new_tree_sha = tree_resp.json()["sha"]
-
-        # 5. Create Commit
-        commit_data = {
-            "message": commit_message,
-            "tree": new_tree_sha
-        }
-        if latest_commit_sha:
-            commit_data["parents"] = [latest_commit_sha]
-            
-        new_commit_resp = requests.post(f"{self.base_url}/git/commits", headers=self.headers, json=commit_data)
-        if new_commit_resp.status_code != 201:
-            return False, f"Failed to create commit: {new_commit_resp.status_code} {new_commit_resp.text}"
-        new_commit_sha = new_commit_resp.json()["sha"]
-
-        # 6. Update branch reference
-        if latest_commit_sha:
-            # Update existing branch
-            update_ref_resp = requests.patch(
-                f"{self.base_url}/git/refs/heads/{branch}", 
-                headers=self.headers, 
-                json={"sha": new_commit_sha, "force": True}
-            )
-        else:
-            # Create new branch
-            update_ref_resp = requests.post(
-                f"{self.base_url}/git/refs", 
-                headers=self.headers, 
-                json={"ref": f"refs/heads/{branch}", "sha": new_commit_sha}
-            )
-            
-        if update_ref_resp.status_code not in [200, 201]:
-            return False, f"Failed to update/create branch reference: {update_ref_resp.status_code} {update_ref_resp.text}"
-
-        return True, new_commit_sha
+        # Ensure latest_commit_sha is returned for compatibility, though not strictly needed by worker anymore
+        # We can grab it from local git
+        latest_sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=local_db_path, stdout=subprocess.PIPE, text=True).stdout.strip()
+        return True, latest_sha

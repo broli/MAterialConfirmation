@@ -1,0 +1,17 @@
+# Ignore all hidden files
+.*
+# But do not ignore this .gitignore file
+!.gitignore
+
+# Ignore backups
+backup*/
+*backup*/
+categories_backup_*/
+
+# Ignore operational folders if they accidentally end up here
+sessions/
+logs/
+output/
+
+# Ignore version file (used by user-sync, not needed in git)
+version.txt

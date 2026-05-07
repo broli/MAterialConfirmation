@@ -1,3 +1,7 @@
+param (
+    [switch]$nobuild
+)
+
 # PKB Material Confirmation System - Deployment Script (v3.1)
 
 $sourceDir = "C:\Users\carlo\Desktop\Programing\Python\MAterialConfirmation"
@@ -7,20 +11,18 @@ Write-Host "--------------------------------------------------"
 Write-Host "Starting Deployment of v3.1"
 Write-Host "Source: $sourceDir"
 Write-Host "Target: $destDir"
+if ($nobuild) { Write-Host "Build Mode: SKIPPED (--nobuild)" }
 Write-Host "--------------------------------------------------"
 
 # 0. Build Executable
-Write-Host "Step 0: Building Executable with PyInstaller..."
-pyinstaller gui_main.spec --noconfirm
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Error: PyInstaller build failed. Deployment aborted."
-    exit
-}
-
-# Ensure destination exists
-if (!(Test-Path "$destDir")) {
-    Write-Host "Creating destination directory..."
-    New-Item -ItemType Directory -Path "$destDir" -Force
+if (!$nobuild) {
+    Write-Host "Step 0: Building Executable with PyInstaller..."
+    # Using python -m PyInstaller to ensure it uses the current environment's installer
+    python -m PyInstaller gui_main.spec --noconfirm
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: PyInstaller build failed. Deployment aborted."
+        exit
+    }
 }
 
 # 1. Copy EXE
@@ -36,35 +38,15 @@ if (Test-Path $sourceExe) {
     exit
 }
 
-# 2. Copy Database Folder (Categories only)
-$sourceDb = Join-Path $sourceDir "database"
-$targetDb = Join-Path $destDir "database"
-
-if (Test-Path $sourceDb) {
-    Write-Host "Step 2: Syncing Database..."
-    if (!(Test-Path $targetDb)) { New-Item -ItemType Directory -Path $targetDb -Force | Out-Null }
-    # Copy categories and templates, skip assets (too large) and backups
-    Copy-Item -Path "$sourceDb\categories" -Destination "$targetDb" -Recurse -Force
-    Copy-Item -Path "$sourceDb\templates" -Destination "$targetDb" -Recurse -Force
-}
 
 # 3. Copy Documentation
+
 Write-Host "Step 3: Updating Documentation..."
-$docs = @("Ollama.md", "README.md", "ROADMAP.md", "SYSTEM_USER_GUIDE.md")
+$docs = @("Ollama.md", "README.md", "ROADMAP.md", "USER_GUIDE.md", "ADMIN_GUIDE.md")
 foreach ($doc in $docs) {
     $docPath = Join-Path $sourceDir $doc
     if (Test-Path $docPath) {
         Copy-Item "$docPath" -Destination "$destDir" -Force
-    }
-}
-
-# 4. Ensure Operational Folders Exist
-Write-Host "Step 4: Verifying Operational Folders..."
-$folders = @("sessions", "logs", "output")
-foreach ($folder in $folders) {
-    $folderPath = Join-Path $destDir $folder
-    if (!(Test-Path $folderPath)) {
-        New-Item -ItemType Directory -Path $folderPath -Force | Out-Null
     }
 }
 
