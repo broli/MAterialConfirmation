@@ -88,6 +88,7 @@ class ProductFormWidget(QWidget):
         core_layout.addWidget(QLabel("Category File *"), 7, 0)
         self.cat_entry = QComboBox()
         self.cat_entry.addItems(self._get_existing_categories())
+        self.cat_entry.currentIndexChanged.connect(self._on_category_changed)
         core_layout.addWidget(self.cat_entry, 7, 1)
         
         core_group.setLayout(core_layout)
@@ -149,6 +150,14 @@ class ProductFormWidget(QWidget):
     def _get_existing_categories(self):
         if not os.path.exists(self.categories_path): return []
         return [f for f in os.listdir(self.categories_path) if f.endswith('.yaml')]
+
+    def _on_category_changed(self, index):
+        # Auto-fill ID if empty when category changes
+        if not self.id_entry.text().strip():
+            cat_file = self.cat_entry.currentText()
+            from models.product_service import ProductService
+            next_id = ProductService.get_next_id(cat_file, self.categories_path)
+            self.id_entry.setText(next_id)
 
     def add_dimension_row(self, key="", value=""):
         row = DimensionRow(key, value)

@@ -78,6 +78,35 @@ class ProductService:
             yaml.dump(existing, f, sort_keys=False, allow_unicode=True)
 
     @staticmethod
+    def get_next_id(cat_file: str, categories_path: str) -> str:
+        """
+        Find the next available integer ID in a category YAML file.
+        """
+        if not cat_file.endswith(".yaml"):
+            cat_file += ".yaml"
+        target = os.path.join(categories_path, cat_file)
+        if not os.path.exists(target):
+            return "1"
+
+        try:
+            with open(target, "r", encoding="utf-8") as f:
+                existing = yaml.safe_load(f) or []
+            
+            max_id = 0
+            for item in existing:
+                item_id = item.get("id")
+                if item_id:
+                    try:
+                        val = int(item_id)
+                        if val > max_id:
+                            max_id = val
+                    except (ValueError, TypeError):
+                        continue
+            return str(max_id + 1)
+        except Exception:
+            return "1"
+
+    @staticmethod
     def remove_from_yaml(item_id: str, cat_file: str, categories_path: str) -> None:
         """
         Remove the product with ``item_id`` from the given YAML file.

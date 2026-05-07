@@ -121,9 +121,12 @@ class ProductEditDialog(QDialog):
     def save(self):
         data, category = self.form.get_data()
         
+        # Auto-generate ID if empty (often used for ignore.yaml or manual additions)
         if not data.get("id"):
-            QMessageBox.warning(self, "Validation Error", "ID is required.")
-            return
+            from models.product_service import ProductService
+            data["id"] = ProductService.get_next_id(category, self.categories_path)
+            # Update form so user can see it if there's an error later
+            self.form.id_entry.setText(data["id"])
             
         try:
             self.product_service.upsert_to_yaml(data, category, self.categories_path, self.assets_path)
