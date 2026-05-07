@@ -25,3 +25,4 @@ database/assets/
 *.csv
 *.xlsx
 *.7z
+settings.json

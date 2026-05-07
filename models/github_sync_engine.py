@@ -90,7 +90,9 @@ class GithubSyncEngine:
         resp = requests.post(url, headers=self.headers, json={"content": content, "encoding": "base64"})
         if resp.status_code == 201:
             return resp.json()["sha"]
-        return None
+        
+        # Raise exception so the worker captures the exact reason
+        raise Exception(f"GitHub Error {resp.status_code}: {resp.text}")
 
     def publish_changes(self, local_db_path, commit_message="Database update", progress_callback=None):
         """
