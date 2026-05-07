@@ -31,7 +31,11 @@ class ConfigManager:
         "settings_window_height": 650,
         "settings_window_x": 200,
         "settings_window_y": 200,
-        "last_pdf_dir": ""
+        "last_pdf_dir": "",
+        "role": "user",
+        "github_owner": "YOUR_COMPANY_GITHUB_USERNAME",
+        "github_repo": "material-confirmation-db",
+        "github_token": ""
     }
     
     @classmethod

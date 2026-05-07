@@ -12,6 +12,36 @@ from ui.batch_pdf import BatchPdfIngestWindow
 from ui.ingestion_progress import IngestionProgressDialog
 from ui.product_detail import ProductDetailDialog
 from ui.components.product_form import ProductFormWidget
+from ui.sync_progress_dialog import SyncProgressDialog
+from models.github_sync_engine import GithubSyncEngine
+
+class UpdateChecker(QThread):
+    finished = Signal(bool) # True if update available
+
+    def __init__(self, owner, repo, token, local_path):
+        super().__init__()
+        self.owner = owner
+        self.repo = repo
+        self.token = token
+        self.local_path = local_path
+        
+    def run(self):
+        try:
+            engine = GithubSyncEngine(self.owner, self.repo, self.token)
+            latest_sha = engine.get_latest_commit()
+            if not latest_sha:
+                self.finished.emit(False)
+                return
+                
+            version_file = os.path.join(self.local_path, "version.txt")
+            local_sha = ""
+            if os.path.exists(version_file):
+                with open(version_file, "r") as f:
+                    local_sha = f.read().strip()
+                    
+            self.finished.emit(local_sha != latest_sha)
+        except Exception:
+            self.finished.emit(False)
 
 class TempItemEditDialog(QDialog):
     def __init__(self, parent, categories_path="database/categories", item_data=None):
@@ -147,6 +177,23 @@ class MainWindow(QMainWindow):
         
         # Start Ollama check
         self.controller.check_ollama_background()
+        
+        # Start Update Check
+        self.check_for_updates()
+
+    def check_for_updates(self):
+        owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
+        repo = ConfigManager.get("github_repo") or "material-confirmation-db"
+        token = ConfigManager.get("github_token") or ""
+        local_path = self.controller.db_loader.base_path
+        
+        self.update_checker = UpdateChecker(owner, repo, token, local_path)
+        self.update_checker.finished.connect(self._on_update_check_done)
+        self.update_checker.start()
+        
+    def _on_update_check_done(self, update_available):
+        if update_available:
+            self.open_sync_dialog(is_publish=False)
 
     def _setup_header(self):
         header_frame = QFrame()
@@ -166,11 +213,24 @@ class MainWindow(QMainWindow):
         self.debug_var.stateChanged.connect(self.toggle_debug)
         layout.addWidget(self.debug_var)
         
-        self.btn_manage_db = QPushButton("⚙️ Manage Database")
-        self.btn_manage_db.setStyleSheet("background-color: #1565c0; color: white;")
-        self.btn_manage_db.clicked.connect(self.open_database_manager)
-        layout.addWidget(self.btn_manage_db)
+        role = ConfigManager.get("role") or "user"
         
+        if role == "admin":
+            self.btn_manage_db = QPushButton("⚙️ Manage Database")
+            self.btn_manage_db.setStyleSheet("background-color: #1565c0; color: white;")
+            self.btn_manage_db.clicked.connect(self.open_database_manager)
+            layout.addWidget(self.btn_manage_db)
+            
+            self.btn_publish = QPushButton("🚀 Publish Database")
+            self.btn_publish.setStyleSheet("background-color: #d32f2f; color: white;")
+            self.btn_publish.clicked.connect(lambda: self.open_sync_dialog(is_publish=True))
+            layout.addWidget(self.btn_publish)
+        else:
+            self.btn_sync = QPushButton("🔄 Sync Database")
+            self.btn_sync.setStyleSheet("background-color: #1976d2; color: white;")
+            self.btn_sync.clicked.connect(lambda: self.open_sync_dialog(is_publish=False))
+            layout.addWidget(self.btn_sync)
+            
         self.btn_settings = QPushButton("⚙️ Settings")
         self.btn_settings.clicked.connect(self.open_settings)
         layout.addWidget(self.btn_settings)
@@ -542,6 +602,26 @@ class MainWindow(QMainWindow):
     def open_batch_pdf(self):
         unmatched = self.controller.get_unmatched_items()
         BatchPdfIngestWindow(self.controller, self, unmatched).exec()
+
+    def open_sync_dialog(self, is_publish=False):
+        owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
+        repo = ConfigManager.get("github_repo") or "material-confirmation-db"
+        token = ConfigManager.get("github_token") or ""
+        local_path = self.controller.db_loader.base_path
+        
+        if is_publish and not token:
+            QMessageBox.warning(self, "Missing Token", "You cannot publish without an Admin Token. Please set it in settings.json.")
+            return
+
+        dialog = SyncProgressDialog(self, is_publish=is_publish)
+        dialog.show()
+        dialog.start_sync(owner, repo, token, local_path)
+        
+        # When closed, refresh DB if it was a download sync
+        dialog.exec()
+        if not is_publish:
+            self.controller.refresh_catalog()
+            self.populate_ui()
 
     def closeEvent(self, event):
         is_maximized = self.isMaximized()
