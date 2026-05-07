@@ -1,7 +1,7 @@
-# 🛠️ PKB Material Confirmation & Management System (v2.6)
+# 🛠️ PKB Material Confirmation & Management System (v3.1)
 **From Simple PDF Generation to a Lightweight ERP Ecosystem**
 
-![Version](https://img.shields.io/badge/version-2.6-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-3.1-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-Phase%203-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.14%2B-green?style=for-the-badge)
 
@@ -13,7 +13,7 @@ The **PKB Material Confirmation System** is a bespoke operational tool designed 
 Our mission is to eliminate manual errors and repetitive administrative tasks, ensuring that every measurement, color selection, and product specification is perfectly aligned between the client's vision and the project's execution.
 
 > [!TIP]
-> **New to the system?** Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v2.6 features.
+> **New to the system?** Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v3.1 features.
 
 ---
 

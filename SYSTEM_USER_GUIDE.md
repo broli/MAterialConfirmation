@@ -1,4 +1,4 @@
-# 📘 PKB ERP Command Center - User Guide (v2.6)
+# 📘 PKB ERP Command Center - User Guide (v3.1)
 
 Welcome to the **PKB Material Confirmation System**. This guide explains the core workflow for processing contracts and managing your material catalog.
 

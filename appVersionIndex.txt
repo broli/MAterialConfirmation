@@ -1,21 +1,21 @@
-# App Version Index (v3.0 Transition)
+# App Version Index (v3.1)
 
 [ui/main_window.py](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/ui/main_window.py)
-- Line 20: self.setWindowTitle("PKB ERP Command Center v3.0 (Qt)")
+- Line 143: self.setWindowTitle("PKB ERP Command Center v3.1 (Qt)")
 
 [README.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/README.md)
-- Line 1: # 🛠️ PKB Material Confirmation & Management System (v2.6)
-- Line 4: ![Version](https://img.shields.io/badge/version-2.6-blue?style=for-the-badge)
-- Line 16: Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v2.6 features.
+- Line 1: # 🛠️ PKB Material Confirmation & Management System (v3.1)
+- Line 4: ![Version](https://img.shields.io/badge/version-3.1-blue?style=for-the-badge)
+- Line 16: Check out the [SYSTEM_USER_GUIDE.md](SYSTEM_USER_GUIDE.md) for a step-by-step walkthrough of the v3.1 features.
 
 [SYSTEM_USER_GUIDE.md](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/SYSTEM_USER_GUIDE.md)
-- Line 1: # 📘 PKB ERP Command Center - User Guide (v2.6)
+- Line 1: # 📘 PKB ERP Command Center - User Guide (v3.1)
 
 [deploy.ps1](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/deploy.ps1)
-- Line 1: Deployment Script (v2.6)
-- Line 13: Write-Host "Starting Deployment of v2.6"
-- Line 19: $exeName = "PKB Material Confirmation System_v2.6.exe"
-- Line 62: Write-Host "Deployment Successful! v2.6 is now live."
+- Line 1: Deployment Script (v3.1)
+- Line 13: Write-Host "Starting Deployment of v3.1"
+- Line 19: $exeName = "PKB Material Confirmation System_v3.1.exe"
+- Line 62: Write-Host "Deployment Successful! v3.1 is now live."
 
 [gui_main.spec](file:///c:/Users/carlo/Desktop/Programing/Python/MAterialConfirmation/gui_main.spec)
-- Line 32: name='PKB Material Confirmation System_v2.6'
+- Line 32: name='PKB Material Confirmation System_v3.1'

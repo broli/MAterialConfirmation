@@ -106,6 +106,23 @@ class GithubSyncEngine:
         branch = ConfigManager.get("github_branch") or "main"
         latest_commit_sha = self.get_latest_commit(branch)
         
+        if not latest_commit_sha:
+            # INITIALIZATION: Create a dummy file to initialize the repo Git database.
+            # The Git Data API (trees/commits) often fails with "Repository is empty" 
+            # if no commits exist yet. Using the Contents API bypasses this.
+            init_url = f"{self.base_url}/contents/README_PKB_DATABASE.txt"
+            init_data = {
+                "message": "Initial database repository setup",
+                "content": base64.b64encode(b"PKB Material Confirmation Database Repository").decode("utf-8"),
+                "branch": branch
+            }
+            init_resp = requests.put(init_url, headers=self.headers, json=init_data)
+            if init_resp.status_code not in [200, 201]:
+                return False, f"Failed to initialize repository: {init_resp.text}"
+            
+            # Now that it's initialized, get the SHA so the rest of the logic works normally
+            latest_commit_sha = self.get_latest_commit(branch)
+
         base_tree_sha = None
         if latest_commit_sha:
             commit_resp = requests.get(f"{self.base_url}/git/commits/{latest_commit_sha}", headers=self.headers)
