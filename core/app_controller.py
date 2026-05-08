@@ -18,6 +18,8 @@ class AppController(QObject):
     session_loaded = Signal(dict)
     ingestion_finished = Signal(dict)
     ingestion_error = Signal(str)
+    generation_finished = Signal(str, str) # type, path
+    generation_error = Signal(str, str)    # type, error
     
     def __init__(self):
         super().__init__()
@@ -217,10 +219,25 @@ class AppController(QObject):
         output_dir = os.path.join(self.target_pdf_dir, "ERP_Automated_Output")
         os.makedirs(output_dir, exist_ok=True)
             
-        generator = PDFGenerator(output_path=output_dir, debug_mode=self.match_service.debug_mode)
-        out_file = generator.create_pdf(payload)
-        self.status_updated.emit(f"✅ PDF saved to: {os.path.basename(out_file)}")
-        return True, out_file
+        self.status_updated.emit("⏳ Starting PDF Generation...")
+        
+        thread = QThread()
+        from core.workers import GenerationWorker
+        worker = GenerationWorker('pdf', payload, output_dir, self.match_service.debug_mode)
+        worker.moveToThread(thread)
+        thread._worker = worker
+        
+        thread.started.connect(worker.run)
+        worker.signals.progress.connect(self.status_updated.emit)
+        worker.signals.result.connect(lambda path: self.generation_finished.emit('pdf', path))
+        worker.signals.error.connect(lambda e: self.generation_error.emit('pdf', str(e[1])))
+        worker.signals.finished.connect(thread.quit)
+        worker.signals.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        
+        self._threads.append(thread)
+        thread.start()
+        return True, "Started"
 
     def generate_excel(self, client_name: str, project_po: str):
         payload = self.prepare_payload(client_name, project_po)
@@ -235,10 +252,23 @@ class AppController(QObject):
             "project_po": self.session_data.get("project_po", ""),
             "products": payload["products"]
         }
-        generator = ExcelRoutingEngine(output_dir=output_dir, debug_mode=self.match_service.debug_mode)
-        out_file = generator.generate_excel(excel_payload)
-        if out_file:
-            self.status_updated.emit(f"✅ Excel saved to: {os.path.basename(out_file)}")
-            return True, out_file
-        else:
-            return False, "Missing Excel Template file in /database/templates dir."
+        
+        self.status_updated.emit("⏳ Starting Excel Generation...")
+        
+        thread = QThread()
+        from core.workers import GenerationWorker
+        worker = GenerationWorker('excel', excel_payload, output_dir, self.match_service.debug_mode)
+        worker.moveToThread(thread)
+        thread._worker = worker
+        
+        thread.started.connect(worker.run)
+        worker.signals.progress.connect(self.status_updated.emit)
+        worker.signals.result.connect(lambda path: self.generation_finished.emit('excel', path))
+        worker.signals.error.connect(lambda e: self.generation_error.emit('excel', str(e[1])))
+        worker.signals.finished.connect(thread.quit)
+        worker.signals.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        
+        self._threads.append(thread)
+        thread.start()
+        return True, "Started"

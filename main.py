@@ -21,7 +21,7 @@ if __name__ == "__main__":
         onboarding = TeamSelectionDialog()
         # Use dark theme for onboarding too
         app.setStyleSheet(qdarktheme.load_stylesheet("dark"))
-        if onboarding.exec() != QDialog.Accepted:
+        if onboarding.exec() != QDialog.DialogCode.Accepted:
             sys.exit(0)
     
     # Apply dark theme

@@ -79,7 +79,7 @@ class SettingsWindow(QDialog):
             actions_layout.addWidget(btn_download)
         else:
             self.show_window_cb = QCheckBox("Show terminal when starting Ollama")
-            self.show_window_cb.setChecked(ConfigManager.get("show_ollama_window"))
+            self.show_window_cb.setChecked(bool(ConfigManager.get("show_ollama_window")))
             self.show_window_cb.stateChanged.connect(self.save_show_window_setting)
             actions_layout.addWidget(self.show_window_cb)
             
@@ -105,7 +105,7 @@ class SettingsWindow(QDialog):
                 self.combo_model.addItems(models)
             else:
                 self.combo_model.addItem("No models found")
-            self.combo_model.setCurrentText(ConfigManager.get("llm_model"))
+            self.combo_model.setCurrentText(str(ConfigManager.get("llm_model") or ""))
             self.combo_model.currentTextChanged.connect(self.save_model_selection)
             actions_layout.addWidget(self.combo_model)
             
@@ -132,7 +132,7 @@ class SettingsWindow(QDialog):
         self.scroll_layout.addWidget(actions_frame)
 
     def save_show_window_setting(self, state):
-        ConfigManager.set("show_ollama_window", state == Qt.Checked)
+        ConfigManager.set("show_ollama_window", state == 2)
 
     def save_model_selection(self, choice):
         if choice and choice != "No models found":
@@ -153,7 +153,7 @@ class SettingsWindow(QDialog):
             self.combo_model.addItems(models)
             current = ConfigManager.get("llm_model")
             if current in models:
-                self.combo_model.setCurrentText(current)
+                self.combo_model.setCurrentText(str(current))
             else:
                 self.combo_model.setCurrentIndex(0)
                 self.save_model_selection(models[0])
@@ -177,7 +177,7 @@ class SettingsWindow(QDialog):
         model = self.combo_model.currentText()
         if model and model != "No models found":
             reply = QMessageBox.question(self, "Confirm Delete", f"Are you sure you want to delete {model}?")
-            if reply == QMessageBox.Yes:
+            if reply == QMessageBox.StandardButton.Yes:
                 if OllamaUtils.delete_model(model):
                     QMessageBox.information(self, "Success", f"Model {model} deleted.")
                     self.refresh_status()

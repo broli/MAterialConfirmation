@@ -1,7 +1,7 @@
 import os
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                                QLabel, QPushButton, QLineEdit, QCheckBox, 
-                               QScrollArea, QFrame, QFileDialog, QMessageBox, QDialog, QSizePolicy, QSpacerItem)
+                               QScrollArea, QFrame, QFileDialog, QMessageBox, QDialog, QSizePolicy, QSpacerItem, QProgressBar)
 from PySide6.QtCore import Qt, QSize, QThread, Signal
 from PySide6.QtGui import QIcon
 
@@ -130,11 +130,11 @@ class ClickableRow(QFrame):
         super().__init__()
         self.index = index
         self.callback = callback
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             QTimer.singleShot(0, lambda: self.callback(self.index))
 
 class MainWindow(QMainWindow):
@@ -159,7 +159,7 @@ class MainWindow(QMainWindow):
                 self.move(x, y)
         
         if is_maximized:
-            self.setWindowState(Qt.WindowMaximized)
+            self.setWindowState(Qt.WindowState.WindowMaximized)
         
         # Central widget
         self.central_widget = QWidget()
@@ -177,6 +177,8 @@ class MainWindow(QMainWindow):
         self.controller.session_loaded.connect(self.populate_ui)
         self.controller.ingestion_finished.connect(self.populate_ui)
         self.controller.ingestion_error.connect(self.show_error)
+        self.controller.generation_finished.connect(self._on_generation_finished)
+        self.controller.generation_error.connect(self._on_generation_error)
         
         # Start Ollama check
         if ConfigManager.get("role") == "admin":
@@ -211,7 +213,7 @@ class MainWindow(QMainWindow):
         self.btn_load_dir.clicked.connect(self.load_directory)
         layout.addWidget(self.btn_load_dir)
         
-        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         self.debug_var = QCheckBox("Enable Developer Logging")
         self.debug_var.stateChanged.connect(self.toggle_debug)
@@ -258,7 +260,7 @@ class MainWindow(QMainWindow):
         self.entry_po = QLineEdit()
         i_layout.addWidget(self.entry_po)
         
-        i_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        i_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         self.hide_ignored_var = QCheckBox("Hide Ignored Items")
         self.hide_ignored_var.setChecked(True)
@@ -283,7 +285,7 @@ class MainWindow(QMainWindow):
         self.scroll_area.setWidgetResizable(True)
         self.workspace_content = QWidget()
         self.workspace_grid = QGridLayout(self.workspace_content)
-        self.workspace_grid.setAlignment(Qt.AlignTop)
+        self.workspace_grid.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.workspace_grid.setColumnStretch(0, 1)
         self.workspace_grid.setColumnStretch(1, 1)
         self.scroll_area.setWidget(self.workspace_content)
@@ -318,7 +320,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.btn_process_unmatched)
 
         
-        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         self.btn_gen_pdf = QPushButton("📄 Generate Client PDF")
         self.btn_gen_pdf.setStyleSheet("background-color: #2e7d32; color: white;")
@@ -333,9 +335,25 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(footer_frame)
 
     def _setup_status_bar(self):
+        status_frame = QFrame()
+        status_layout = QHBoxLayout(status_frame)
+        status_layout.setContentsMargins(5, 2, 5, 2)
+
         self.status_bar = QLabel("Ready.")
         self.status_bar.setStyleSheet("color: gray;")
-        self.main_layout.addWidget(self.status_bar)
+        status_layout.addWidget(self.status_bar)
+
+        status_layout.addStretch()
+
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
+        self.progress_bar.setRange(0, 0) # Indeterminate
+        self.progress_bar.setMaximumHeight(12)
+        self.progress_bar.setMaximumWidth(200)
+        self.progress_bar.setTextVisible(False)
+        status_layout.addWidget(self.progress_bar)
+
+        self.main_layout.addWidget(status_frame)
 
     def update_status(self, msg: str):
         self.status_bar.setText(msg)
@@ -376,8 +394,8 @@ class MainWindow(QMainWindow):
         session_path = os.path.splitext(pdf_path)[0] + ".json"
         if os.path.exists(session_path):
             reply = QMessageBox.question(self, "Session Found", "A previous session exists for this PDF. Resume?", 
-                                         QMessageBox.Yes | QMessageBox.No)
-            if reply == QMessageBox.Yes:
+                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
                 self.controller.load_session(session_path)
                 return
                 
@@ -400,16 +418,37 @@ class MainWindow(QMainWindow):
     def generate_pdf(self):
         success, msg = self.controller.generate_pdf(self.entry_client.text(), self.entry_po.text())
         if success:
-            QMessageBox.information(self, "Success", f"Client PDF Generated!\n{msg}")
+            self._set_generation_ui_busy(True)
         else:
             QMessageBox.warning(self, "Warning", msg)
 
     def generate_excel(self):
         success, msg = self.controller.generate_excel(self.entry_client.text(), self.entry_po.text())
         if success:
-            QMessageBox.information(self, "Success", f"Material Cart Excel Generated!\n{msg}")
+            self._set_generation_ui_busy(True)
         else:
             QMessageBox.warning(self, "Warning", msg)
+
+    def _set_generation_ui_busy(self, busy: bool):
+        self.btn_gen_pdf.setEnabled(not busy)
+        self.btn_gen_excel.setEnabled(not busy)
+        self.progress_bar.setVisible(busy)
+        if busy:
+            self.status_bar.setStyleSheet("color: #1976d2; font-weight: bold;")
+        else:
+            self.status_bar.setStyleSheet("color: gray;")
+
+    def _on_generation_finished(self, task_type, file_path):
+        self._set_generation_ui_busy(False)
+        name = "PDF" if task_type == 'pdf' else "Excel"
+        QMessageBox.information(self, "Success", f"{name} Generated!\nSaved to: {os.path.basename(file_path)}")
+        self.update_status(f"✅ {name} saved successfully.")
+
+    def _on_generation_error(self, task_type, err_msg):
+        self._set_generation_ui_busy(False)
+        name = "PDF" if task_type == 'pdf' else "Excel"
+        QMessageBox.critical(self, "Error", f"Failed to generate {name}:\n{err_msg}")
+        self.update_status(f"❌ {name} generation failed.")
 
     def clear_layout(self, layout):
         if layout is not None:
@@ -545,13 +584,18 @@ class MainWindow(QMainWindow):
         # Update Process Unmatched button state
         unmatched = self.controller.get_unmatched_items()
         count = len(unmatched)
-        if count > 0:
+        role = ConfigManager.get("role") or "user"
+        
+        if count > 0 and role == "admin":
             self.btn_process_unmatched.setEnabled(True)
             self.btn_process_unmatched.setText(f"⚙️ Process Unrecognized Items ({count})")
             self.btn_process_unmatched.setStyleSheet("background-color: #0277bd; color: white; font-weight: bold;")
         else:
             self.btn_process_unmatched.setEnabled(False)
-            self.btn_process_unmatched.setText("⚙️ Process Unrecognized Items")
+            text = f"⚙️ Process Unrecognized Items ({count})" if count > 0 else "⚙️ Process Unrecognized Items"
+            if role != "admin":
+                text += " (Admin Only)"
+            self.btn_process_unmatched.setText(text)
             self.btn_process_unmatched.setStyleSheet("background-color: #424242; color: #888;")
 
 
@@ -564,7 +608,7 @@ class MainWindow(QMainWindow):
 
     def change_item_match(self, idx):
         picker = DatabaseManager(self.controller, self, picker_mode=True)
-        if picker.exec() == QDialog.Accepted and picker.selected_item_id:
+        if picker.exec() == QDialog.DialogCode.Accepted and picker.selected_item_id:
             items = self.controller.session_data.get("line_items", [])
             if 0 <= idx < len(items):
                 item = items[idx]
@@ -584,7 +628,7 @@ class MainWindow(QMainWindow):
 
     def open_add_temp_item(self):
         dialog = TempItemEditDialog(self)
-        if dialog.exec() == QDialog.Accepted and hasattr(dialog, 'result_data'):
+        if dialog.exec() == QDialog.DialogCode.Accepted and hasattr(dialog, 'result_data'):
             if "line_items" not in self.controller.session_data:
                 self.controller.session_data["line_items"] = []
             self.controller.session_data["line_items"].append(dialog.result_data)
@@ -600,7 +644,7 @@ class MainWindow(QMainWindow):
         if 0 <= idx < len(items):
             item = items[idx]
             dialog = TempItemEditDialog(self, item_data=item)
-            if dialog.exec() == QDialog.Accepted and hasattr(dialog, 'result_data'):
+            if dialog.exec() == QDialog.DialogCode.Accepted and hasattr(dialog, 'result_data'):
                 items[idx] = dialog.result_data
                 self.populate_ui()
 

@@ -87,8 +87,10 @@ class ProductFormWidget(QWidget):
         
         core_layout.addWidget(QLabel("Category File *"), 7, 0)
         self.cat_entry = QComboBox()
+        self.cat_entry.setEditable(True)
         self.cat_entry.addItems(self._get_existing_categories())
         self.cat_entry.currentIndexChanged.connect(self._on_category_changed)
+        self.cat_entry.editTextChanged.connect(lambda: self._on_category_changed(-1))
         core_layout.addWidget(self.cat_entry, 7, 1)
         
         core_group.setLayout(core_layout)
@@ -154,7 +156,9 @@ class ProductFormWidget(QWidget):
     def _on_category_changed(self, index):
         # Auto-fill ID if empty when category changes
         if not self.id_entry.text().strip():
-            cat_file = self.cat_entry.currentText()
+            cat_file = self.cat_entry.currentText().strip()
+            if not cat_file: return
+            
             from models.product_service import ProductService
             next_id = ProductService.get_next_id(cat_file, self.categories_path)
             self.id_entry.setText(next_id)

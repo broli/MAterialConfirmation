@@ -104,3 +104,39 @@ class IngestionWorker(QObject):
             self.signals.error.emit((type(e), e, traceback.format_exc()))
         finally:
             self.signals.finished.emit()
+
+
+class GenerationWorker(QObject):
+    """
+    Worker for generating PDF or Excel files in the background.
+    """
+    def __init__(self, task_type, payload, output_dir, debug_mode):
+        super().__init__()
+        self.task_type = task_type # 'pdf' or 'excel'
+        self.payload = payload
+        self.output_dir = output_dir
+        self.debug_mode = debug_mode
+        self.signals = WorkerSignals()
+
+    def run(self):
+        try:
+            if self.task_type == 'pdf':
+                from models.client_pdf_generator import PDFGenerator
+                self.signals.progress.emit("🎨 Creating Client PDF...")
+                generator = PDFGenerator(output_path=self.output_dir, debug_mode=self.debug_mode)
+                out_file = generator.create_pdf(self.payload)
+                self.signals.result.emit(out_file)
+            
+            elif self.task_type == 'excel':
+                from models.excel_routing_engine import ExcelRoutingEngine
+                self.signals.progress.emit("📊 Creating Material Cart Excel...")
+                generator = ExcelRoutingEngine(output_dir=self.output_dir, debug_mode=self.debug_mode)
+                out_file = generator.generate_excel(self.payload)
+                if out_file:
+                    self.signals.result.emit(out_file)
+                else:
+                    self.signals.error.emit((FileNotFoundError, FileNotFoundError("Excel template missing"), ""))
+        except Exception as e:
+            self.signals.error.emit((type(e), e, traceback.format_exc()))
+        finally:
+            self.signals.finished.emit()

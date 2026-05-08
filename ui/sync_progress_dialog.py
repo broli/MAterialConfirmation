@@ -1,5 +1,5 @@
 import os
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QProgressBar, QPushButton, QHBoxLayout
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QProgressBar, QPushButton, QHBoxLayout, QTextEdit
 from PySide6.QtCore import Qt, QThread, Signal
 from models.github_sync_engine import GithubSyncEngine
 from models.config_manager import ConfigManager
@@ -103,23 +103,32 @@ class SyncProgressDialog(QDialog):
     def __init__(self, parent, is_publish=False):
         super().__init__(parent)
         self.setWindowTitle("Publishing Database" if is_publish else "Syncing Database")
-        self.setFixedSize(400, 150)
+        self.resize(600, 400)
         self.is_publish = is_publish
         
         layout = QVBoxLayout(self)
         
         self.lbl_status = QLabel("Initializing...")
-        self.lbl_status.setAlignment(Qt.AlignCenter)
+        self.lbl_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lbl_status.setStyleSheet("font-weight: bold;")
         layout.addWidget(self.lbl_status)
         
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0) # Indeterminate initially
         layout.addWidget(self.progress_bar)
         
+        self.log_view = QTextEdit()
+        self.log_view.setReadOnly(True)
+        self.log_view.setStyleSheet("background-color: #1e1e1e; color: #dcdcdc; font-family: Consolas, monospace;")
+        layout.addWidget(self.log_view)
+        
+        footer = QHBoxLayout()
         self.btn_close = QPushButton("Close")
         self.btn_close.setEnabled(False)
         self.btn_close.clicked.connect(self.accept)
-        layout.addWidget(self.btn_close, alignment=Qt.AlignCenter)
+        footer.addStretch()
+        footer.addWidget(self.btn_close)
+        layout.addLayout(footer)
 
     def closeEvent(self, event):
         # Prevent closing while syncing
@@ -134,8 +143,13 @@ class SyncProgressDialog(QDialog):
         self.worker.finished.connect(self.on_finished)
         self.worker.start()
 
+    def append_log(self, message: str):
+        self.log_view.append(message)
+        self.log_view.verticalScrollBar().setValue(self.log_view.verticalScrollBar().maximum())
+
     def on_progress(self, current, total, text):
         self.lbl_status.setText(text)
+        self.append_log(text)
         if total > 0:
             self.progress_bar.setRange(0, total)
             self.progress_bar.setValue(current)
@@ -144,6 +158,7 @@ class SyncProgressDialog(QDialog):
 
     def on_finished(self, success, message):
         self.lbl_status.setText(message)
+        self.append_log(message)
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(100)
         self.btn_close.setEnabled(True)

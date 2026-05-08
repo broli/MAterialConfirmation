@@ -139,16 +139,17 @@ class GithubSyncEngine:
         try:
             # Check if there are changes to commit
             status = subprocess.run(["git", "status", "--porcelain"], cwd=local_db_path, stdout=subprocess.PIPE, text=True).stdout
-            if not status.strip():
-                return True, "No changes to publish."
-                
-            subprocess.run(["git", "commit", "-m", commit_message], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if status.strip():
+                subprocess.run(["git", "commit", "-m", commit_message], cwd=local_db_path, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except subprocess.CalledProcessError as e:
             return False, f"Failed to commit: {e.stderr.decode('utf-8') if e.stderr else 'Unknown error'}"
 
         # 7. Push changes
         if progress_callback: progress_callback(0, 0, f"Pushing to {branch}...")
         try:
+            # Ensure local branch matches the target branch name (fixes 'src refspec main does not match any' if default was master)
+            subprocess.run(["git", "branch", "-M", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
             # Try a regular push first, then force if it fails (e.g., first push or overwritten history)
             push_res = subprocess.run(["git", "push", "-u", "origin", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if push_res.returncode != 0:

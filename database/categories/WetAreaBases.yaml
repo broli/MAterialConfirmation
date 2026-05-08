@@ -134,3 +134,21 @@
       Width: 30"
       Height: '15'
     image_file: BCI rt-603015cl-r-w_l.png
+- id: RT-603015L-W
+  sku: RT-603015L-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Tubs BCI Tubs Replacement Tubs (Standard Sizes) 60X30X15
+    Straight White Left RT-603015L-W: Acrylic Replacement Tub 60X30X15 LH Straight
+    Skirt, White'
+  printable:
+    finish: White
+    description: Bath Tubs Replacement (Standard Sizes) 60X30X15 Straight Skirt, Left
+      drain
+    dimensions:
+      Width: 60"
+      Lenght: 30"
+      Depth: '15'
+    image_file: rt-603015l-w_l.jpg
