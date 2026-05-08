@@ -16,3 +16,21 @@
     description: LVP Trecento - Tile White Ocean
     dimensions: {}
     image_file: white-ocean-vinyl-flooring.jpg
+- id: NF570-104
+  sku: NF570-104
+  brand: NextFloor
+  provider: NextFloor
+  routing_tag: PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Flooring Bathroom Flooring Package (Under 60 SqFt) Monumental
+    Collection PKBNF Ecru (12" x 36") Includes Material and Installation of Luxury
+    Vinyl up to 60 sq.ft, Wall Base 3.5", and Transition Molding. Also includes toilet
+    removal and reinstallation of client provided standard toilet (Standard toilet
+    mounted with external and visible bolts, accessible from the outside). Includes
+    installation using the existing Toilet Flange and Water Shut-Off Valve, and the
+    replacement of the Wax ring and Water line.
+  printable:
+    finish: Monumental PKBNF Ecru
+    description: LVP Ecru
+    dimensions: {}
+    image_file: MonumentalPlus-570+104-Ecru.png

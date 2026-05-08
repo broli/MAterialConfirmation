@@ -178,7 +178,38 @@ class AppController(QObject):
             
         return True, item
 
+    def reevaluate_unmatched(self):
+        """Re-evaluates unconfirmed items against the current catalog asynchronously."""
+        if not self.session_data or "line_items" not in self.session_data:
+            self.session_loaded.emit(self.session_data)
+            return
+            
+        unconfirmed = [item for item in self.session_data["line_items"] if not item.get("confirmed", False)]
+        if not unconfirmed:
+            self.session_loaded.emit(self.session_data)
+            return
+            
+        thread = QThread()
+        from core.workers import ReevaluateWorker
+        worker = ReevaluateWorker(self.session_data["line_items"], self.match_service)
+        worker.moveToThread(thread)
+        thread._worker = worker
+        
+        thread.started.connect(worker.run)
+        worker.signals.progress.connect(self.status_updated.emit)
+        worker.signals.result.connect(self._on_reevaluate_result)
+        worker.signals.error.connect(lambda e: self.ingestion_error.emit(str(e[1])))
+        worker.signals.finished.connect(thread.quit)
+        worker.signals.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        
+        self._threads.append(thread)
+        thread.start()
 
+    def _on_reevaluate_result(self, changed):
+        self.session_loaded.emit(self.session_data)
+        if changed:
+            self.status_updated.emit("🔄 Re-evaluated unmatched items against database.")
 
     def resolve_match(self, item):
         return self.match_service.resolve_match(item)

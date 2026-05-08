@@ -152,3 +152,17 @@
       Lenght: 30"
       Depth: '15'
     image_file: rt-603015l-w_l.jpg
+- id: DL-6703-09CL
+  sku: DL-6703-09CL
+  brand: Dream Line
+  provider: Lowes
+  routing_tag: WAREHOUSE
+  purchase_link: https://www.lowes.com/pd/DreamLine-Prime-White-75-in-x-38-in-x-38-in-Corner-Shower-Kit-Off-center-Drain/5013202201
+  oneclick_description: Bath Shower Bases Neo-Angle 38" x 38" Pan with Glass Door
+    38" x 38" Neo-Angle Curved Shower Base - Center Drain, White with 76" H Curved
+    Neo Angle Shower Door Matte Black
+  printable:
+    finish: Matte Black
+    description: Round Corner shower Base and Door Black Hardware Included
+    dimensions: {}
+    image_file: 46423319.png

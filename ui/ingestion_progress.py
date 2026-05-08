@@ -33,7 +33,7 @@ class IngestionProgressDialog(QDialog):
         self.log_view.verticalScrollBar().setValue(self.log_view.verticalScrollBar().maximum())
         
         # Also update the top label for the most recent high-level status
-        if "AI Matching" in message or "Extracting" in message or "Checking" in message:
+        if "AI Matching" in message or "Extracting" in message or "Checking" in message or "Match" in message:
             self.status_label.setText(message)
 
     def set_finished(self):

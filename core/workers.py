@@ -140,3 +140,41 @@ class GenerationWorker(QObject):
             self.signals.error.emit((type(e), e, traceback.format_exc()))
         finally:
             self.signals.finished.emit()
+
+class ReevaluateWorker(QObject):
+    """
+    Worker for re-evaluating unmatched items in the background.
+    """
+    def __init__(self, line_items, match_service):
+        super().__init__()
+        self.line_items = line_items
+        self.match_service = match_service
+        self.signals = WorkerSignals()
+
+    def _progress_callback(self, msg: str):
+        self.signals.progress.emit(msg)
+
+    def run(self):
+        try:
+            items_to_eval = [item for item in self.line_items if not item.get("confirmed", False)]
+            if not items_to_eval:
+                self.signals.progress.emit("✅ Re-evaluation complete.")
+                self.signals.result.emit(False)
+                return
+
+            for item in items_to_eval:
+                if "_match" in item:
+                    del item["_match"]
+
+            self.match_service.enrich_items(
+                items_to_eval,
+                status_callback=self._progress_callback
+            )
+
+            self.signals.progress.emit("✅ Re-evaluation complete.")
+            self.signals.result.emit(True)
+        except Exception as e:
+            self.signals.error.emit((type(e), e, traceback.format_exc()))
+        finally:
+            self.signals.finished.emit()
+

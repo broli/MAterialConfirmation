@@ -665,10 +665,22 @@ class MainWindow(QMainWindow):
 
     def open_database_manager(self):
         DatabaseManager(self.controller, self).exec()
+        self.controller.refresh_catalog()
+        if self.controller.session_data and "line_items" in self.controller.session_data:
+            self.ingestion_dialog = IngestionProgressDialog(self)
+            self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+            self.ingestion_dialog.show()
+        self.controller.reevaluate_unmatched()
 
     def open_batch_pdf(self):
         unmatched = self.controller.get_unmatched_items()
         BatchPdfIngestWindow(self.controller, self, unmatched).exec()
+        self.controller.refresh_catalog()
+        if self.controller.session_data and "line_items" in self.controller.session_data:
+            self.ingestion_dialog = IngestionProgressDialog(self)
+            self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+            self.ingestion_dialog.show()
+        self.controller.reevaluate_unmatched()
 
     def open_sync_dialog(self, is_publish=False):
         owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
@@ -688,7 +700,11 @@ class MainWindow(QMainWindow):
         dialog.exec()
         if not is_publish:
             self.controller.refresh_catalog()
-            self.populate_ui()
+            if self.controller.session_data and "line_items" in self.controller.session_data:
+                self.ingestion_dialog = IngestionProgressDialog(self)
+                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog.show()
+            self.controller.reevaluate_unmatched()
 
     def closeEvent(self, event):
         is_maximized = self.isMaximized()
