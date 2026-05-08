@@ -1,0 +1,61 @@
+name: macOS Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Patch spec file for macOS
+        run: |
+          if ! grep -q "BUNDLE(" gui_main.spec; then
+            cat <<EOF >> gui_main.spec
+
+          app = BUNDLE(
+              exe,
+              name='PKB Material Confirmation System.app',
+              icon=None,
+              bundle_identifier='com.pkb.erp.commandcenter',
+              info_plist={
+                  'NSHighResolutionCapable': 'True',
+                  'LSBackgroundOnly': 'False',
+              },
+          )
+          EOF
+          fi
+
+      - name: Build with PyInstaller
+        run: python -m PyInstaller gui_main.spec --noconfirm
+
+      - name: Package App
+        run: |
+          cd dist
+          zip -r "../PKB_Material_Confirmation_System_macOS.zip" "PKB Material Confirmation System.app"
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: PKB_Material_Confirmation_System_macOS.zip
+          generate_release_notes: true
