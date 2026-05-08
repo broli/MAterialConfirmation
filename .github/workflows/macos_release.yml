@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for the release (e.g., v3.2)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -57,5 +62,6 @@ jobs:
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           files: PKB_Material_Confirmation_System_macOS.zip
           generate_release_notes: true
