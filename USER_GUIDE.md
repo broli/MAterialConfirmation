@@ -6,9 +6,12 @@ Welcome to the **PKB Material Confirmation System**. This guide explains the cor
 
 ## 🚀 Standard Workflow
 
-### 1. Starting the Application
+### 1. Starting the Application & Setup
 - Open `PKB Material Confirmation System.exe`.
-- The system will load your local database automatically.
+- **First Run Only:** You will be greeted by a "Select Your Team" screen. 
+    - Click on your team (e.g., **Kitchen Team** or **Bath Team**).
+    - This will automatically configure your database connection and team branding.
+- Once configured, the system will load your team's specific database automatically.
 
 ### 2. Loading a Contract
 - Click **📁 Pick Agreement** and select the client's PDF contract.

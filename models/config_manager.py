@@ -8,10 +8,27 @@ class ConfigManager:
     CONFIG_FILE = "settings.json"
     #GITHUB_READ_ONLY_TOKEN = "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"
     
+    TEAM_PRESETS = {
+        "Kitchen Team": {
+            "github_owner": "BathPC",
+            "github_repo": "material-confirmation-db-kitchen",
+            "github_token": "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",
+            "role": "user",
+            "cover_image_filename": "Kitchen Document Cover Page.png"
+        },
+        "Bath Team": {
+            "github_owner": "BathPC",
+            "github_repo": "material-confirmation-db",
+            "github_token": "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",
+            "role": "user",
+            "cover_image_filename": "Bath Document Cover Page.png"
+        }
+    }
+    
     DEFAULT_SETTINGS = {
         "llm_model": "llama3.1",
         "show_ollama_window": True,
-        "cover_image_filename": "Bath Document Cover Page.png",
+        "cover_image_filename": "Default Cover Page.png",
         "window_maximized": True,
         "window_width": 1100,
         "window_height": 750,
@@ -36,9 +53,17 @@ class ConfigManager:
         "role": "user",
         "github_owner": "BathPC",
         "github_repo": "material-confirmation-db",
-        "github_token": "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",
+        "github_token": "",
         "github_branch": "main"
     }
+
+    @classmethod
+    def apply_preset(cls, team_name: str) -> None:
+        """Applies a preset configuration and saves it to disk."""
+        if team_name in cls.TEAM_PRESETS:
+            settings = cls.load()
+            settings.update(cls.TEAM_PRESETS[team_name])
+            cls.save(settings)
     
     @classmethod
     def load(cls) -> dict:

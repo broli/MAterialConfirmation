@@ -188,7 +188,8 @@ class AppController(QObject):
                 "name": self.session_data.get("client_name", ""),
                 "project": "PO " + self.session_data.get("project_po", "")
             },
-            "products": []
+            "products": [],
+            "custom_pages": self.session_data.get("custom_pages", [])
         }
         
         for item in self.session_data.get("line_items", []):

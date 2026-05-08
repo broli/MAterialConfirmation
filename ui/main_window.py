@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, Q
 from PySide6.QtCore import Qt, QSize, QThread, Signal
 from PySide6.QtGui import QIcon
 
+from ui.custom_pages_dialog import CustomPagesDialog
 from models.config_manager import ConfigManager
 from ui.settings import SettingsWindow
 from ui.database_manager import DatabaseManager
@@ -122,6 +123,8 @@ class TempItemEditDialog(QDialog):
         }
         self.accept()
 
+from PySide6.QtCore import QTimer
+
 class ClickableRow(QFrame):
     def __init__(self, index, callback):
         super().__init__()
@@ -132,7 +135,7 @@ class ClickableRow(QFrame):
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if event.button() == Qt.LeftButton:
-            self.callback(self.index)
+            QTimer.singleShot(0, lambda: self.callback(self.index))
 
 class MainWindow(QMainWindow):
     def __init__(self, controller):
@@ -303,6 +306,11 @@ class MainWindow(QMainWindow):
         self.btn_add_temp.clicked.connect(self.open_add_temp_item)
         layout.addWidget(self.btn_add_temp)
         
+        self.btn_custom_pages = QPushButton("📎 Attach Pages")
+        self.btn_custom_pages.setStyleSheet("background-color: #0277bd; color: white; font-weight: bold;")
+        self.btn_custom_pages.clicked.connect(self.open_custom_pages)
+        layout.addWidget(self.btn_custom_pages)
+        
         self.btn_process_unmatched = QPushButton("⚙️ Process Unrecognized Items")
         self.btn_process_unmatched.setEnabled(False) # Disabled by default
         self.btn_process_unmatched.setStyleSheet("background-color: #424242; color: #888;")
@@ -414,9 +422,16 @@ class MainWindow(QMainWindow):
                     self.clear_layout(item.layout())
 
     def show_item_detail(self, idx):
+        if getattr(self, '_detail_dialog_open', False):
+            return
+            
         items = self.controller.session_data.get("line_items", [])
         if 0 <= idx < len(items):
-            ProductDetailDialog(self, idx, self.controller).exec()
+            self._detail_dialog_open = True
+            try:
+                ProductDetailDialog(self, idx, self.controller).exec()
+            finally:
+                self._detail_dialog_open = False
 
     def populate_ui(self, session_data=None):
         if self.ingestion_dialog:
@@ -574,6 +589,11 @@ class MainWindow(QMainWindow):
                 self.controller.session_data["line_items"] = []
             self.controller.session_data["line_items"].append(dialog.result_data)
             self.populate_ui()
+
+    def open_custom_pages(self):
+        dialog = CustomPagesDialog(self, self.controller.session_data)
+        dialog.exec()
+        self.populate_ui()
 
     def edit_temp_item(self, idx):
         items = self.controller.session_data.get("line_items", [])
