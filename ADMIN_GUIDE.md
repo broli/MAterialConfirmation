@@ -1,4 +1,4 @@
-# 🔑 PKB ERP Command Center - Admin Guide (v3.1)
+# 🔑 PKB ERP Command Center - Admin Guide (v3.2)
 
 This guide is intended for administrators who manage the AI infrastructure, database catalog, and system settings.
 
