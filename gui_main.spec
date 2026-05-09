@@ -7,6 +7,13 @@ hiddenimports = []
 tmp_ret = collect_all('customtkinter')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
+# Explicitly include hidden imports often missed by PyInstaller
+hiddenimports += [
+    'pydantic', 'openai', 'instructor', 'requests', 'PySide6', 
+    'pyqtdarktheme', 'RapidFuzz', 'yaml', 'fpdf', 'pdfminer', 
+    'pdfplumber', 'cffi'
+]
+
 
 a = Analysis(
     ['main.py'],

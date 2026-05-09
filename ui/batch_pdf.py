@@ -50,6 +50,7 @@ class BatchPdfIngestWindow(QDialog):
         
         self.setWindowTitle("Batch Add Unmatched PDF Items")
         self.resize(1200, 800)
+        self.db_modified = False
         
         self.unmatched_items = unmatched_items or []
         
@@ -129,6 +130,7 @@ class BatchPdfIngestWindow(QDialog):
             categories_path = os.path.join(self.controller.db_loader.base_path, "categories")
             assets_path = os.path.join(self.controller.db_loader.base_path, "assets")
             ProductService.upsert_to_yaml(data, category, categories_path, assets_path)
+            self.db_modified = True
             QMessageBox.information(self, "Success", "Item saved successfully!")
             
             # Remove from unmatched queue visually

@@ -145,6 +145,7 @@ class DatabaseManager(QDialog):
         self.assets_path = os.path.join(self.db_loader.base_path, "assets")
         self.picker_mode = picker_mode
         self.selected_item_id = None
+        self.db_modified = False
         
         self.setWindowTitle("Catalog Manager (Qt)" if not picker_mode else "Select Item")
         self.resize(1000, 700)
@@ -243,6 +244,7 @@ class DatabaseManager(QDialog):
         self.controller.refresh_catalog()
         # Preserve filter if any
         self.table_model.update_catalog(self.controller.catalog)
+        self.db_modified = True
 
     def on_search_changed(self, text):
         self.table_model.set_filter(text)

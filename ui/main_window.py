@@ -664,23 +664,27 @@ class MainWindow(QMainWindow):
         SettingsWindow(self).exec()
 
     def open_database_manager(self):
-        DatabaseManager(self.controller, self).exec()
-        self.controller.refresh_catalog()
-        if self.controller.session_data and "line_items" in self.controller.session_data:
-            self.ingestion_dialog = IngestionProgressDialog(self)
-            self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
-            self.ingestion_dialog.show()
-        self.controller.reevaluate_unmatched()
+        dialog = DatabaseManager(self.controller, self)
+        dialog.exec()
+        if getattr(dialog, 'db_modified', False):
+            self.controller.refresh_catalog()
+            if self.controller.session_data and "line_items" in self.controller.session_data:
+                self.ingestion_dialog = IngestionProgressDialog(self)
+                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog.show()
+            self.controller.reevaluate_unmatched()
 
     def open_batch_pdf(self):
         unmatched = self.controller.get_unmatched_items()
-        BatchPdfIngestWindow(self.controller, self, unmatched).exec()
-        self.controller.refresh_catalog()
-        if self.controller.session_data and "line_items" in self.controller.session_data:
-            self.ingestion_dialog = IngestionProgressDialog(self)
-            self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
-            self.ingestion_dialog.show()
-        self.controller.reevaluate_unmatched()
+        dialog = BatchPdfIngestWindow(self.controller, self, unmatched)
+        dialog.exec()
+        if getattr(dialog, 'db_modified', False):
+            self.controller.refresh_catalog()
+            if self.controller.session_data and "line_items" in self.controller.session_data:
+                self.ingestion_dialog = IngestionProgressDialog(self)
+                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog.show()
+            self.controller.reevaluate_unmatched()
 
     def open_sync_dialog(self, is_publish=False):
         owner = ConfigManager.get("github_owner") or "YOUR_COMPANY_GITHUB_USERNAME"
