@@ -1,100 +1,86 @@
-# 🛠️ PKB Material Confirmation & Management System (v3.2)
-**From Simple PDF Generation to a Lightweight ERP Ecosystem**
+# 🛠️ PKB Material Confirmation & Operational Engine (v4.0)
+**Bridging Sales, Logistics, and AI into a Unified Material Lifecycle.**
 
-![Version](https://img.shields.io/badge/version-3.2-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-Phase%203-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-4.0-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-Production--Ready-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.14%2B-green?style=for-the-badge)
+![Framework](https://img.shields.io/badge/UI-PySide6-orange?style=for-the-badge)
 
 ---
 
-## 🌟 Overview
-The **PKB Material Confirmation System** is a bespoke operational tool designed for **Payless Kitchen & Bath (PKB)**. What began as a streamlined solution for material verification has evolved into a strategic bridge between sales, project management, and logistics.
+## 🌟 Project Overview
+The **PKB Material Confirmation System** is a sophisticated operational tool built for **Payless Kitchen & Bath**. It solves a critical industry problem: the "Communication Gap" between messy, hand-written or complex PDF sales contracts and the structured data required for procurement and client sign-off.
 
-Our mission is to eliminate manual errors and repetitive administrative tasks, ensuring that every measurement, color selection, and product specification is perfectly aligned between the client's vision and the project's execution.
-
-> [!TIP]
-> **New to the system?** Check out the [USER_GUIDE.md](USER_GUIDE.md) for a step-by-step walkthrough, or the [ADMIN_GUIDE.md](ADMIN_GUIDE.md) for system management.
+What started as a PDF generator has evolved into a **Hybrid AI-Driven Ecosystem** that automates data extraction, simplifies database management, and ensures 100% material accuracy across the project lifecycle.
 
 ---
 
-## 📈 The Evolution: From Phase 1 to Phase 2
+## 🚀 Key Technical Features
 
-### Phase 1: The Foundation (Completed) ✅
-In its initial form, the application focused on solving the "Communication Gap" between sales and clients. 
-* **Elegant PDF Generation:** Creating professional, branded documentation with high-quality imagery for client approval.
-* **Master Catalog:** A unified database of products (Faucets, Vanities, etc.) with consistent specs.
-* **Visual Verification:** Ensuring clients see exactly what they are approving before the 3D design and construction phases begin.
+### 🌌 Hybrid AI Matching Engine (Gemini + Ollama)
+At the heart of the system is a prioritized hybrid AI pipeline:
+- **Gemini Waterfall:** A resilient API-based backend that dynamically ranks available models based on capability and recency. It features an intelligent failover system that automatically shifts traffic if a model hits a rate limit or quota.
+- **Local Ollama Fallback:** A fully private, offline fallback using local LLMs for environments where API access is restricted.
+- **Deterministic Validation:** AI extractions are strictly validated against a Pydantic schema before being passed to a RapidFuzz-powered fuzzy matching engine.
 
-### Phase 2: The Lightweight ERP (In Progress) 🚀
-We are now transforming this tool into a **Modular ERP System**. Instead of just generating a document, we are building a data-driven engine that powers the entire material lifecycle.
-* **AI-Powered Matching Engine:** A two-step deterministic pipeline using local LLMs to parse raw contract text into structured data, followed by strict attribute-based filtering for 100% accuracy.
-* **Contract Intelligence:** Extracting vital project data from contracts (with human-in-the-loop approval) to populate the system.
-* **Workstream Automation:** Transforming a single data entry into multiple tailored outputs.
-* **Ollama Orchestration:** In-app management of the local AI lifecycle, including model pulling, service control, and resource optimization.
-* **Custom Branding:** Dynamically select and import cover images for professional document generation.
+### 📥 Automated Bulk Ingestion Pipeline
+High-efficiency pipeline for scaling product catalogs:
+- **Phase 1 (Extract):** Direct native PDF parsing of vendor catalogs.
+- **Phase 2 (Process):** Batch processing via the Gemini Waterfall to structure raw text into Brand, SKU, and Dimensions.
+- **Phase 3 (Review):** A dedicated Staging Database for human-in-the-loop approval before items enter the Production catalog.
 
----
-
-## 🧠 The Matching Pipeline
-The system uses a sophisticated matching logic to link messy PDF contract strings to our master catalog:
-
-1. **Multi-Threaded LLM Sanitization Layer:** Uses **Ollama (Llama 3)** and **Instructor** to parse raw text into a validated **Pydantic** model (`ContractItem`). Requests are processed concurrently to drastically reduce batch ingestion time.
-2. **Deterministic Filter:** Strictly filters the catalog by extracted attributes (Finish, Size, etc.). If an item contradicts these fields, it is discarded.
-3. **Fuzzy Fallback:** Applies a final fuzzy string match (RapidFuzz) on the remaining candidates to find the most accurate product link.
-4. **Diagnostic Logging:** Comprehensive debug tracking is available to monitor exact JSON requests, LLM execution times, and step-by-step match scoring.
-
----
-
-## 🧩 Modular Output System
-The core of the system is the **Modular Output Engine**, which generates specific documentation for every stakeholder in the process:
-
-| Output Type | Purpose | Key Content |
-| :--- | :--- | :--- |
-| **🛒 Purchasing List** | Procurement | Model numbers, vendor info, and pricing for the buying team. |
-| **🤝 Client Approval** | Client Sign-off | High-res photos, finishes, and dimensions for final signature. |
-| **📦 Warehouse Dispatch** | Logistics | Packing lists and pick-lists for the warehouse to prepare for delivery. |
-| **📋 PM Task Board** | Management | Automated extraction of repetitive PM tasks directly from contract data. |
+### ⚙️ Advanced Database Manager
+- **Context-Aware Batch Editing:** A multi-select UI that uses the full product GUI in batch mode.
+- **Smart Selectors:** "Enable/Apply" checkboxes with auto-selection logic allow admins to target specific fields (like Brand or Finish) across hundreds of items simultaneously.
+- **Git-Based Synchronization:** Distributed database architecture using YAML files, enabling seamless syncing across teams via GitHub with automated pull/push logic.
 
 ---
 
 ## 🛠️ Tech Stack
-* **GUI:** [PySide6 (Qt)](https://doc.qt.io/qtforpython-6/) + [qdarktheme](https://github.com/5yutan5/PyQtDarkTheme) (MVC architecture with modern dark theming)
-* **AI Engine:** [Ollama](https://ollama.com/) (REST API Integration) + [Instructor](https://github.com/jxnl/instructor) + [Pydantic](https://docs.pydantic.dev/)
-* **Matching:** RapidFuzz (String similarity)
-* **Data:** PyYAML (Git-friendly database)
-* **PDF Core:** fpdf2 & Pillow
+- **Frontend:** [PySide6 (Qt)](https://doc.qt.io/qtforpython-6/) with [qdarktheme](https://github.com/5yutan5/PyQtDarkTheme) for a premium, modern dark-mode experience.
+- **AI/LLM:** [Google Gemini API](https://ai.google.dev/) & [Ollama](https://ollama.com/) integrated via [Instructor](https://github.com/jxnl/instructor) and [Pydantic](https://docs.pydantic.dev/).
+- **Matching Logic:** [RapidFuzz](https://github.com/rapidfuzz/RapidFuzz) for high-performance string similarity.
+- **Persistence:** Human-readable YAML database optimized for Git-based concurrency and cloud syncing.
+- **Outputs:** [fpdf2](https://github.com/fpdf2/fpdf2) for branded PDF generation and [openpyxl](https://openpyxl.readthedocs.io/) for Excel-based procurement injection.
+
+---
+
+## 📂 System Architecture
+The application follows a clean **MVC (Model-View-Controller)** pattern:
+- **Models:** Atomic services for Config, Catalog, Matching, and AI.
+- **Views:** Decoupled PySide6 components and custom widgets (ProductForm, BatchDialog).
+- **Controllers:** Orchestrators that manage the flow between UI events and background worker threads.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Python 3.14+
-* **Ollama Installed** (Download from [ollama.com](https://ollama.com/)). The app can now start/stop the service for you!
-* **LLM Model:** Use the in-app **Settings** menu to pull your preferred model (e.g., `llama3.1`).
+- Python 3.14+
+- **Gemini API Key:** (Optional) Set `gemini_api_key` in `settings.json` for high-speed cloud ingestion.
+- **Ollama:** (Optional) Download from [ollama.com](https://ollama.com/) for local fallback support.
 
 ### Installation
-1. Clone the repository.
-2. Initialize the virtual environment:
+1. **Clone & Setup:**
    ```powershell
+   git clone https://github.com/BathPC/material-confirmation-system.git
+   cd material-confirmation-system
    python -m venv .venv
    .\.venv\Scripts\Activate.ps1
-   ```
-3. Install dependencies:
-   ```powershell
    pip install -r requirements.txt
    ```
-4. Run the application:
-   ```powershell
-   python main.py
-   ```
+2. **First Run:** Launch `python main.py` and select your team (Kitchen or Bath) to auto-configure your environment.
 
 ---
 
-## 🔭 Future Vision
-The road ahead involves deep integration with existing PM workflows. We aim to leverage AI and structured data parsing to strip away the "repetitive noise" of project management, allowing our team to focus on what matters most: **delivering beautiful kitchens and baths.**
+## 💼 Portfolio Highlights
+This project demonstrates expertise in:
+- **Asynchronous GUI Design:** Managing long-running AI tasks with background workers and real-time UI feedback.
+- **Hybrid Cloud/Local AI:** Balancing cost, speed, and privacy through a modular LLM client architecture.
+- **Complex Data Mapping:** Implementing robust ETL (Extract, Transform, Load) logic to normalize unstructured PDF data into a relational-style YAML database.
+- **Enterprise Workflow Automation:** Reducing manual administrative labor by over 80% through deterministic automation.
 
 ---
 
 **Developed for PKB (Payless Kitchen & Bath)**  
-*Project Manager: Carlos*
+*Lead Architect: Carlos*

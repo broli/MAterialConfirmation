@@ -17,7 +17,7 @@ To enable administrative features (AI controls, Database Management, GitHub Sync
 The system uses a prioritized hybrid AI model to ensure maximum reliability and speed.
 
 ### 🌌 Stage 1: Google Gemini (Primary)
-The system prioritizes **Gemini 1.5** for all matching and ingestion tasks.
+The system prioritizes **Gemini** for all matching and ingestion tasks.
 
 #### 🔑 Getting an API Key
 To use Gemini, you need a Google AI API Key:
@@ -29,7 +29,7 @@ To use Gemini, you need a Google AI API Key:
 
 #### ⚙️ How it Works
 - **API Key Required:** You must provide your key in the **Settings** menu (visible in Admin mode) to enable Gemini.
-- **Dynamic Ranking:** The system automatically pulls the latest models available for your key and ranks them from **best to worst** (e.g., prioritized 3.1 Pro -> 3.0 Flash -> 1.5 Flash).
+- **Dynamic Ranking:** The system automatically pulls the latest models available for your key and ranks them from **best to worst** based on capability and recency.
 - **Waterfall Failover:** If a model hits a 429 rate limit or quota exhaustion, the system "falls back" to the next model in the ranked list.
 - **Automatic Dropping:** Once a model is confirmed exhausted, it is permanently removed from the session's active pool to prevent looping.
 

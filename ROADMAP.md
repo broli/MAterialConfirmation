@@ -83,7 +83,7 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ## 📅 Phase 9: Gemini API & Advanced Database Scaling (Complete) ✅
 - [x] **Gemini Integration:** Migrated from purely local Ollama to a high-speed Gemini API backend with Instructor-based schema validation.
-- [x] **Intelligent Model Waterfall:** Implemented a ranked failover system that automatically cycles through Gemini models (3.1 Pro -> 3.0 Flash, etc.) to handle rate limits without interruption.
+- [x] **Intelligent Model Waterfall:** Implemented a ranked failover system that automatically cycles through available Gemini models to handle rate limits without interruption.
 - [x] **Robust Quota Management:** Persistent model pool management that drops exhausted models for the session to prevent infinite retry loops.
 - [x] **Advanced Batch Editor:** Replaced the legacy single-field editor with the full product GUI in batch mode, featuring "Apply/Enable" checkboxes and auto-selection logic.
 - [x] **Deterministic Filename Sanitization:** Regex-based sanitization for categories (e.g., "Painting / Patch" -> "Painting_Patch.yaml") to ensure stable filesystem mapping.
