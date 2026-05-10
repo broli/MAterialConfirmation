@@ -1,4 +1,4 @@
-# 🔑 PKB ERP Command Center - Admin Guide (v3.2)
+# 🔑 PKB ERP Command Center - Admin Guide (v4.0)
 
 This guide is intended for administrators who manage the AI infrastructure, database catalog, and system settings.
 
@@ -12,19 +12,40 @@ To enable administrative features (Ollama control, Database Management, GitHub S
 
 ---
 
-## 🧠 Ollama & AI Management
-The system uses **Ollama** for complex PDF extraction and batch importing.
-- **Start Service:** In the **Settings** menu, use the **▶️ Start Service** button if Ollama is offline.
-- **Model Selection:** We recommend using `llama3.1`. Ensure the model is "pulled" in Ollama before use.
-- **Show Terminal:** You can toggle this in Settings to see the background AI logs.
+## 🧠 AI Infrastructure (Gemini & Ollama)
+The system uses a hybrid AI approach for PDF extraction and database scaling.
+
+### 🌌 Gemini API (Recommended for Bulk)
+The system prioritizes **Google Gemini 1.5** for high-accuracy bulk ingestion.
+- **Model Waterfall:** If one Gemini model hits a rate limit (429 error), the system automatically "falls back" to the next available model in the ranking.
+- **Quota Management:** Once a model hits its daily quota, it is permanently dropped from the active pool for that session to prevent loops.
+- **Configuration:** Ensure your `GEMINI_API_KEY` is set in `settings.json`.
+
+### 🦙 Ollama (Local Fallback)
+Used for complex PDF extraction when offline or for specific local tasks.
+- **Start Service:** Use the **▶️ Start Service** button in Settings if Ollama is offline.
+- **Model:** Recommended `llama3.1`. Ensure the model is "pulled" before use.
 
 ---
 
 ## 🗄️ Database Management
-Admins have access to the **⚙️ Manage Database** button.
-- **Edit/Add Products:** Modify the local catalog directly.
-- **Batch Add (PDF):** Use this to import multiple items from a PDF catalog. This process is AI-intensive and requires Ollama.
-- **Publish Database:** Use this to sync your local changes to the central GitHub repository.
+Admins have access to the **⚙️ Manage Database** toolset.
+
+### 📝 Edit & Approval Workflow
+- **Staging Database:** All new AI-extracted items are placed in the `staging_database`. You must review and "Approve" them before they move to the Production catalog.
+- **Advanced Batch Edit:** Select multiple rows and click **Batch Edit Selected**. 
+  - **Enable/Apply Checkboxes:** Use the checkboxes next to each field to signal which data to overwrite.
+  - **Auto-Selection:** The app automatically checks the box as you type.
+  - **Explicit Clear:** Check a box and leave the field empty to explicitly wipe that data across the batch.
+  
+### 📥 Bulk Ingestion Pipeline (PDF)
+1. **Stage 1 (Extract):** Parses raw PDF lines into a local processing queue.
+2. **Stage 2 (Process):** Uses the Gemini Waterfall to extract structured product data (Brand, SKU, Dimensions, Finish).
+3. **Stage 3 (Review):** Items appear in the Database Manager's Staging tab for final verification.
+
+### 🌐 Synchronization
+- **Publish Database:** Syncs your local changes to the central GitHub repository.
+- **GitHub Sync:** Keeps the entire team's catalog consistent.
 
 ---
 
