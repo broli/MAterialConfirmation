@@ -29,6 +29,7 @@
     "github_token": "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",
     "github_branch": "main",
     "gemini_api_key": "AIzaSyCuayOJeydMpfHtTZf-urnqO3cIRC2MLYI",
+    "gemini_model": "gemini-2.5-flash",
     "main_window_maximized": true,
     "main_window_width": 1200,
     "main_window_height": 800,

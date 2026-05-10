@@ -51,13 +51,13 @@ class GeminiClient:
     def __init__(
         self,
         api_key: str = None,
-        model: str = "gemini-3-flash-preview",
+        model: str = None,
         log_callback=None,
         debug_mode: bool = False,
         log_dir: str = "logs",
     ):
         self.api_key = api_key or ConfigManager.get("gemini_api_key")
-        self.model = model
+        self.model = model or ConfigManager.get("gemini_model") or "gemini-3.0-flash"
         self.log_callback = log_callback
         self.debug_mode = debug_mode
         self.log_dir = log_dir

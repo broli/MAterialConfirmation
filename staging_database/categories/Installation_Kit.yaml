@@ -1,0 +1,18 @@
+- sku: UNKNOWN
+  brand: Everflow
+  finish: Color Coordinated, White, Red, Brass
+  routing_tag: GENERAL
+  oneclick_description: 'Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including:
+    12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1
+    Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF.
+    ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain
+    Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color
+    Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-Area Plywood
+    5/8x4x8, 1 2x4 wood'
+  printable:
+    description: PAN INSTALL KIT
+    finish: Color Coordinated, White, Red, Brass
+    dimensions: '{''drywall_sheet'': ''4x8'', ''p-trap_diameter'': ''2"'', ''abs_pipe_length'':
+      ''2 LF'', ''abs_pipe_diameter'': ''2"'', ''pex_pipe_length'': ''10 L.F'', ''everflow_pex_diameter'':
+      ''1/2"'', ''plywood_sheet'': ''5/8x4x8'', ''wood_piece'': ''2x4''}'
+  id: STG-49A9C4D9

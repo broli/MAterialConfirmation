@@ -55,7 +55,8 @@ class ConfigManager:
         "github_repo": "material-confirmation-db",
         "github_token": "",
         "github_branch": "main",
-        "gemini_api_key": ""
+        "gemini_api_key": "",
+        "gemini_model": "gemini-3.0-flash"
     }
 
     @classmethod
