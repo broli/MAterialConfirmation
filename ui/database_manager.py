@@ -486,3 +486,17 @@ class DatabaseManager(QDialog):
         if hasattr(self, 'bulk_worker') and self.bulk_worker.mode == "process":
             self.source_combo.setCurrentText("Staging Area")
         self._refresh_loaders()
+
+    def _cleanup_thread(self):
+        if self._is_thread_running():
+            self.bulk_worker.stop()
+            self.bulk_thread.quit()
+            self.bulk_thread.wait(2000)
+
+    def reject(self):
+        self._cleanup_thread()
+        super().reject()
+
+    def accept(self):
+        self._cleanup_thread()
+        super().accept()
