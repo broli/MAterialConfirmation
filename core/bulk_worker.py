@@ -7,6 +7,7 @@ from models.config_manager import ConfigManager
 from models.catalog_loader import CatalogLoader
 from models.gemini_service import GeminiClient
 from models.product_service import ProductService
+from models.contract_ingestion import OneClickIngestor
 
 class BulkIngestWorker(QObject):
     """
@@ -20,11 +21,18 @@ class BulkIngestWorker(QObject):
     error = Signal(tuple)
     finished = Signal()
 
-    def __init__(self, pdf_folder_path: str, debug_mode: bool = False):
+    def __init__(self, target_folder_path: str, debug_mode: bool = False, mode: str = "extract"):
         super().__init__()
-        self.pdf_folder_path = pdf_folder_path
+        self.target_folder_path = target_folder_path
         self.debug_mode = debug_mode
-        self.queue_file = os.path.join(pdf_folder_path, "gemini_queue.json")
+        self.mode = mode
+        self.log_file = "logs/bulk_worker_debug.log"
+        if self.debug_mode:
+            os.makedirs("logs", exist_ok=True)
+            with open(self.log_file, "a", encoding="utf-8") as f:
+                f.write(f"\n--- Starting new Bulk Ingestion debug session ({self.mode} mode) at {time.strftime('%Y-%m-%d %H:%M:%S')} ---\n")
+                
+        self.queue_file = os.path.join(target_folder_path, "gemini_queue.json")
         self.is_running = True
         
         self.db_loader = CatalogLoader(base_path="database")
@@ -34,30 +42,52 @@ class BulkIngestWorker(QObject):
         self.staging_loader = CatalogLoader(base_path=self.staging_path)
         self.staging_catalog = self.staging_loader.load_all_categories() or {}
 
+    def _log_debug(self, msg):
+        if not self.debug_mode:
+            return
+        self.progress.emit(f"[DEBUG] {msg}")
+        try:
+            with open(self.log_file, "a", encoding="utf-8") as f:
+                f.write(f"[{time.strftime('%H:%M:%S')}] {msg}\n")
+        except Exception:
+            pass
+
     def stop(self):
         self.is_running = False
 
     def run(self):
         try:
-            self.progress.emit("Starting Bulk Ingestion Pipeline...")
+            self.progress.emit(f"Starting Bulk Ingestion Pipeline ({self.mode} mode)...")
             
-            # Stage 1 & 2: Build Queue and run Heuristics
-            queue = self._build_queue()
-            if not queue:
-                self.progress.emit("No new unique items found in PDFs.")
-                self.result.emit({"status": "success", "processed": 0})
-                self.finished.emit()
-                return
+            if self.mode == "extract":
+                # Stage 1: Build Queue from PDFs
+                queue = self._build_queue()
+                self._save_queue(queue)
+                if not queue:
+                    self.progress.emit("No new unique items found in PDFs.")
+                    self.result.emit({"status": "success", "processed": 0})
+                else:
+                    self.progress.emit(f"Extraction complete. {len(queue)} items queued in {os.path.basename(self.queue_file)}.")
+                    self.result.emit({"status": "success", "processed": len(queue)})
+                    
+            elif self.mode == "process":
+                # Stage 2 & 3: Heuristics and Gemini
+                queue = self._load_queue()
+                if not queue:
+                    self.progress.emit("Queue is empty. Nothing to process.")
+                    self.result.emit({"status": "success", "processed": 0})
+                    self.finished.emit()
+                    return
 
-            self.progress.emit(f"Queue built with {len(queue)} items. Running Heuristics...")
-            queue = self._run_heuristics(queue)
-            self._save_queue(queue)
-            
-            # Stage 3: Process Queue with Gemini
-            self.progress.emit(f"Starting Gemini processing for {len(queue)} items...")
-            processed_count = self._process_queue_with_gemini()
-            
-            self.result.emit({"status": "success", "processed": processed_count})
+                self.progress.emit(f"Queue loaded with {len(queue)} items. Running Heuristics...")
+                queue = self._run_heuristics(queue)
+                self._save_queue(queue)
+                
+                self.progress.emit(f"Starting Gemini processing for {len(queue)} items...")
+                processed_count = self._process_queue_with_gemini()
+                
+                self.result.emit({"status": "success", "processed": processed_count})
+                
         except Exception as e:
             self.error.emit((type(e), e, None))
         finally:
@@ -92,21 +122,22 @@ class BulkIngestWorker(QObject):
             desc = item.get("oneclick_description", "").strip().lower()
             if desc: existing_descriptions.add(desc)
 
-        # Iterate over session JSONs in the folder (as the PDF extractor usually outputs them)
-        json_files = glob.glob(os.path.join(self.pdf_folder_path, "*.json"))
+        # Iterate over PDFs in the folder
+        pdf_files = glob.glob(os.path.join(self.target_folder_path, "*.pdf"))
         
         if self.debug_mode:
-            self.progress.emit(f"[DEBUG] Looking for JSONs in {self.pdf_folder_path}")
-            self.progress.emit(f"[DEBUG] Found JSON files: {[os.path.basename(f) for f in json_files]}")
+            self._log_debug(f"Looking for PDFs in {self.target_folder_path}")
+            self._log_debug(f"Found PDF files: {[os.path.basename(f) for f in pdf_files]}")
             
-        for jf in json_files:
-            if os.path.basename(jf) == "gemini_queue.json":
-                continue
-                
+        for pdf in pdf_files:
             try:
-                with open(jf, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    
+                if self.debug_mode:
+                    self._log_debug(f"Extracting {os.path.basename(pdf)}...")
+                self.progress.emit(f"Extracting {os.path.basename(pdf)}...")
+                
+                ingestor = OneClickIngestor(pdf, debug_mode=self.debug_mode)
+                data = ingestor.extract_data()
+                
                 for line_item in data.get("line_items", []):
                     desc = line_item.get("raw_description", "")
                     clean_desc = desc.strip().lower()
@@ -116,13 +147,17 @@ class BulkIngestWorker(QObject):
                         queue.append({
                             "raw_description": desc,
                             "room": line_item.get("room", "General"),
-                            "source_file": os.path.basename(jf)
+                            "source_file": os.path.basename(pdf)
                         })
                         existing_descriptions.add(clean_desc)
+                        if self.debug_mode:
+                            self._log_debug(f"Added to queue: '{desc[:30]}...'")
                     elif self.debug_mode and clean_desc:
-                        self.progress.emit(f"[DEBUG] Skipping duplicate: '{clean_desc[:30]}...'")
+                        self._log_debug(f"Skipping duplicate: '{clean_desc[:30]}...'")
             except Exception as e:
-                self.progress.emit(f"Warning: Failed to read {jf}: {e}")
+                self.progress.emit(f"Warning: Failed to extract from {os.path.basename(pdf)}: {e}")
+                if self.debug_mode:
+                    self._log_debug(f"Error extracting {os.path.basename(pdf)}: {e}")
 
         return queue
 

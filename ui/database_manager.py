@@ -220,14 +220,22 @@ class DatabaseManager(QDialog):
         
         top_controls.addStretch()
         
-        self.btn_bulk_ingest = QPushButton("📥 Start Bulk Ingestion")
-        self.btn_bulk_ingest.setStyleSheet("background-color: #6a1b9a; color: white;")
-        self.btn_bulk_ingest.clicked.connect(self.start_bulk_ingestion)
+        self.btn_extract_pdfs = QPushButton("📄 Extract PDFs to Queue")
+        self.btn_extract_pdfs.setStyleSheet("background-color: #6a1b9a; color: white;")
+        self.btn_extract_pdfs.clicked.connect(self.start_extraction)
+        
+        self.btn_process_queue = QPushButton("⚙️ Process Ingestion Queue")
+        self.btn_process_queue.setStyleSheet("background-color: #0277bd; color: white;")
+        self.btn_process_queue.clicked.connect(self.start_processing)
+        
         # Only admin sees this
         if ConfigManager.get("role") != "admin":
-            self.btn_bulk_ingest.hide()
+            self.btn_extract_pdfs.hide()
+            self.btn_process_queue.hide()
             self.source_combo.hide() # Maybe hide staging from non-admins too
-        top_controls.addWidget(self.btn_bulk_ingest)
+        
+        top_controls.addWidget(self.btn_extract_pdfs)
+        top_controls.addWidget(self.btn_process_queue)
         
         self.btn_add = QPushButton("➕ Add New Item")
         self.btn_add.setStyleSheet("background-color: #2e7d32; color: white;")
@@ -411,18 +419,14 @@ class DatabaseManager(QDialog):
                 self.selected_item_id = item_id
                 self.accept()
 
-    def start_bulk_ingestion(self):
-        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder of PDF JSONs")
-        if not folder_path:
-            return
-            
-        self.bulk_worker = BulkIngestWorker(folder_path, debug_mode=self.controller.match_service.debug_mode)
+    def _setup_worker_and_dialog(self, worker_instance, title):
+        self.bulk_worker = worker_instance
         self.bulk_thread = QThread()
         self.bulk_worker.moveToThread(self.bulk_thread)
         
         self.progress_dlg = IngestionProgressDialog(self)
-        self.progress_dlg.setWindowTitle("Bulk Ingestion Running")
-        self.progress_dlg.rejected.connect(self.bulk_worker.stop)
+        self.progress_dlg.setWindowTitle(title)
+        self.progress_dlg.setModal(False) # Allow background operation
         
         self.bulk_thread.started.connect(self.bulk_worker.run)
         self.bulk_worker.progress.connect(self.progress_dlg.append_log)
@@ -435,12 +439,42 @@ class DatabaseManager(QDialog):
         self.bulk_thread.start()
         self.progress_dlg.show()
         
+    def start_extraction(self):
+        if hasattr(self, 'bulk_thread') and self.bulk_thread.isRunning():
+            if hasattr(self, 'progress_dlg') and self.progress_dlg:
+                self.progress_dlg.show()
+                self.progress_dlg.raise_()
+            return
+
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder of PDFs")
+        if not folder_path:
+            return
+            
+        worker = BulkIngestWorker(folder_path, debug_mode=self.controller.match_service.debug_mode, mode="extract")
+        self._setup_worker_and_dialog(worker, "Extracting PDFs")
+        
+    def start_processing(self):
+        if hasattr(self, 'bulk_thread') and self.bulk_thread.isRunning():
+            if hasattr(self, 'progress_dlg') and self.progress_dlg:
+                self.progress_dlg.show()
+                self.progress_dlg.raise_()
+            return
+
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder with gemini_queue.json")
+        if not folder_path:
+            return
+            
+        worker = BulkIngestWorker(folder_path, debug_mode=self.controller.match_service.debug_mode, mode="process")
+        self._setup_worker_and_dialog(worker, "Processing Queue (Heuristics + Gemini)")
+
     def _on_bulk_finished(self, result):
-        if self.progress_dlg:
+        if hasattr(self, 'progress_dlg') and self.progress_dlg:
             self.progress_dlg.close()
         count = result.get("processed", 0)
-        QMessageBox.information(self, "Complete", f"Bulk Ingestion finished. Processed {count} items.")
+        msg = result.get("msg", f"Process finished. Processed {count} items.")
+        QMessageBox.information(self, "Complete", msg)
         
-        # Switch view to staging automatically
-        self.source_combo.setCurrentText("Staging Area")
+        # Automatically switch to staging if we were processing the queue
+        if hasattr(self, 'bulk_worker') and self.bulk_worker.mode == "process":
+            self.source_combo.setCurrentText("Staging Area")
         self._refresh_loaders()
