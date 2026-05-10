@@ -94,6 +94,11 @@ class BulkIngestWorker(QObject):
 
         # Iterate over session JSONs in the folder (as the PDF extractor usually outputs them)
         json_files = glob.glob(os.path.join(self.pdf_folder_path, "*.json"))
+        
+        if self.debug_mode:
+            self.progress.emit(f"[DEBUG] Looking for JSONs in {self.pdf_folder_path}")
+            self.progress.emit(f"[DEBUG] Found JSON files: {[os.path.basename(f) for f in json_files]}")
+            
         for jf in json_files:
             if os.path.basename(jf) == "gemini_queue.json":
                 continue
@@ -114,6 +119,8 @@ class BulkIngestWorker(QObject):
                             "source_file": os.path.basename(jf)
                         })
                         existing_descriptions.add(clean_desc)
+                    elif self.debug_mode and clean_desc:
+                        self.progress.emit(f"[DEBUG] Skipping duplicate: '{clean_desc[:30]}...'")
             except Exception as e:
                 self.progress.emit(f"Warning: Failed to read {jf}: {e}")
 
