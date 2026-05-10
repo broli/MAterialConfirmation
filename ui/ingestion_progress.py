@@ -14,6 +14,11 @@ class IngestionProgressDialog(QDialog):
         self.status_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         layout.addWidget(self.status_label)
         
+        self.model_status_label = QLabel("")
+        self.model_status_label.setStyleSheet("color: #4caf50; font-weight: bold; font-style: italic; font-size: 12px;")
+        self.model_status_label.hide()
+        layout.addWidget(self.model_status_label)
+        
         self.countdown_label = QLabel("")
         self.countdown_label.setStyleSheet("color: #ff9800; font-weight: bold;")
         self.countdown_label.hide()
@@ -46,6 +51,13 @@ class IngestionProgressDialog(QDialog):
 
     def update_status(self, text: str):
         self.status_label.setText(text)
+        
+    def update_model_status(self, text: str):
+        if text:
+            self.model_status_label.setText(f"🤖 {text}")
+            self.model_status_label.show()
+        else:
+            self.model_status_label.hide()
         
     def update_countdown(self, seconds: int):
         if seconds > 0:

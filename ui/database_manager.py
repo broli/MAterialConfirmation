@@ -433,6 +433,7 @@ class DatabaseManager(QDialog):
         self.bulk_thread.started.connect(self.bulk_worker.run)
         self.bulk_worker.progress.connect(self.progress_dlg.append_log)
         self.bulk_worker.status_update.connect(self.progress_dlg.update_status)
+        self.bulk_worker.model_status_update.connect(self.progress_dlg.update_model_status)
         self.bulk_worker.countdown_update.connect(self.progress_dlg.update_countdown)
         self.bulk_worker.result.connect(self._on_bulk_finished)
         self.bulk_worker.finished.connect(self.bulk_thread.quit)

@@ -2,10 +2,11 @@ import os
 import json
 import time
 import glob
+import re
 from PySide6.QtCore import QThread, Signal, QObject
 from models.config_manager import ConfigManager
 from models.catalog_loader import CatalogLoader
-from models.gemini_service import GeminiClient
+from models.gemini_service import GeminiClient, QuotaExceededError
 from models.product_service import ProductService
 from models.contract_ingestion import OneClickIngestor
 
@@ -22,6 +23,7 @@ class BulkIngestWorker(QObject):
     finished = Signal()
     status_update = Signal(str)
     countdown_update = Signal(int)
+    model_status_update = Signal(str)
 
     def __init__(self, target_folder_path: str, debug_mode: bool = False, mode: str = "extract"):
         super().__init__()
@@ -193,7 +195,10 @@ class BulkIngestWorker(QObject):
 
     def _process_queue_with_gemini(self):
         try:
-            gemini = GeminiClient(debug_mode=self.debug_mode)
+            gemini = GeminiClient(
+                debug_mode=self.debug_mode,
+                model_status_callback=self.model_status_update.emit
+            )
         except Exception as e:
             self.progress.emit(f"Gemini Init Error: {e}")
             return 0
@@ -228,7 +233,14 @@ class BulkIngestWorker(QObject):
                 }
                 
                 category = res.category if res.category and res.category != "UNKNOWN" else item.get("category", "UNKNOWN")
-                category_filename = f"{category.replace(' ', '_')}.yaml"
+                
+                # Sanitize the category string for safe file paths
+                clean_category = re.sub(r'[^a-zA-Z0-9_-]', '_', category)
+                clean_category = re.sub(r'_+', '_', clean_category).strip('_')
+                if not clean_category:
+                    clean_category = "UNKNOWN"
+                    
+                category_filename = f"{clean_category}.yaml"
                 
                 # Save to Staging
                 import uuid
@@ -248,6 +260,12 @@ class BulkIngestWorker(QObject):
                 
                 # Small delay to be polite to API
                 time.sleep(1)
+                
+            except QuotaExceededError as e:
+                self.progress.emit(f"🛑 FATAL ERROR: {e}")
+                self.status_update.emit("Daily Quota Exhausted! Stopping.")
+                self.is_running = False
+                break
                 
             except Exception as e:
                 self.progress.emit(f"API Error. Pausing for 80 seconds... ({e})")

@@ -68,35 +68,6 @@ class SettingsWindow(QDialog):
         gemini_layout.addWidget(self.entry_gemini)
         admin_layout.addLayout(gemini_layout)
 
-        # Gemini Model Selection
-        model_layout = QHBoxLayout()
-        model_layout.addWidget(QLabel("Gemini Model:"))
-        self.combo_gemini_model = QComboBox()
-        self.combo_gemini_model.setEditable(True)
-        gemini_models = [
-            "gemini-3.0-flash", 
-            "gemini-3.1-pro-low",
-            "gemini-3.1-pro",
-            "gemini-1.5-flash", 
-            "gemini-1.5-pro"
-        ]
-        self.combo_gemini_model.addItems(gemini_models)
-        current_model = ConfigManager.get("gemini_model") or "gemini-1.5-flash"
-        if current_model in gemini_models:
-            self.combo_gemini_model.setCurrentText(current_model)
-        else:
-            # If it's a custom model not in the list, add it temporarily
-            self.combo_gemini_model.addItem(current_model)
-            self.combo_gemini_model.setCurrentText(current_model)
-        
-        model_layout.addWidget(self.combo_gemini_model)
-        
-        self.btn_get_models = QPushButton("Get Models")
-        self.btn_get_models.clicked.connect(self.fetch_gemini_models)
-        model_layout.addWidget(self.btn_get_models)
-        
-        admin_layout.addLayout(model_layout)
-        
         self.scroll_layout.addWidget(admin_frame)
 
     def build_ollama_section(self, is_installed, is_running, models):
@@ -197,60 +168,10 @@ class SettingsWindow(QDialog):
         footer.addWidget(btn_cancel)
         layout.addLayout(footer)
 
-    def fetch_gemini_models(self):
-        import urllib.request
-        import urllib.error
-        import json
-        
-        api_key = self.entry_gemini.text().strip()
-        if not api_key:
-            QMessageBox.warning(self, "Warning", "Please enter a Gemini API Key first.")
-            return
-            
-        try:
-            self.btn_get_models.setEnabled(False)
-            self.btn_get_models.setText("Fetching...")
-            from PySide6.QtWidgets import QApplication
-            QApplication.processEvents()
-            
-            url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
-            req = urllib.request.Request(url)
-            with urllib.request.urlopen(req) as response:
-                data = json.loads(response.read().decode())
-                
-            models = []
-            for model in data.get("models", []):
-                methods = model.get("supportedGenerationMethods", [])
-                if "generateContent" in methods:
-                    name = model.get("name", "").replace("models/", "")
-                    if name:
-                        models.append(name)
-                        
-            if models:
-                current = self.combo_gemini_model.currentText()
-                self.combo_gemini_model.clear()
-                self.combo_gemini_model.addItems(models)
-                if current in models:
-                    self.combo_gemini_model.setCurrentText(current)
-                QMessageBox.information(self, "Success", f"Loaded {len(models)} models from Google.")
-            else:
-                QMessageBox.warning(self, "Warning", "No compatible models found for this API key.")
-                
-        except urllib.error.URLError as e:
-            QMessageBox.critical(self, "Error", f"Failed to fetch models: {e}")
-        except json.JSONDecodeError:
-            QMessageBox.critical(self, "Error", "Failed to parse API response.")
-        finally:
-            self.btn_get_models.setEnabled(True)
-            self.btn_get_models.setText("Get Models")
-
     def save_settings(self):
         # Admin Settings
         if hasattr(self, 'entry_gemini'):
             ConfigManager.set("gemini_api_key", self.entry_gemini.text().strip())
-        
-        if hasattr(self, 'combo_gemini_model'):
-            ConfigManager.set("gemini_model", self.combo_gemini_model.currentText())
         
         # Ollama Settings
         if hasattr(self, 'show_window_cb'):
