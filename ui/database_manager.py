@@ -3,13 +3,14 @@ import shutil
 from PySide6.QtWidgets import (QDialog, QWidget, QVBoxLayout, QHBoxLayout, 
                                QLabel, QPushButton, QLineEdit, QComboBox, 
                                QTableView, QFrame, QFileDialog, QMessageBox, 
-                               QScrollArea, QHeaderView, QProgressDialog)
-from PySide6.QtCore import Qt, QAbstractTableModel, QSortFilterProxyModel
+                               QScrollArea, QHeaderView, QProgressDialog, QAbstractItemView)
+from PySide6.QtCore import Qt, QAbstractTableModel, QSortFilterProxyModel, QThread
 from models.config_manager import ConfigManager
 from models.product_service import ProductService
 from models.catalog_loader import CatalogLoader
 from ui.components.product_form import ProductFormWidget
 from core.bulk_worker import BulkIngestWorker
+from ui.ingestion_progress import IngestionProgressDialog
 
 class CatalogTableModel(QAbstractTableModel):
     def __init__(self, catalog=None):
@@ -50,9 +51,9 @@ class CatalogTableModel(QAbstractTableModel):
     def columnCount(self, parent=None):
         return len(self._headers)
 
-    def data(self, index, role):
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if not index.isValid(): return None
-        if role == Qt.DisplayRole:
+        if role == Qt.ItemDataRole.DisplayRole:
             row = self._data[index.row()]
             col = index.column()
             if col == 0: return row["category"]
@@ -65,8 +66,8 @@ class CatalogTableModel(QAbstractTableModel):
                 return desc if len(desc) < 80 else desc[:77] + "..."
         return None
 
-    def headerData(self, section, orientation, role):
-        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return self._headers[section]
         return None
         
@@ -252,11 +253,11 @@ class DatabaseManager(QDialog):
         
         self.table_view = QTableView()
         self.table_view.setModel(self.proxy_model)
-        self.table_view.setSelectionBehavior(QTableView.SelectRows)
-        self.table_view.setSelectionMode(QTableView.ExtendedSelection) # Multi-select
+        self.table_view.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.table_view.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection) # Multi-select
         self.table_view.setAlternatingRowColors(True)
         self.table_view.setSortingEnabled(True)
-        self.table_view.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
+        self.table_view.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Stretch)
         self.table_view.doubleClicked.connect(self.on_row_double_click)
         self.main_layout.addWidget(self.table_view)
         
@@ -419,15 +420,15 @@ class DatabaseManager(QDialog):
         self.bulk_thread = QThread()
         self.bulk_worker.moveToThread(self.bulk_thread)
         
-        self.progress_dlg = QProgressDialog("Initializing Bulk Ingest...", "Cancel", 0, 0, self)
+        self.progress_dlg = IngestionProgressDialog(self)
         self.progress_dlg.setWindowTitle("Bulk Ingestion Running")
-        self.progress_dlg.setWindowModality(Qt.WindowModal)
-        self.progress_dlg.canceled.connect(self.bulk_worker.stop)
+        self.progress_dlg.rejected.connect(self.bulk_worker.stop)
         
         self.bulk_thread.started.connect(self.bulk_worker.run)
-        self.bulk_worker.progress.connect(self.progress_dlg.setLabelText)
+        self.bulk_worker.progress.connect(self.progress_dlg.append_log)
         self.bulk_worker.result.connect(self._on_bulk_finished)
         self.bulk_worker.finished.connect(self.bulk_thread.quit)
+        self.bulk_worker.finished.connect(self.progress_dlg.set_finished)
         self.bulk_worker.finished.connect(self.bulk_worker.deleteLater)
         self.bulk_thread.finished.connect(self.bulk_thread.deleteLater)
         

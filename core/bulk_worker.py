@@ -28,11 +28,11 @@ class BulkIngestWorker(QObject):
         self.is_running = True
         
         self.db_loader = CatalogLoader(base_path="database")
-        self.catalog = self.db_loader.load_all_categories()
+        self.catalog = self.db_loader.load_all_categories() or {}
         
         self.staging_path = "staging_database"
         self.staging_loader = CatalogLoader(base_path=self.staging_path)
-        self.staging_catalog = self.staging_loader.load_all_categories()
+        self.staging_catalog = self.staging_loader.load_all_categories() or {}
 
     def stop(self):
         self.is_running = False
@@ -84,11 +84,11 @@ class BulkIngestWorker(QObject):
         existing_descriptions = {item.get("raw_description", "").strip().lower() for item in queue}
         
         # Also add all existing production & staging descriptions to prevent duplicates
-        for item in self.catalog.values():
+        for item in (self.catalog or {}).values():
             desc = item.get("oneclick_description", "").strip().lower()
             if desc: existing_descriptions.add(desc)
             
-        for item in self.staging_catalog.values():
+        for item in (self.staging_catalog or {}).values():
             desc = item.get("oneclick_description", "").strip().lower()
             if desc: existing_descriptions.add(desc)
 
@@ -124,7 +124,7 @@ class BulkIngestWorker(QObject):
         Scans production database to build dictionary of brands/providers and guesses them.
         """
         known_brands = set()
-        for item in self.catalog.values():
+        for item in (self.catalog or {}).values():
             b = item.get("brand", "").strip()
             if b: known_brands.add(b)
 
@@ -152,13 +152,14 @@ class BulkIngestWorker(QObject):
             return 0
             
         queue = self._load_queue()
+        total_items = len(queue)
         processed_count = 0
         
         while queue and self.is_running:
             item = queue[0]
             desc = item["raw_description"]
             
-            self.progress.emit(f"Processing: {desc[:30]}...")
+            self.progress.emit(f"Processing ({processed_count + 1}/{total_items}): {desc[:30]}...")
             
             try:
                 # Call Gemini
