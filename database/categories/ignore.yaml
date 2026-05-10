@@ -382,88 +382,6 @@
   brand: Labor
   finish: UNKNOWN
   routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
-    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
-    plumbing. Includes installation of moisture resistant backerboard and selected
-    shower or tub, walls, fixtures, and accessories. Adjust height of showerhead.
-  printable:
-    description: Bath Bathroom Labor One Piece Demo/Install
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-87EA1AC5
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
-    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
-    plumbing. Includes installation of moisture resistant backerboard and selected
-    shower base or tub, walls, fixtures, and accessories. Adjust height of showerhead.
-  printable:
-    description: Bath Bathroom Labor One Piece Demo/Install
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-1DA3E8AD
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling
-    with lighting Ceiling with Lighting Less than 80sqft Bath Bathroom Labor Miscellaneous
-    Construction Miscellaneous 200 Pull-Up of Tile outside of Wet Space (Min. 50 Sq
-    Ft) (Does Not Include Drywall, Painting & Patching Work) Bath Bathroom Labor Miscellaneous
-    Construction Painting Drywall 200 Installation - Includes Taping, Patching & Texture
-    (By SqFt)
-  printable:
-    description: UNKNOWN
-    finish: UNKNOWN
-    dimensions:
-      area: Less than 80sqft
-      minimum_area: 50 Sq Ft
-  id: STG-02DB73C0
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: 'Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including:
-    12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1
-    Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF.
-    ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain
-    Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color
-    Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-Area Plywood
-    5/8x4x8, 1 2x4 wood'
-  printable:
-    description: PAN INSTALL KIT
-    finish: UNKNOWN
-    dimensions:
-      drywall: 4x8
-      p_trap: 2"
-      abs_dwv_pipe: 2"
-      pex_size: 1/2"
-      plywood: 5/8x4x8
-      wood: 2x4
-  id: STG-29634DFF
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Flooring Flooring Extra Labor Provide & Install Transition
-    Molding PROVIDE & INSTALL TRANSITION MOLDINGS (COMES IN 8FT)
-  printable:
-    description: Transition Molding
-    finish: UNKNOWN
-    dimensions:
-      length: 8FT
-  id: STG-D68751DE
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
   oneclick_description: Bath Vanities Vanity Labor Remove & Replace/Install Large
     Vanity Above 49" Includes demolition, disposal & haul away, and hook-ups of faucet.
     (Does not include patching painting or materials)
@@ -671,4 +589,86 @@
     finish: UNKNOWN
     dimensions: {}
   id: STG-126B8013
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
+    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
+    plumbing. Includes installation of moisture resistant backerboard and selected
+    shower or tub, walls, fixtures, and accessories. Adjust height of showerhead.
+  printable:
+    description: Bath Bathroom Labor One Piece Demo/Install
+    finish: UNKNOWN
+    dimensions: {}
+  id: STG-87EA1AC5
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
+    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
+    plumbing. Includes installation of moisture resistant backerboard and selected
+    shower base or tub, walls, fixtures, and accessories. Adjust height of showerhead.
+  printable:
+    description: Bath Bathroom Labor One Piece Demo/Install
+    finish: UNKNOWN
+    dimensions: {}
+  id: STG-1DA3E8AD
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling
+    with lighting Ceiling with Lighting Less than 80sqft Bath Bathroom Labor Miscellaneous
+    Construction Miscellaneous 200 Pull-Up of Tile outside of Wet Space (Min. 50 Sq
+    Ft) (Does Not Include Drywall, Painting & Patching Work) Bath Bathroom Labor Miscellaneous
+    Construction Painting Drywall 200 Installation - Includes Taping, Patching & Texture
+    (By SqFt)
+  printable:
+    description: UNKNOWN
+    finish: UNKNOWN
+    dimensions:
+      area: Less than 80sqft
+      minimum_area: 50 Sq Ft
+  id: STG-02DB73C0
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Bathroom Labor Pan Install Kit PAN INSTALL KIT - Including:
+    12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1
+    Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 2", 2 LF.
+    ABS-DWV pipe 2”, 1 pc-10 L.F Pex white/ Pex A red, 2 Corner Reinforcement, Drain
+    Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop, Color
+    Coordinated: 3 Silicone, Color Coordinated: Matching drain cover, Wet-Area Plywood
+    5/8x4x8, 1 2x4 wood'
+  printable:
+    description: PAN INSTALL KIT
+    finish: UNKNOWN
+    dimensions:
+      drywall: 4x8
+      p_trap: 2"
+      abs_dwv_pipe: 2"
+      pex_size: 1/2"
+      plywood: 5/8x4x8
+      wood: 2x4
+  id: STG-29634DFF
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Flooring Flooring Extra Labor Provide & Install Transition
+    Molding PROVIDE & INSTALL TRANSITION MOLDINGS (COMES IN 8FT)
+  printable:
+    description: Transition Molding
+    finish: UNKNOWN
+    dimensions:
+      length: 8FT
+  id: STG-D68751DE
   category_file: ignore

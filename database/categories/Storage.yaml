@@ -161,3 +161,19 @@
     description: 4-Shelf Corner Caddy
     dimensions: {}
     image_file: cc-4-cs_g_l.jpg
+- id: ABN1616-PSS
+  sku: ABN1616-PSS
+  brand: ALFI
+  provider: HD
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Storage Storage Pods ALFI-SS: Stainless
+    Steel 16" x 16"'
+  printable:
+    finish: Stainless Steel
+    description: Storage Pods
+    image_file: ABN1616-PSS.png
+    dimensions:
+      width: 16"
+      height: 16"
+  category_file: Storage

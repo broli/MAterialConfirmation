@@ -169,7 +169,7 @@ class ProductEditDialog(QDialog):
         layout.addLayout(footer)
 
     def save(self):
-        data, category = self.form.get_data()
+        form_data, category = self.form.get_data()
         
         if not category:
             QMessageBox.warning(self, "Validation Error", "Category is required.")
@@ -178,6 +178,20 @@ class ProductEditDialog(QDialog):
         target_cat = str(category)
         if target_cat and not target_cat.endswith(".yaml"):
             target_cat += ".yaml"
+
+        # Merge new data into original product dictionary to prevent dropping un-editable fields
+        data = dict(self.product)
+        for k, v in form_data.items():
+            if k == "printable":
+                if "printable" not in data:
+                    data["printable"] = {}
+                for pk, pv in v.items():
+                    data["printable"][pk] = pv
+            else:
+                data[k] = v
+        
+        # Ensure category_file is updated in the data dict if it was moved
+        data["category_file"] = target_cat
 
         if not data.get("id"):
             data["id"] = ProductService.get_next_id(target_cat, self.categories_path)
