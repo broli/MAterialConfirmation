@@ -18,6 +18,7 @@ output/
 
 # Database Assets (images)
 database/assets/
+staging_database/
 
 # Document files
 *.pdf

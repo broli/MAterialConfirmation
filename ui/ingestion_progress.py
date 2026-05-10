@@ -11,8 +11,13 @@ class IngestionProgressDialog(QDialog):
         layout = QVBoxLayout(self)
         
         self.status_label = QLabel("Initializing...")
-        self.status_label.setStyleSheet("font-weight: bold;")
+        self.status_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         layout.addWidget(self.status_label)
+        
+        self.countdown_label = QLabel("")
+        self.countdown_label.setStyleSheet("color: #ff9800; font-weight: bold;")
+        self.countdown_label.hide()
+        layout.addWidget(self.countdown_label)
         
         self.log_view = QTextEdit()
         self.log_view.setReadOnly(True)
@@ -38,10 +43,16 @@ class IngestionProgressDialog(QDialog):
         self.log_view.append(message)
         # Auto scroll to bottom
         self.log_view.verticalScrollBar().setValue(self.log_view.verticalScrollBar().maximum())
+
+    def update_status(self, text: str):
+        self.status_label.setText(text)
         
-        # Also update the top label for the most recent high-level status
-        if "AI Matching" in message or "Extracting" in message or "Checking" in message or "Match" in message:
-            self.status_label.setText(message)
+    def update_countdown(self, seconds: int):
+        if seconds > 0:
+            self.countdown_label.setText(f"⏳ Retrying in {seconds}s...")
+            self.countdown_label.show()
+        else:
+            self.countdown_label.hide()
 
     def set_finished(self):
         self.btn_close.setEnabled(True)

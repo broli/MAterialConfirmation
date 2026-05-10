@@ -20,6 +20,8 @@ class BulkIngestWorker(QObject):
     result = Signal(dict)
     error = Signal(tuple)
     finished = Signal()
+    status_update = Signal(str)
+    countdown_update = Signal(int)
 
     def __init__(self, target_folder_path: str, debug_mode: bool = False, mode: str = "extract"):
         super().__init__()
@@ -58,6 +60,7 @@ class BulkIngestWorker(QObject):
     def run(self):
         try:
             self.progress.emit(f"Starting Bulk Ingestion Pipeline ({self.mode} mode)...")
+            self.status_update.emit(f"Starting pipeline ({self.mode})...")
             
             if self.mode == "extract":
                 # Stage 1: Build Queue from PDFs
@@ -75,11 +78,13 @@ class BulkIngestWorker(QObject):
                 queue = self._load_queue()
                 if not queue:
                     self.progress.emit("Queue is empty. Nothing to process.")
+                    self.status_update.emit("Queue empty.")
                     self.result.emit({"status": "success", "processed": 0})
                     self.finished.emit()
                     return
 
                 self.progress.emit(f"Queue loaded with {len(queue)} items. Running Heuristics...")
+                self.status_update.emit(f"Running Heuristics ({len(queue)} items)...")
                 queue = self._run_heuristics(queue)
                 self._save_queue(queue)
                 
@@ -202,6 +207,7 @@ class BulkIngestWorker(QObject):
             desc = item["raw_description"]
             
             self.progress.emit(f"Processing ({processed_count + 1}/{total_items}): {desc[:30]}...")
+            self.status_update.emit(f"Processing ({processed_count + 1}/{total_items})")
             
             try:
                 # Call Gemini
@@ -244,13 +250,18 @@ class BulkIngestWorker(QObject):
                 time.sleep(1)
                 
             except Exception as e:
-                self.progress.emit(f"API Error. Pausing for 5 minutes... ({e})")
+                self.progress.emit(f"API Error. Pausing for 80 seconds... ({e})")
+                self.status_update.emit("API Rate Limit - Paused")
                 
-                # Sleep for 5 minutes checking self.is_running
-                for _ in range(300):
+                # Sleep for 80 seconds checking self.is_running
+                for i in range(80):
                     if not self.is_running:
                         break
+                    self.countdown_update.emit(80 - i)
                     time.sleep(1)
+                
+                # Clear countdown when resuming
+                self.countdown_update.emit(0)
                 
                 if not self.is_running:
                     break
