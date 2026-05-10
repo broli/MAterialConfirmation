@@ -81,12 +81,19 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 - [x] **Ollama Orchestration:** Added `SettingsWindow` to manage `ollama serve` lifecycle, pull/delete models, and select active models.
 - [x] **Dynamic PDF Branding:** Allow users to pick and import custom cover images via settings.
 
-## 📅 Phase 9: ERP Expansion & Workflow (In Progress) 🔮
-- [ ] **Inventory Integration:** Basic connection to stock, to auto route requests
+## 📅 Phase 9: Gemini API & Advanced Database Scaling (Complete) ✅
+- [x] **Gemini Integration:** Migrated from purely local Ollama to a high-speed Gemini API backend with Instructor-based schema validation.
+- [x] **Intelligent Model Waterfall:** Implemented a ranked failover system that automatically cycles through Gemini models (3.1 Pro -> 3.0 Flash, etc.) to handle rate limits without interruption.
+- [x] **Robust Quota Management:** Persistent model pool management that drops exhausted models for the session to prevent infinite retry loops.
+- [x] **Advanced Batch Editor:** Replaced the legacy single-field editor with the full product GUI in batch mode, featuring "Apply/Enable" checkboxes and auto-selection logic.
+- [x] **Deterministic Filename Sanitization:** Regex-based sanitization for categories (e.g., "Painting / Patch" -> "Painting_Patch.yaml") to ensure stable filesystem mapping.
+
+## 📅 Phase 10: ERP Expansion & Workflow (In Progress) 🔮
+- [ ] **Inventory Integration:** Basic connection to stock, to auto route requests.
 - [ ] **Payment schedule email text generator:** Automated text for BT invoices.
-- [ ] **automatic filling of job material Excel** For cart reviews for the PM based on the job folder name.
-- [x] **Update PDF Generator** to handle 2 items per page
-- [ ] **create database maintenance tool** to clean up unused items, merge duplicates, etc..
+- [ ] **Automatic filling of job material Excel:** For cart reviews for the PM based on the job folder name.
+- [x] **Update PDF Generator:** Handle 2 items per page for better document density.
+- [ ] **Create database maintenance tool:** Clean up unused items, merge duplicates, etc.
     
 
 ## 📅 Phase X: MISC and future ideas, even dreaming
