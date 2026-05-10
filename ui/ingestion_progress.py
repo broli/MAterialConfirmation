@@ -20,10 +20,17 @@ class IngestionProgressDialog(QDialog):
         layout.addWidget(self.log_view)
         
         footer = QHBoxLayout()
+        
+        self.btn_abort = QPushButton("🛑 Abort Process")
+        self.btn_abort.setStyleSheet("background-color: #d32f2f; color: white;")
+        self.btn_abort.clicked.connect(self.reject)
+        
         self.btn_close = QPushButton("Close")
         self.btn_close.setEnabled(False)
         self.btn_close.clicked.connect(self.accept)
+        
         footer.addStretch()
+        footer.addWidget(self.btn_abort)
         footer.addWidget(self.btn_close)
         layout.addLayout(footer)
 
@@ -38,4 +45,5 @@ class IngestionProgressDialog(QDialog):
 
     def set_finished(self):
         self.btn_close.setEnabled(True)
+        self.btn_abort.hide()
         self.status_label.setText("✅ Ingestion Complete!")

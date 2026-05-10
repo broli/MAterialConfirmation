@@ -426,7 +426,9 @@ class DatabaseManager(QDialog):
         
         self.progress_dlg = IngestionProgressDialog(self)
         self.progress_dlg.setWindowTitle(title)
-        self.progress_dlg.setModal(False) # Allow background operation
+        self.progress_dlg.setModal(True)
+        
+        self.progress_dlg.rejected.connect(self.bulk_worker.stop)
         
         self.bulk_thread.started.connect(self.bulk_worker.run)
         self.bulk_worker.progress.connect(self.progress_dlg.append_log)
