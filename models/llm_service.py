@@ -79,7 +79,7 @@ class LocalLLMClient:
     def __init__(
         self,
         host: str = "http://localhost:11434",
-        model: str = None,
+        model: str | None = None,
         log_callback=None,
         debug_mode: bool = False,
         log_dir: str = "logs",

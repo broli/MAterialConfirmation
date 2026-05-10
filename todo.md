@@ -1,13 +1,3 @@
 # PKB ERP Command Center - Pending UI Tasks
 
-- [] **Reuse pdf ingestion popup** make it a "something" to be reused by other parts of the app
-- [x] **Remove button** remove browse for agreement from the batch add unmatched window and make the main pdf ingestion the default way to import data
-- [x] Update `Catalog Manager` with a search bar
-    - [x] Modify `CatalogTableModel` to support filtering
-    - [x] Add search UI to `DatabaseManager`
-
-- [x] Update GUI create a single gui for add/remove/edit items from the database
-- [x] Update GUI reuse the single gui from above trough out the app
-
-
-- [/] **End-to-End Testing**: Conduct rigorous testing of the full ingestion -> matching -> confirmation -> export pipeline.
+- [ ] **auto clean database** clean images not used. Clean items that are not used for a certain amount of time. 

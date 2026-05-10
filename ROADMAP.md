@@ -91,8 +91,6 @@ Evolution from a standalone material confirmation tool to a **lightweight, robus
 
 ## 📅 Phase X: MISC and future ideas, even dreaming
 - [ ] **Support full-width items in PDF** fallback for items that need to span both columns.
-- [ ] **Create automated daily logs and summary** of the activity of the ERP command center.
-- [ ] **auto clean database** clean images not used. Clean items that are not used for a certain amount of time. 
 - [ ] **real usage** get the real usage of features to improve the app.
 - [ ] **user feedback** get user feedback to improve the app & add new features.
 

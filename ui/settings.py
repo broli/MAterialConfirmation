@@ -12,6 +12,7 @@ class SettingsWindow(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Settings")
         self.resize(800, 600)
+        self.pending_cover_image = None
         
         main_layout = QVBoxLayout(self)
         
@@ -29,6 +30,7 @@ class SettingsWindow(QDialog):
         self.scroll_layout.addWidget(self.progress)
         
         self._load_data()
+        self._setup_footer(main_layout)
 
     def _load_data(self):
         # In a real app this should be a QThread, but for simplicity here we do it fast
@@ -43,10 +45,30 @@ class SettingsWindow(QDialog):
         
         role = ConfigManager.get("role") or "user"
         if role == "admin":
+            self.build_admin_section()
             self.build_ollama_section(is_installed, is_running, models)
             
         self.build_pdf_section()
         self.scroll_layout.addStretch()
+
+    def build_admin_section(self):
+        title_lbl = QLabel("<b>Admin Settings</b>")
+        title_lbl.setStyleSheet("font-size: 18px;")
+        self.scroll_layout.addWidget(title_lbl)
+        
+        admin_frame = QFrame()
+        admin_layout = QVBoxLayout(admin_frame)
+        
+        # Gemini API Key
+        gemini_layout = QHBoxLayout()
+        gemini_layout.addWidget(QLabel("Gemini API Key:"))
+        self.entry_gemini = QLineEdit()
+        self.entry_gemini.setEchoMode(QLineEdit.EchoMode.Password)
+        self.entry_gemini.setText(ConfigManager.get("gemini_api_key") or "")
+        gemini_layout.addWidget(self.entry_gemini)
+        
+        admin_layout.addLayout(gemini_layout)
+        self.scroll_layout.addWidget(admin_frame)
 
     def build_ollama_section(self, is_installed, is_running, models):
         title_lbl = QLabel("<b>Requirements & Ollama Settings</b>")
@@ -80,7 +102,6 @@ class SettingsWindow(QDialog):
         else:
             self.show_window_cb = QCheckBox("Show terminal when starting Ollama")
             self.show_window_cb.setChecked(bool(ConfigManager.get("show_ollama_window")))
-            self.show_window_cb.stateChanged.connect(self.save_show_window_setting)
             actions_layout.addWidget(self.show_window_cb)
             
             btn_layout = QHBoxLayout()
@@ -106,7 +127,6 @@ class SettingsWindow(QDialog):
             else:
                 self.combo_model.addItem("No models found")
             self.combo_model.setCurrentText(str(ConfigManager.get("llm_model") or ""))
-            self.combo_model.currentTextChanged.connect(self.save_model_selection)
             actions_layout.addWidget(self.combo_model)
             
             pull_layout = QHBoxLayout()
@@ -131,12 +151,42 @@ class SettingsWindow(QDialog):
             
         self.scroll_layout.addWidget(actions_frame)
 
-    def save_show_window_setting(self, state):
-        ConfigManager.set("show_ollama_window", state == 2)
+    def _setup_footer(self, layout):
+        footer = QHBoxLayout()
+        
+        btn_save = QPushButton("Save Settings")
+        btn_save.setMinimumHeight(40)
+        btn_save.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold; padding: 0 20px;")
+        btn_save.clicked.connect(self.save_settings)
+        
+        btn_cancel = QPushButton("Cancel")
+        btn_cancel.setMinimumHeight(40)
+        btn_cancel.clicked.connect(self.reject)
+        
+        footer.addStretch()
+        footer.addWidget(btn_save)
+        footer.addWidget(btn_cancel)
+        layout.addLayout(footer)
 
-    def save_model_selection(self, choice):
-        if choice and choice != "No models found":
-            ConfigManager.set("llm_model", choice)
+    def save_settings(self):
+        # Admin Settings
+        if hasattr(self, 'entry_gemini'):
+            ConfigManager.set("gemini_api_key", self.entry_gemini.text().strip())
+        
+        # Ollama Settings
+        if hasattr(self, 'show_window_cb'):
+            ConfigManager.set("show_ollama_window", self.show_window_cb.isChecked())
+            
+        if hasattr(self, 'combo_model'):
+            choice = self.combo_model.currentText()
+            if choice and choice != "No models found":
+                ConfigManager.set("llm_model", choice)
+                
+        # PDF Settings
+        if self.pending_cover_image:
+            ConfigManager.set("cover_image_filename", self.pending_cover_image)
+            
+        self.accept()
 
     def refresh_status(self):
         is_running = OllamaUtils.is_running()
@@ -156,7 +206,6 @@ class SettingsWindow(QDialog):
                 self.combo_model.setCurrentText(str(current))
             else:
                 self.combo_model.setCurrentIndex(0)
-                self.save_model_selection(models[0])
         else:
             self.combo_model.addItem("No models found")
 
@@ -229,8 +278,8 @@ class SettingsWindow(QDialog):
                 if os.path.abspath(file_path) != os.path.abspath(dest_path):
                     shutil.copy2(file_path, dest_path)
                     
-                ConfigManager.set("cover_image_filename", filename)
-                self.lbl_cover_name.setText(filename)
-                QMessageBox.information(self, "Success", f"Cover image updated to {filename}")
+                self.pending_cover_image = filename
+                self.lbl_cover_name.setText(f"{filename} (Pending Save)")
+                self.lbl_cover_name.setStyleSheet("color: #ffa726; font-weight: bold;")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to import image: {e}")

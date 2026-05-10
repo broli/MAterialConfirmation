@@ -237,7 +237,7 @@
     dimensions: {}
 - id: '25'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -247,34 +247,38 @@
     must supply paint and any applicable primer at time of installation. If Materials
     are available at time of installation customer is subject to a $150 trip surcharge.
     Bath Flooring Pull Up Luxury Vinyl 60 Pull Up of Luxury Vinyl (Per Square Foot)
+  category_file: ignore
 - id: '26'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Electrical Replace Light Fixture including
     Relocating Electrical Does Not Include Additional Electrical / Patch & Paint
+  category_file: ignore
 - id: '27'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
-  routing_tag: WAREHOUSE
+  routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Miscellaneous Install Mirror (Labor Only)
     Client to provide Mirror Material
+  category_file: ignore
 - id: '28'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Wall Prep / Finishing Work Drywall Installation
     Minimum - Includes Taping, Patching & Texture (Under 30 SqFt) (MUST ADD IF ADDING
     ANY ELECTRICAL & PLUMBING WORK)
+  category_file: ignore
 - id: '29'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -283,25 +287,28 @@
     wet space plumbing. Includes installation of moisture resistant backerboard and
     selected shower base, walls, fixtures, and accessories and adjust height of showerhead
     . Includes Wet Space Supplies/Materials.
+  category_file: ignore
 - id: '30'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Plumbing Moving Drain Lines on Raised Foundation
     (Per LF)
+  category_file: ignore
 - id: '31'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Bath Special Requests Customer wants shower drain with very
     small holes. Family has very long hair,
+  category_file: ignore
 - id: '32'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -315,9 +322,10 @@
     labor or materials must be documented in a Change Order (CO) and may incur an
     additional charge—unless the change is informational only and does not affect
     cost or labor.'
+  category_file: ignore
 - id: '33'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -327,17 +335,19 @@
     Signature Series Olive Green (PKCCRU) 15 Semi-Custom Cabinet (Maple Interior)
     Standard Upper Cabinet - 12" D (Exterior Depth) & 10.5" (Interior Depth) Standard
     Base Cabinet - 24" D
+  category_file: ignore
 - id: '34'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Outside Partner Plumbing Hook-Up of Kitchen Sink Includes
     Hot and Cold Water Supply Lines, 1/4 Turn Angle Stops and Faucet Install
+  category_file: ignore
 - id: '35'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -346,18 +356,20 @@
     any wall damages from Demolition, as well as labor for Priming & Painting. Customer
     must supply paint and any applicable primer at time of installation. If Materials
     are available at time of installation customer is subject to a $150 trip surcharge.
+  category_file: ignore
 - id: '36'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Kitchen Special Requests Client must provide paint Also, this
     project does not include any electrical work. Client must purchase and provide
     a new garbage disposal and we will install.
+  category_file: ignore
 - id: '37'
   sku: ''
-  brand: ''
+  brand: NaN
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
@@ -365,3 +377,4 @@
     **Complementary** Includes Painting of both side of Casing (Does Not Include Any
     New Material) (2) Door Casings in Kitchen (1) Window Casings in Kitchen Complementary
     connect/disconnect of hood, fridge, and stove
+  category_file: ignore

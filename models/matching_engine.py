@@ -30,6 +30,8 @@ from threading import Lock
 from rapidfuzz import process, fuzz
 from schema.contract_item import ContractItem
 from models.llm_service import LocalLLMClient
+from models.gemini_service import GeminiClient
+from models.config_manager import ConfigManager
 
 
 # ---------------------------------------------------------------------------
@@ -445,7 +447,7 @@ class MatchService:
         "gray":   "gray50",
     }
 
-    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs", llm_model: str = None):
+    def __init__(self, catalog: dict, debug_mode: bool = False, log_dir: str = "logs", llm_model: "str | None" = None):
         """
         Parameters
         ----------
@@ -462,7 +464,14 @@ class MatchService:
         self._catalog    = catalog
         self._debug_mode = debug_mode
         self._log_dir    = log_dir
-        self._llm        = LocalLLMClient(model=llm_model, debug_mode=debug_mode, log_dir=log_dir)
+        
+        self._llm: "GeminiClient | LocalLLMClient"
+        gemini_key = ConfigManager.get("gemini_api_key")
+        if gemini_key:
+            self._llm = GeminiClient(api_key=gemini_key, debug_mode=debug_mode, log_dir=log_dir)
+        else:
+            self._llm = LocalLLMClient(model=llm_model, debug_mode=debug_mode, log_dir=log_dir)
+            
         # Create the match logger only when debug is on (avoids empty log files).
         self._match_log: MatchDebugLogger | None = (
             MatchDebugLogger(log_dir) if debug_mode else None
@@ -474,9 +483,11 @@ class MatchService:
 
     def check_ollama_ready(self) -> tuple[bool, str]:
         """
-        Verify the Ollama connection and model availability.
+        Verify the LLM connection (Ollama or Gemini).
         Returns (True, "OK") or (False, "Error message").
         """
+        if isinstance(self._llm, GeminiClient):
+            return True, "Connected to Gemini API."
         return self._llm.check_connection()
 
     # ------------------------------------------------------------------
@@ -597,6 +608,8 @@ class MatchService:
         candidates_after_filter: dict = {}
         top5: list = []
         fast_path_used = False
+        match_id: str | None = None
+        confidence: float = 0.0
 
         short_desc = item.get("raw_description", "")[:50]
         category   = item.get("category", "")
@@ -650,7 +663,8 @@ class MatchService:
                         confidence = 0.0
                     else:
                         if status_callback:
-                            status_callback(f"🧠 {status_prefix} AI Match (Ollama): {label}")
+                            service_name = "Gemini" if isinstance(self._llm, GeminiClient) else "Ollama"
+                            status_callback(f"🧠 {status_prefix} AI Match ({service_name}): {label}")
                         
                         hint_section  = item.get("section") or None
                         hint_category = item.get("category") or None

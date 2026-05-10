@@ -54,7 +54,8 @@ class ConfigManager:
         "github_owner": "BathPC",
         "github_repo": "material-confirmation-db",
         "github_token": "",
-        "github_branch": "main"
+        "github_branch": "main",
+        "gemini_api_key": ""
     }
 
     @classmethod
