@@ -5,26 +5,39 @@ This guide is intended for administrators who manage the AI infrastructure, data
 ---
 
 ## 🛡️ Enabling Admin Mode
-To enable administrative features (Ollama control, Database Management, GitHub Sync):
-1. Open `settings.json` in the application folder.
-2. Find the `"role"` key and change it from `"user"` to `"admin"`.
+To enable administrative features (AI controls, Database Management, GitHub Sync):
+1. Locate `settings.json` in the application folder. 
+   - **Note:** This file is automatically created **after the first run** (once you select your team).
+2. Open `settings.json`, find the `"role"` key, and change it from `"user"` to `"admin"`.
 3. Save the file and restart the application.
 
 ---
 
-## 🧠 AI Infrastructure (Gemini & Ollama)
-The system uses a hybrid AI approach for PDF extraction and database scaling.
+## 🧠 AI Infrastructure (Hybrid Approach)
+The system uses a prioritized hybrid AI model to ensure maximum reliability and speed.
 
-### 🌌 Gemini API (Recommended for Bulk)
-The system prioritizes **Google Gemini 1.5** for high-accuracy bulk ingestion.
-- **Model Waterfall:** If one Gemini model hits a rate limit (429 error), the system automatically "falls back" to the next available model in the ranking.
-- **Quota Management:** Once a model hits its daily quota, it is permanently dropped from the active pool for that session to prevent loops.
-- **Configuration:** Ensure your `GEMINI_API_KEY` is set in `settings.json`.
+### 🌌 Stage 1: Google Gemini (Primary)
+The system prioritizes **Gemini 1.5** for all matching and ingestion tasks.
 
-### 🦙 Ollama (Local Fallback)
-Used for complex PDF extraction when offline or for specific local tasks.
+#### 🔑 Getting an API Key
+To use Gemini, you need a Google AI API Key:
+1. Go to the [Google AI Studio](https://aistudio.google.com/).
+2. Sign in with your Google account and click **"Get API key"**.
+3. **Free vs. Paid:**
+   - **Free Tier:** The application works perfectly with a free API key. However, you will encounter strict rate limits and a daily quota. The system will automatically pause and wait when these are hit.
+   - **Paid Tier:** If you require faster processing for large catalogs without pauses, consider enabling billing in your Google Cloud project to increase your RPM (Requests Per Minute).
+
+#### ⚙️ How it Works
+- **API Key Required:** You must provide your key in the **Settings** menu (visible in Admin mode) to enable Gemini.
+- **Dynamic Ranking:** The system automatically pulls the latest models available for your key and ranks them from **best to worst** (e.g., prioritized 3.1 Pro -> 3.0 Flash -> 1.5 Flash).
+- **Waterfall Failover:** If a model hits a 429 rate limit or quota exhaustion, the system "falls back" to the next model in the ranked list.
+- **Automatic Dropping:** Once a model is confirmed exhausted, it is permanently removed from the session's active pool to prevent looping.
+
+### 🦙 Stage 2: Ollama (Local Fallback)
+If no Gemini API key is provided, or for specific local extraction tasks, the system falls back to **Ollama**.
+- **Local Power:** Since Ollama runs on your hardware, it works offline but is slower than Gemini for bulk tasks.
 - **Start Service:** Use the **▶️ Start Service** button in Settings if Ollama is offline.
-- **Model:** Recommended `llama3.1`. Ensure the model is "pulled" before use.
+- **Model:** Default is `llama3.1`. Ensure the model is "pulled" via the terminal (`ollama pull llama3.1`) before use.
 
 ---
 
