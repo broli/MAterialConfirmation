@@ -439,8 +439,16 @@ class DatabaseManager(QDialog):
         self.bulk_thread.start()
         self.progress_dlg.show()
         
+    def _is_thread_running(self):
+        try:
+            if hasattr(self, 'bulk_thread') and self.bulk_thread is not None:
+                return self.bulk_thread.isRunning()
+        except RuntimeError:
+            pass
+        return False
+
     def start_extraction(self):
-        if hasattr(self, 'bulk_thread') and self.bulk_thread.isRunning():
+        if self._is_thread_running():
             if hasattr(self, 'progress_dlg') and self.progress_dlg:
                 self.progress_dlg.show()
                 self.progress_dlg.raise_()
@@ -454,7 +462,7 @@ class DatabaseManager(QDialog):
         self._setup_worker_and_dialog(worker, "Extracting PDFs")
         
     def start_processing(self):
-        if hasattr(self, 'bulk_thread') and self.bulk_thread.isRunning():
+        if self._is_thread_running():
             if hasattr(self, 'progress_dlg') and self.progress_dlg:
                 self.progress_dlg.show()
                 self.progress_dlg.raise_()
