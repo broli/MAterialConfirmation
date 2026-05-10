@@ -1,18 +1,3 @@
-- id: DLT-1130602
-  sku: DLT-1130602
-  brand: PKB HV
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
-    x 30"
-  printable:
-    finish: white
-    description: DLT-1130602
-    dimensions:
-      width: '60'
-      height: '30'
-    image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
 - id: DLT-1130601
   sku: DLT-1130601
   brand: PKB HV
@@ -166,3 +151,21 @@
     description: Round Corner shower Base and Door Black Hardware Included
     dimensions: {}
     image_file: 46423319.png
+- id: DLT-1130602
+  sku: DLT-1130602
+  brand: PKB HV
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: Bath Shower Bases HV Single Threshold Right Side Drain 60"
+    x 30"
+  printable:
+    finish: white
+    description: DLT-1130602
+    dimensions:
+      width: '60'
+      height: '30'
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600.jpg
+  category_file: WetAreaBases
+  aliases:
+  - Bath Shower Bases HV Single Threshold Right Side Drain 60" x 30" 60x30 Right Drain

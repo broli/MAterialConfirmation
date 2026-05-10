@@ -138,7 +138,7 @@ class BatchEditDialog(QDialog):
 
 
 class ProductEditDialog(QDialog):
-    def __init__(self, parent, product_service, categories_path, assets_path, product=None, dropdown_categories_path=None):
+    def __init__(self, parent, product_service, categories_path, assets_path, product=None, dropdown_categories_path=None, controller=None):
         super().__init__(parent)
         self.product_service = product_service
         self.categories_path = categories_path
@@ -158,15 +158,63 @@ class ProductEditDialog(QDialog):
         self.form.load_data(self.product, self.product.get("category_file", ""))
         layout.addWidget(self.form)
         
+        self.controller = controller
+        
         footer = QHBoxLayout()
         btn_save = QPushButton("Save")
         btn_save.clicked.connect(self.save)
         btn_cancel = QPushButton("Cancel")
         btn_cancel.clicked.connect(self.reject)
+        
+        if self.controller and not self.is_new:
+            btn_similar = QPushButton("🔍 Find Similar in Production")
+            btn_similar.setStyleSheet("background-color: #0277bd; color: white;")
+            btn_similar.clicked.connect(self._on_find_similar)
+            footer.addWidget(btn_similar)
+            
         footer.addStretch()
         footer.addWidget(btn_save)
         footer.addWidget(btn_cancel)
         layout.addLayout(footer)
+
+    def _on_find_similar(self):
+        from ui.components.similar_items_dialog import SimilarItemsDialog
+        
+        prod_engine = self.controller.match_service._engine
+        prod_catalog = self.controller.catalog
+        
+        dlg = SimilarItemsDialog(self, self.product, prod_engine, prod_catalog)
+        if dlg.exec():
+            prod_id = dlg.selected_production_id
+            if prod_id:
+                prod_item = prod_catalog.get(prod_id)
+                if not prod_item: return
+                
+                # 1. Add alias to production item
+                staging_desc = self.product.get("oneclick_description", "").strip()
+                aliases = prod_item.get("aliases", [])
+                if not isinstance(aliases, list): aliases = []
+                
+                if staging_desc and staging_desc not in aliases:
+                    aliases.append(staging_desc)
+                    prod_item["aliases"] = aliases
+                    
+                    prod_cat_path = os.path.join("database", "categories")
+                    prod_ass_path = os.path.join("database", "assets")
+                    cat_file = prod_item.get("category_file", "")
+                    if cat_file and not cat_file.endswith(".yaml"):
+                        cat_file += ".yaml"
+                    if not cat_file:
+                        cat_file = "UNKNOWN.yaml"
+                    
+                    self.product_service.upsert_to_yaml(prod_item, cat_file, prod_cat_path, prod_ass_path)
+                
+                # 2. Delete staging item
+                if not self.is_new and self.original_category:
+                    self.product_service.remove_from_yaml(self.product.get("id"), self.original_category, self.categories_path)
+                
+                QMessageBox.information(self, "Success", f"Linked as alias to {prod_id} and deleted from staging.")
+                self.accept()
 
     def save(self):
         form_data, category = self.form.get_data()
@@ -264,14 +312,20 @@ class DatabaseManager(QDialog):
         self.btn_process_queue.setStyleSheet("background-color: #0277bd; color: white;")
         self.btn_process_queue.clicked.connect(self.start_processing)
         
+        self.btn_maintenance = QPushButton("🔧 Database Maintenance")
+        self.btn_maintenance.setStyleSheet("background-color: #f57c00; color: white;")
+        self.btn_maintenance.clicked.connect(self.show_maintenance)
+
         # Only admin sees this
         if ConfigManager.get("role") != "admin":
             self.btn_extract_pdfs.hide()
             self.btn_process_queue.hide()
+            self.btn_maintenance.hide()
             self.source_combo.hide() # Maybe hide staging from non-admins too
         
         top_controls.addWidget(self.btn_extract_pdfs)
         top_controls.addWidget(self.btn_process_queue)
+        top_controls.addWidget(self.btn_maintenance)
         
         self.btn_add = QPushButton("➕ Add New Item")
         self.btn_add.setStyleSheet("background-color: #2e7d32; color: white;")
@@ -428,17 +482,22 @@ class DatabaseManager(QDialog):
         self._refresh_loaders()
         QMessageBox.information(self, "Success", f"Approved {len(items)} items to production.")
 
+    def show_maintenance(self):
+        from ui.maintenance_dialog import MaintenanceDialog
+        dlg = MaintenanceDialog(self, self.controller, self.product_service)
+        dlg.exec()
+
     def show_add_form(self):
         cat_path, ass_path = self.get_current_paths()
         prod_cat_path = os.path.join("database", "categories")
-        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, dropdown_categories_path=prod_cat_path)
+        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, dropdown_categories_path=prod_cat_path, controller=self.controller)
         if dlg.exec():
             self._refresh_loaders()
 
     def show_edit_form(self, item_full):
         cat_path, ass_path = self.get_current_paths()
         prod_cat_path = os.path.join("database", "categories")
-        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, item_full, dropdown_categories_path=prod_cat_path)
+        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, item_full, dropdown_categories_path=prod_cat_path, controller=self.controller)
         if dlg.exec():
             self._refresh_loaders()
 

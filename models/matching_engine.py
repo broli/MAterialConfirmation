@@ -259,14 +259,30 @@ class MatchingEngine:
         """
         self.catalog = catalog
 
-        # { item_id -> oneclick_description } — pre-built for fast repeated lookups.
+        # { search_key -> target_string } for RapidFuzz
         self._index: dict[str, str] = {}
+        # { search_key -> actual_item_id } to resolve aliases back to the master catalog
+        self._reverse_map: dict[str, str] = {}
 
         for item_id, item_data in catalog.items():
             desc = item_data.get("oneclick_description", "").strip()
-            # oneclick_description is mandatory per schema.  If missing, add a
-            # visible sentinel so the item surfaces clearly during data-quality review.
-            self._index[item_id] = desc if desc else "TBD_UPDATE_ME"
+            if not desc:
+                desc = "TBD_UPDATE_ME"
+            
+            # Index the primary description
+            primary_key = f"{item_id}_main"
+            self._index[primary_key] = desc
+            self._reverse_map[primary_key] = item_id
+            
+            # Index any known aliases
+            aliases = item_data.get("aliases", [])
+            if isinstance(aliases, list):
+                for i, alias in enumerate(aliases):
+                    alias_str = str(alias).strip()
+                    if alias_str:
+                        alias_key = f"{item_id}_alias_{i}"
+                        self._index[alias_key] = alias_str
+                        self._reverse_map[alias_key] = item_id
 
     # ------------------------------------------------------------------
     # Public search API
@@ -292,9 +308,9 @@ class MatchingEngine:
             limit=2,
         )
         
-        # Sort descending and return in (score, id, db_desc) format to match Slow Path
+        # Sort descending and return in (score, actual_id, db_desc) format to match Slow Path
         results_sorted = sorted(all_results, key=lambda x: x[1], reverse=True)
-        return [(score, mid, db_desc) for db_desc, score, mid in results_sorted]
+        return [(score, self._reverse_map[s_key], db_desc) for db_desc, score, s_key in results_sorted]
 
     def match_item(
         self,
@@ -321,8 +337,9 @@ class MatchingEngine:
             return None, None, 0.0
 
         candidates = {}
-        for item_id, item_data in self.catalog.items():
-            desc = self._index.get(item_id, "")
+        for s_key, desc in self._index.items():
+            item_id = self._reverse_map[s_key]
+            item_data = self.catalog[item_id]
 
             # 1. Strict filter on Finish
             if contract_item.finish:
@@ -351,7 +368,7 @@ class MatchingEngine:
                     if failed_dim:
                         continue
 
-            candidates[item_id] = desc
+            candidates[s_key] = desc
 
         if not candidates:
             if _return_candidates:
@@ -375,14 +392,22 @@ class MatchingEngine:
         if all_results:
             # all_results is list of (db_desc, score, item_id) — sort descending
             all_results_sorted = sorted(all_results, key=lambda x: x[1], reverse=True)
-            best_db_desc, confidence_score, best_match_id = all_results_sorted[0]
+            best_db_desc, confidence_score, best_match_key = all_results_sorted[0]
+            best_match_id = self._reverse_map[best_match_key]
 
             if _return_candidates:
                 # Return top-5 as (score, id, db_desc) for the debug logger
-                top5 = [
-                    (score, mid, db_desc)
-                    for db_desc, score, mid in all_results_sorted[:5]
-                ]
+                # We group by item_id to avoid showing the same item multiple times if both main/alias matched high
+                seen_ids = set()
+                top5 = []
+                for db_desc, score, s_key in all_results_sorted:
+                    mid = self._reverse_map[s_key]
+                    if mid not in seen_ids:
+                        seen_ids.add(mid)
+                        top5.append((score, mid, db_desc))
+                        if len(top5) == 5:
+                            break
+                            
                 return best_match_id, best_db_desc, confidence_score, candidates, search_target, top5
 
             return best_match_id, best_db_desc, confidence_score

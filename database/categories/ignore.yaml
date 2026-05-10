@@ -306,23 +306,6 @@
   oneclick_description: Bath Special Requests Customer wants shower drain with very
     small holes. Family has very long hair,
   category_file: ignore
-- id: '32'
-  sku: ''
-  brand: NaN
-  provider: ''
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: 'Bath Special Requests The following items are not included
-    in this agreement: toilet, vanity faucet, medicine cabinet, mirror, plumbing labor,
-    painting and patchwork, and electrical work. This contract itemizes all client-selected
-    materials. If the scope of work changes, any additional labor or materials must
-    be documented in a Change Order (CO) and may incur an additional charge—unless
-    the change is informational only and does not affect cost or build. This contract
-    itemizes all client-selected materials. If the scope of work changes, any additional
-    labor or materials must be documented in a Change Order (CO) and may incur an
-    additional charge—unless the change is informational only and does not affect
-    cost or labor.'
-  category_file: ignore
 - id: '33'
   sku: ''
   brand: NaN
@@ -672,3 +655,28 @@
       length: 8FT
   id: STG-D68751DE
   category_file: ignore
+- id: '32'
+  sku: ''
+  brand: NaN
+  provider: ''
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: 'Bath Special Requests The following items are not included
+    in this agreement: toilet, vanity faucet, medicine cabinet, mirror, plumbing labor,
+    painting and patchwork, and electrical work. This contract itemizes all client-selected
+    materials. If the scope of work changes, any additional labor or materials must
+    be documented in a Change Order (CO) and may incur an additional charge—unless
+    the change is informational only and does not affect cost or build. This contract
+    itemizes all client-selected materials. If the scope of work changes, any additional
+    labor or materials must be documented in a Change Order (CO) and may incur an
+    additional charge—unless the change is informational only and does not affect
+    cost or labor.'
+  category_file: ignore
+  aliases:
+  - Bath Special Requests Project includes demolition and haul-away, installation
+    of new acrylic wall panels, a new tub, one grab bar, and a 4-shelf caddy in the
+    wet area. Outside the wet area, we will disconnect and reconnect a new vanity
+    (provided by us), install wainscoting over the existing tile, as well as basic
+    patching and painting, and install a recessed medicine cabinet provided by the
+    client. Project does not include a new toilet, flooring, or vent. Project to be
+    paid in cash.

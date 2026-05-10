@@ -48,6 +48,7 @@ To prevent filesystem errors, category filenames are automatically sanitized:
 | `brand` | String | Yes | Manufacturer name. |
 | `routing_tag` | String | Yes | Export logic: `IGNORE`, `WAREHOUSE`, `PROCURE`, or `WH_OR_PROCURE`. |
 | `oneclick_description` | String | Yes | The target string used for fuzzy matching. |
+| `aliases` | List[String] | No | Known alternative descriptions or typo variations to ensure perfect future matches. |
 | `printable` | Object | No | Determines if the item appears on the Client PDF. |
 
 ### The `printable` Object

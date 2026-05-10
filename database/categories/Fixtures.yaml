@@ -107,24 +107,6 @@
     description: Hydrorail
     dimensions: {}
     image_file: Kauai_1011-MB_1.final.png
-- id: LCNR-SS-SAN
-  sku: LCNR-SS-SAN
-  brand: BCI
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat
-    (900
-
-    Pound Capacity) Santorini White'
-  printable:
-    finish: Santorini White
-    description: Corner Hexagon Shower Seat
-    dimensions:
-      width: '28'
-      height: '20.25'
-      depth: '1.75'
-    image_file: lcnr-ss-san_l.jpg
 - id: UKD08
   sku: MISSING_SKU
   brand: UNIKOO

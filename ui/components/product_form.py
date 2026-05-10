@@ -95,16 +95,20 @@ class ProductFormWidget(QWidget):
         self.oneclick_entry = QLineEdit()
         add_core_field(5, "OneClick Desc *", self.oneclick_entry, "oneclick", is_unique=True)
         
+        self.aliases_entry = QLineEdit()
+        self.aliases_entry.setPlaceholderText("Alias 1 | Alias 2")
+        add_core_field(6, "Aliases (| separated)", self.aliases_entry, "aliases", is_unique=True)
+        
         self.routing_entry = QComboBox()
         self.routing_entry.addItems(["WAREHOUSE", "PROCURE", "WH_OR_PROCURE", "IGNORE"])
-        add_core_field(6, "Routing Tag *", self.routing_entry, "routing")
+        add_core_field(7, "Routing Tag *", self.routing_entry, "routing")
         
         self.cat_entry = QComboBox()
         self.cat_entry.setEditable(True)
         self.cat_entry.addItems(self._get_existing_categories())
         self.cat_entry.currentIndexChanged.connect(self._on_category_changed)
         self.cat_entry.editTextChanged.connect(lambda: self._on_category_changed(-1))
-        add_core_field(7, "Category File *", self.cat_entry, "cat")
+        add_core_field(8, "Category File *", self.cat_entry, "cat")
         
         core_group.setLayout(core_layout)
         layout.addWidget(core_group)
@@ -252,6 +256,12 @@ class ProductFormWidget(QWidget):
         self.purchase_link_entry.setText(str(data.get("purchase_link", "")))
         self.oneclick_entry.setText(str(data.get("oneclick_description", "")))
         
+        aliases = data.get("aliases", [])
+        if isinstance(aliases, list):
+            self.aliases_entry.setText(" | ".join(aliases))
+        else:
+            self.aliases_entry.setText(str(aliases))
+        
         routing = data.get("routing_tag", "WAREHOUSE")
         idx = self.routing_entry.findText(routing)
         if idx >= 0: self.routing_entry.setCurrentIndex(idx)
@@ -315,6 +325,13 @@ class ProductFormWidget(QWidget):
         if _get_if_active("routing"): data["routing_tag"] = self.routing_entry.currentText()
         if _get_if_active("purchase_link"): data["purchase_link"] = self.purchase_link_entry.text().strip()
         if _get_if_active("oneclick"): data["oneclick_description"] = self.oneclick_entry.text().strip()
+        
+        if _get_if_active("aliases"):
+            al_text = self.aliases_entry.text().strip()
+            if al_text:
+                data["aliases"] = [a.strip() for a in al_text.split("|") if a.strip()]
+            else:
+                data["aliases"] = []
         
         # Printable data
         printable_updates = {}
