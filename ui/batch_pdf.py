@@ -12,8 +12,8 @@ class QueueTableModel(QAbstractTableModel):
         self._data = data or []
         self._headers = ["Description", "Status"]
 
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole:
             item = self._data[index.row()]
             if index.column() == 0:
                 desc = item.get("raw_description", "")
@@ -22,14 +22,14 @@ class QueueTableModel(QAbstractTableModel):
                 return "Pending"
         return None
 
-    def rowCount(self, index=None):
+    def rowCount(self, parent=None):
         return len(self._data)
 
-    def columnCount(self, index=None):
+    def columnCount(self, parent=None):
         return len(self._headers)
 
-    def headerData(self, section, orientation, role):
-        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return self._headers[section]
         return None
 
@@ -65,7 +65,7 @@ class BatchPdfIngestWindow(QDialog):
         self.table_view = QTableView()
         self.table_model = QueueTableModel(self.unmatched_items)
         self.table_view.setModel(self.table_model)
-        self.table_view.setSelectionBehavior(QTableView.SelectRows)
+        self.table_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.table_view.clicked.connect(self.on_table_click)
         left_layout.addWidget(self.table_view)
         
@@ -98,25 +98,28 @@ class BatchPdfIngestWindow(QDialog):
     def on_table_click(self, index):
         item = self.table_model.get_item(index.row())
         if item:
+            extracted = item.get("_match", {}).get("extracted_fields") or {}
+            
             # Map LLM extractions to the expected database schema
             mapped_data = {
                 "id": "", # ID should be assigned manually by user
                 "sku": item.get("sku", ""),
-                "brand": item.get("brand", ""),
+                "brand": extracted.get("brand", ""),
                 "oneclick_description": item.get("raw_description", ""),
                 "routing_tag": "WAREHOUSE",
             }
             
             # Map LLM-extracted printable properties
             printable = {}
-            if item.get("finish"): printable["finish"] = item["finish"]
-            if item.get("base_item"): printable["description"] = item["base_item"]
-            if item.get("dimensions"): printable["dimensions"] = item["dimensions"]
+            if extracted.get("finish"): printable["finish"] = extracted["finish"]
+            if extracted.get("base_item"): printable["description"] = extracted["base_item"]
+            if extracted.get("dimensions"): printable["dimensions"] = extracted["dimensions"]
             
             if printable:
                 mapped_data["printable"] = printable
                 
-            self.form.load_data(mapped_data)
+            category = extracted.get("category", "")
+            self.form.load_data(mapped_data, category)
             
     def initiate_save(self):
         data, category = self.form.get_data()
