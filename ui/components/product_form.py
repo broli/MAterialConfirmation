@@ -1,7 +1,7 @@
 import os
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, 
                                QLabel, QLineEdit, QComboBox, 
-                               QPushButton, QFrame, QFileDialog, QScrollArea, QGroupBox, QGridLayout)
+                               QPushButton, QFrame, QFileDialog, QScrollArea, QGroupBox, QGridLayout, QCheckBox)
 from PySide6.QtCore import Qt, Signal
 
 class DimensionRow(QWidget):
@@ -35,11 +35,12 @@ class DimensionRow(QWidget):
         return None
 
 class ProductFormWidget(QWidget):
-    def __init__(self, parent=None, categories_path="database/categories"):
+    def __init__(self, parent=None, categories_path="database/categories", batch_mode=False):
         super().__init__(parent)
         self.categories_path = categories_path
-        self._build_ui()
+        self.batch_mode = batch_mode
         self.dim_rows = []
+        self._build_ui()
 
     def _build_ui(self):
         main_layout = QVBoxLayout(self)
@@ -55,43 +56,54 @@ class ProductFormWidget(QWidget):
         core_group = QGroupBox("Core Information")
         core_layout = QGridLayout()
         
-        core_layout.addWidget(QLabel("ID *"), 0, 0)
+        def add_core_field(row, label_text, widget, attr_prefix, is_unique=False):
+            if self.batch_mode and is_unique:
+                widget.hide()
+                return
+            if self.batch_mode:
+                cb = QCheckBox(label_text)
+                setattr(self, f"{attr_prefix}_cb", cb)
+                core_layout.addWidget(cb, row, 0)
+                if isinstance(widget, QLineEdit):
+                    widget.textChanged.connect(lambda text, c=cb: c.setChecked(True))
+                elif isinstance(widget, QComboBox):
+                    widget.currentIndexChanged.connect(lambda idx, c=cb: c.setChecked(True))
+                    if widget.isEditable():
+                        widget.editTextChanged.connect(lambda text, c=cb: c.setChecked(True))
+            else:
+                lbl = QLabel(label_text)
+                setattr(self, f"{attr_prefix}_lbl", lbl)
+                core_layout.addWidget(lbl, row, 0)
+            core_layout.addWidget(widget, row, 1)
+
         self.id_entry = QLineEdit()
-        core_layout.addWidget(self.id_entry, 0, 1)
+        add_core_field(0, "ID *", self.id_entry, "id", is_unique=True)
         
-        core_layout.addWidget(QLabel("SKU *"), 1, 0)
         self.sku_entry = QLineEdit()
-        core_layout.addWidget(self.sku_entry, 1, 1)
+        add_core_field(1, "SKU *", self.sku_entry, "sku")
         
-        core_layout.addWidget(QLabel("Brand *"), 2, 0)
         self.brand_entry = QLineEdit()
-        core_layout.addWidget(self.brand_entry, 2, 1)
+        add_core_field(2, "Brand *", self.brand_entry, "brand")
         
-        core_layout.addWidget(QLabel("Provider"), 3, 0)
         self.provider_entry = QLineEdit()
-        core_layout.addWidget(self.provider_entry, 3, 1)
+        add_core_field(3, "Provider", self.provider_entry, "provider")
         
-        core_layout.addWidget(QLabel("Purchase Link"), 4, 0)
         self.purchase_link_entry = QLineEdit()
-        core_layout.addWidget(self.purchase_link_entry, 4, 1)
+        add_core_field(4, "Purchase Link", self.purchase_link_entry, "purchase_link")
         
-        core_layout.addWidget(QLabel("OneClick Desc *"), 5, 0)
         self.oneclick_entry = QLineEdit()
-        core_layout.addWidget(self.oneclick_entry, 5, 1)
+        add_core_field(5, "OneClick Desc *", self.oneclick_entry, "oneclick", is_unique=True)
         
-        # Dropdowns
-        core_layout.addWidget(QLabel("Routing Tag *"), 6, 0)
         self.routing_entry = QComboBox()
         self.routing_entry.addItems(["WAREHOUSE", "PROCURE", "WH_OR_PROCURE", "IGNORE"])
-        core_layout.addWidget(self.routing_entry, 6, 1)
+        add_core_field(6, "Routing Tag *", self.routing_entry, "routing")
         
-        core_layout.addWidget(QLabel("Category File *"), 7, 0)
         self.cat_entry = QComboBox()
         self.cat_entry.setEditable(True)
         self.cat_entry.addItems(self._get_existing_categories())
         self.cat_entry.currentIndexChanged.connect(self._on_category_changed)
         self.cat_entry.editTextChanged.connect(lambda: self._on_category_changed(-1))
-        core_layout.addWidget(self.cat_entry, 7, 1)
+        add_core_field(7, "Category File *", self.cat_entry, "cat")
         
         core_group.setLayout(core_layout)
         layout.addWidget(core_group)
@@ -101,20 +113,38 @@ class ProductFormWidget(QWidget):
         print_layout = QVBoxLayout()
         
         f_layout = QHBoxLayout()
-        f_layout.addWidget(QLabel("Finish:"))
-        self.finish_entry = QLineEdit()
-        f_layout.addWidget(self.finish_entry)
+        if self.batch_mode:
+            self.finish_cb = QCheckBox("Finish:")
+            f_layout.addWidget(self.finish_cb)
+            self.finish_entry = QLineEdit()
+            self.finish_entry.textChanged.connect(lambda t: self.finish_cb.setChecked(True))
+            f_layout.addWidget(self.finish_entry)
+        else:
+            f_layout.addWidget(QLabel("Finish:"))
+            self.finish_entry = QLineEdit()
+            f_layout.addWidget(self.finish_entry)
         print_layout.addLayout(f_layout)
         
         d_layout = QHBoxLayout()
-        d_layout.addWidget(QLabel("Description:"))
-        self.desc_entry = QLineEdit()
-        d_layout.addWidget(self.desc_entry)
+        if self.batch_mode:
+            self.desc_cb = QCheckBox("Description:")
+            d_layout.addWidget(self.desc_cb)
+            self.desc_entry = QLineEdit()
+            self.desc_entry.textChanged.connect(lambda t: self.desc_cb.setChecked(True))
+            d_layout.addWidget(self.desc_entry)
+        else:
+            d_layout.addWidget(QLabel("Description:"))
+            self.desc_entry = QLineEdit()
+            d_layout.addWidget(self.desc_entry)
         print_layout.addLayout(d_layout)
         
         # Dimensions
         self.dims_container = QVBoxLayout()
-        print_layout.addWidget(QLabel("Dimensions:"))
+        if self.batch_mode:
+            self.dims_cb = QCheckBox("Dimensions (Overwrite All):")
+            print_layout.addWidget(self.dims_cb)
+        else:
+            print_layout.addWidget(QLabel("Dimensions:"))
         print_layout.addLayout(self.dims_container)
         
         btn_add_dim = QPushButton("+ Add Dimension")
@@ -122,26 +152,30 @@ class ProductFormWidget(QWidget):
         print_layout.addWidget(btn_add_dim)
         
         # Image
-        img_layout = QHBoxLayout()
-        img_layout.addWidget(QLabel("Image File:"))
-        self.image_entry = QLineEdit()
-        img_layout.addWidget(self.image_entry)
-        btn_browse = QPushButton("Browse")
-        btn_browse.clicked.connect(self._browse_image)
-        img_layout.addWidget(btn_browse)
-        print_layout.addLayout(img_layout)
-        
-        # Image Preview
-        self.image_preview_label = QLabel("No Image")
-        self.image_preview_label.setAlignment(Qt.AlignCenter)
-        self.image_preview_label.setStyleSheet("border: 1px dashed #555; background-color: #1e1e1e; color: #888;")
-        self.image_preview_label.setFixedSize(150, 150)
-        
-        preview_layout = QHBoxLayout()
-        preview_layout.addWidget(self.image_preview_label)
-        preview_layout.addStretch()
-        print_layout.addLayout(preview_layout)
-        
+        if not self.batch_mode:
+            img_layout = QHBoxLayout()
+            img_layout.addWidget(QLabel("Image File:"))
+            self.image_entry = QLineEdit()
+            img_layout.addWidget(self.image_entry)
+            btn_browse = QPushButton("Browse")
+            btn_browse.clicked.connect(self._browse_image)
+            img_layout.addWidget(btn_browse)
+            print_layout.addLayout(img_layout)
+            
+            # Image Preview
+            self.image_preview_label = QLabel("No Image")
+            self.image_preview_label.setAlignment(Qt.AlignCenter)
+            self.image_preview_label.setStyleSheet("border: 1px dashed #555; background-color: #1e1e1e; color: #888;")
+            self.image_preview_label.setFixedSize(150, 150)
+            
+            preview_layout = QHBoxLayout()
+            preview_layout.addWidget(self.image_preview_label)
+            preview_layout.addStretch()
+            print_layout.addLayout(preview_layout)
+        else:
+            self.image_entry = QLineEdit()
+            self.image_preview_label = QLabel()
+            
         print_group.setLayout(print_layout)
         layout.addWidget(print_group)
         
@@ -166,6 +200,10 @@ class ProductFormWidget(QWidget):
     def add_dimension_row(self, key="", value=""):
         row = DimensionRow(key, value)
         row.remove_requested.connect(self._remove_dimension_row)
+        if self.batch_mode and hasattr(self, 'dims_cb'):
+            self.dims_cb.setChecked(True)
+            row.key_edit.textChanged.connect(lambda t: self.dims_cb.setChecked(True))
+            row.value_edit.textChanged.connect(lambda t: self.dims_cb.setChecked(True))
         self.dims_container.addWidget(row)
         self.dim_rows.append(row)
 
@@ -237,8 +275,22 @@ class ProductFormWidget(QWidget):
                 self._remove_dimension_row(row)
                 
             dims = printable.get("dimensions", {})
-            for k, v in dims.items():
-                self.add_dimension_row(k, str(v))
+            if isinstance(dims, str):
+                dims_str = dims.strip()
+                if not dims_str:
+                    dims = {}
+                else:
+                    import ast
+                    try:
+                        dims = ast.literal_eval(dims_str)
+                        if not isinstance(dims, dict):
+                            dims = {"raw": str(dims)}
+                    except Exception:
+                        dims = {"raw": dims_str}
+                    
+            if isinstance(dims, dict):
+                for k, v in dims.items():
+                    self.add_dimension_row(k, str(v))
         else:
             self.finish_entry.clear()
             self.desc_entry.clear()
@@ -248,34 +300,39 @@ class ProductFormWidget(QWidget):
                 self._remove_dimension_row(row)
 
     def get_data(self):
-        data = {
-            "id": self.id_entry.text().strip(),
-            "sku": self.sku_entry.text().strip(),
-            "brand": self.brand_entry.text().strip(),
-            "provider": self.provider_entry.text().strip(),
-            "routing_tag": self.routing_entry.currentText(),
-            "purchase_link": self.purchase_link_entry.text().strip(),
-            "oneclick_description": self.oneclick_entry.text().strip(),
-        }
+        data = {}
+        
+        def _get_if_active(attr_prefix):
+            if not self.batch_mode: return True
+            cb = getattr(self, f"{attr_prefix}_cb", None)
+            return cb and cb.isChecked()
+
+        if _get_if_active("id"): data["id"] = self.id_entry.text().strip()
+        if _get_if_active("sku"): data["sku"] = self.sku_entry.text().strip()
+        if _get_if_active("brand"): data["brand"] = self.brand_entry.text().strip()
+        if _get_if_active("provider"): data["provider"] = self.provider_entry.text().strip()
+        if _get_if_active("routing"): data["routing_tag"] = self.routing_entry.currentText()
+        if _get_if_active("purchase_link"): data["purchase_link"] = self.purchase_link_entry.text().strip()
+        if _get_if_active("oneclick"): data["oneclick_description"] = self.oneclick_entry.text().strip()
         
         # Printable data
-        finish = self.finish_entry.text().strip()
-        desc = self.desc_entry.text().strip()
-        img = self.image_entry.text().strip()
+        printable_updates = {}
         
-        dims = {}
-        for row in self.dim_rows:
-            res = row.get_data()
-            if res:
-                dims[res[0]] = res[1]
-                
-        # Only include printable if there's actual data
-        if finish or desc or img or dims:
-            data["printable"] = {
-                "finish": finish,
-                "description": desc,
-                "dimensions": dims,
-                "image_file": img # This could be absolute path if browsed, handled by ProductService
-            }
+        if _get_if_active("finish"): printable_updates["finish"] = self.finish_entry.text().strip()
+        if _get_if_active("desc"): printable_updates["description"] = self.desc_entry.text().strip()
+        if not self.batch_mode: printable_updates["image_file"] = self.image_entry.text().strip()
+        
+        if not self.batch_mode or (hasattr(self, 'dims_cb') and self.dims_cb.isChecked()):
+            dims = {}
+            for row in self.dim_rows:
+                res = row.get_data()
+                if res:
+                    dims[res[0]] = res[1]
+            # In batch mode, we explicitly set dims (even if empty to wipe it), or if not empty
+            if not self.batch_mode or self.dims_cb.isChecked():
+                printable_updates["dimensions"] = dims
             
-        return data, self.cat_entry.currentText()
+        if printable_updates:
+            data["printable"] = printable_updates
+            
+        return data, self.cat_entry.currentText() if _get_if_active("cat") else None

@@ -228,7 +228,7 @@ class BulkIngestWorker(QObject):
                     "printable": {
                         "description": res.base_item or desc,
                         "finish": res.finish or "",
-                        "dimensions": str(res.dimensions) if res.dimensions else ""
+                        "dimensions": dict(res.dimensions) if res.dimensions else {}
                     }
                 }
                 

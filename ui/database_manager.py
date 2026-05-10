@@ -83,29 +83,25 @@ class CatalogTableModel(QAbstractTableModel):
 
 
 class BatchEditDialog(QDialog):
-    def __init__(self, parent, selected_count):
+    def __init__(self, parent, selected_count, categories_path):
         super().__init__(parent)
         self.setWindowTitle(f"Batch Edit ({selected_count} items)")
-        self.resize(400, 250)
+        self.resize(600, 700)
         self.result_data = {}
+        self.result_category = None
         
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Select a field to modify for all selected items:"))
         
-        form_layout = QHBoxLayout()
-        self.field_combo = QComboBox()
-        self.field_combo.addItems(["brand", "category_file", "routing_tag"])
-        form_layout.addWidget(self.field_combo)
+        header = QLabel("<b>Check the fields you want to apply to all selected items.</b><br><i>Checked but empty fields will explicitly clear the data for those items.</i>")
+        header.setStyleSheet("color: #ff9800; font-size: 13px; margin-bottom: 10px;")
+        layout.addWidget(header)
         
-        self.value_entry = QLineEdit()
-        self.value_entry.setPlaceholderText("New value...")
-        form_layout.addWidget(self.value_entry)
-        
-        layout.addLayout(form_layout)
+        self.form = ProductFormWidget(self, categories_path=categories_path, batch_mode=True)
+        layout.addWidget(self.form)
         
         footer = QHBoxLayout()
         btn_apply = QPushButton("Apply to All")
-        btn_apply.setStyleSheet("background-color: #f57c00; color: white; font-weight: bold;")
+        btn_apply.setStyleSheet("background-color: #f57c00; color: white; font-weight: bold; padding: 6px 15px;")
         btn_apply.clicked.connect(self.apply)
         btn_cancel = QPushButton("Cancel")
         btn_cancel.clicked.connect(self.reject)
@@ -116,16 +112,15 @@ class BatchEditDialog(QDialog):
         layout.addLayout(footer)
         
     def apply(self):
-        field = self.field_combo.currentText()
-        val = self.value_entry.text().strip()
-        if not val:
-            QMessageBox.warning(self, "Warning", "Value cannot be empty.")
+        data, cat = self.form.get_data()
+        
+        # Require at least one field
+        if not data and not cat:
+            QMessageBox.warning(self, "Warning", "No fields selected for batch edit.")
             return
             
-        if field == "category_file" and not val.endswith(".yaml"):
-            val += ".yaml"
-            
-        self.result_data = {field: val}
+        self.result_data = data
+        self.result_category = cat
         self.accept()
 
 
@@ -329,25 +324,34 @@ class DatabaseManager(QDialog):
             QMessageBox.warning(self, "Warning", "Select items to batch edit.")
             return
             
-        dlg = BatchEditDialog(self, len(items))
+        cat_path, ass_path = self.get_current_paths()
+        dlg = BatchEditDialog(self, len(items), cat_path)
         if dlg.exec() == QDialog.DialogCode.Accepted:
-            field = list(dlg.result_data.keys())[0]
-            val = dlg.result_data[field]
-            
-            cat_path, ass_path = self.get_current_paths()
+            updates = dlg.result_data
+            new_cat = dlg.result_category
             
             # Apply to all
             for item in items:
                 old_cat = item.get("category_file", "")
                 
-                # Apply change
-                item[field] = val
+                # Merge core fields
+                for k, v in updates.items():
+                    if k == "printable":
+                        if "printable" not in item:
+                            item["printable"] = {}
+                        for pk, pv in updates["printable"].items():
+                            item["printable"][pk] = pv
+                    else:
+                        item[k] = v
                 
-                new_cat = item.get("category_file", "")
+                target_cat = new_cat if new_cat else item.get("category_file", "")
+                if target_cat and not target_cat.endswith(".yaml"):
+                    target_cat += ".yaml"
+                    
+                item["category_file"] = target_cat
                 
-                # If category changed, we might need to delete old YAML if it was the only item
-                # For simplicity, we just upsert. The ProductService manages file writing.
-                self.product_service.upsert_to_yaml(item, new_cat, cat_path, ass_path)
+                # Upsert uses ProductService which will handle the save
+                self.product_service.upsert_to_yaml(item, target_cat, cat_path, ass_path)
             
             self._refresh_loaders()
             QMessageBox.information(self, "Success", f"Batch edit applied to {len(items)} items.")
