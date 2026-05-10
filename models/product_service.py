@@ -54,17 +54,21 @@ class ProductService:
         assets_path : str
             Absolute path to the ``database/assets/`` directory (used for copying images).
         """
+        if not cat_file:
+            raise ValueError("cat_file (category filename) is required for upsert operation.")
+
         # Handle absolute paths for images
         if assets_path and "printable" in product:
             img = product["printable"].get("image_file", "")
             if img and os.path.isabs(img) and os.path.exists(img):
                 new_img = ProductService.copy_image_to_assets(img, assets_path)
                 product["printable"]["image_file"] = new_img
+        
+        cat_str = str(cat_file)
+        if not cat_str.endswith(".yaml"):
+            cat_str += ".yaml"
 
-        if not cat_file.endswith(".yaml"):
-            cat_file += ".yaml"
-
-        target = os.path.join(categories_path, cat_file)
+        target = os.path.join(categories_path, cat_str)
         existing: list = []
         if os.path.exists(target):
             with open(target, "r", encoding="utf-8") as f:
@@ -82,9 +86,14 @@ class ProductService:
         """
         Find the next available integer ID in a category YAML file.
         """
-        if not cat_file.endswith(".yaml"):
-            cat_file += ".yaml"
-        target = os.path.join(categories_path, cat_file)
+        if not cat_file:
+            return "1"
+            
+        cat_str = str(cat_file)
+        if not cat_str.endswith(".yaml"):
+            cat_str += ".yaml"
+            
+        target = os.path.join(categories_path, cat_str)
         if not os.path.exists(target):
             return "1"
 

@@ -36,7 +36,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='PKB Material Confirmation System_v3.2',
+    name='PKB Material Confirmation System_v4.0',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -16,8 +16,7 @@ class QueueTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             item = self._data[index.row()]
             if index.column() == 0:
-                desc = item.get("raw_description", "")
-                return desc if len(desc) < 40 else desc[:37] + "..."
+                return item.get("raw_description", "")
             elif index.column() == 1:
                 return "Pending"
         return None
@@ -66,6 +65,7 @@ class BatchPdfIngestWindow(QDialog):
         self.table_model = QueueTableModel(self.unmatched_items)
         self.table_view.setModel(self.table_model)
         self.table_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.table_view.setColumnWidth(0, 400)
         self.table_view.clicked.connect(self.on_table_click)
         left_layout.addWidget(self.table_view)
         
@@ -128,11 +128,15 @@ class BatchPdfIngestWindow(QDialog):
             QMessageBox.warning(self, "Validation Error", "ID is required.")
             return
             
+        if not category:
+            QMessageBox.warning(self, "Validation Error", "Category is required.")
+            return
+            
         try:
             from models.product_service import ProductService
             categories_path = os.path.join(self.controller.db_loader.base_path, "categories")
             assets_path = os.path.join(self.controller.db_loader.base_path, "assets")
-            ProductService.upsert_to_yaml(data, category, categories_path, assets_path)
+            ProductService.upsert_to_yaml(data, str(category), categories_path, assets_path)
             self.db_modified = True
             QMessageBox.information(self, "Success", "Item saved successfully!")
             

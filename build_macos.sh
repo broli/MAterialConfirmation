@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PKB Material Confirmation System - macOS "One-Click" Build Script (v3.2)
+# PKB Material Confirmation System - macOS "One-Click" Build Script (v4.0)
 # This script automates: Clone -> Environment Setup -> Build -> Cleanup
 # Requirement: macOS with Python 3 installed.
 

@@ -17,25 +17,32 @@ class CatalogTableModel(QAbstractTableModel):
         super().__init__()
         self._catalog = catalog or {}
         self._data = []
-        self._headers = ["Category", "ID", "SKU", "Brand", "Routing", "Description"]
+        self._headers = ["ID", "SKU", "Routing", "Brand", "Category", "Provider", "Finish", "Image File", "Purchase Link", "Dimensions", "Print Desc", "OneClick Desc"]
         self._update_internal_data()
 
     def _update_internal_data(self):
         self._data = []
         for item_id, item in self._catalog.items():
-            cat = item.get("category_file", "").replace(".yaml", "")
-            sku = item.get("sku", "UNKNOWN")
-            brand = item.get("brand", "UNKNOWN")
-            routing = item.get("routing_tag", "UNKNOWN")
-            desc = item.get("oneclick_description", "")
-            
+            printable = item.get("printable", {})
+            dims = printable.get("dimensions", {})
+            if isinstance(dims, dict):
+                dims_str = ", ".join([f"{k}: {v}" for k, v in dims.items()])
+            else:
+                dims_str = str(dims)
+
             self._data.append({
-                "category": cat,
                 "id": item_id,
-                "sku": sku,
-                "brand": brand,
-                "routing": routing,
-                "description": desc,
+                "sku": item.get("sku", "UNKNOWN"),
+                "routing": item.get("routing_tag", "UNKNOWN"),
+                "brand": item.get("brand", "UNKNOWN"),
+                "category": item.get("category_file", "").replace(".yaml", ""),
+                "provider": item.get("provider", ""),
+                "finish": printable.get("finish", ""),
+                "image_file": printable.get("image_file", ""),
+                "purchase_link": item.get("purchase_link", ""),
+                "dimensions": dims_str,
+                "print_desc": printable.get("description", ""),
+                "oneclick": item.get("oneclick_description", ""),
                 "full_item": item
             })
 
@@ -56,14 +63,20 @@ class CatalogTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             row = self._data[index.row()]
             col = index.column()
-            if col == 0: return row["category"]
-            elif col == 1: return row["id"]
-            elif col == 2: return row["sku"]
+            if col == 0: return row["id"]
+            elif col == 1: return row["sku"]
+            elif col == 2: return row["routing"]
             elif col == 3: return row["brand"]
-            elif col == 4: return row["routing"]
-            elif col == 5: 
-                desc = row["description"]
-                return desc if len(desc) < 80 else desc[:77] + "..."
+            elif col == 4: return row["category"]
+            elif col == 5: return row["provider"]
+            elif col == 6: return row["finish"]
+            elif col == 7: return row["image_file"]
+            elif col == 8: return row["purchase_link"]
+            elif col == 9: return row["dimensions"]
+            elif col == 10: 
+                return row["print_desc"]
+            elif col == 11: 
+                return row["oneclick"]
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
@@ -83,7 +96,7 @@ class CatalogTableModel(QAbstractTableModel):
 
 
 class BatchEditDialog(QDialog):
-    def __init__(self, parent, selected_count, categories_path):
+    def __init__(self, parent, selected_count, categories_path, dropdown_categories_path=None):
         super().__init__(parent)
         self.setWindowTitle(f"Batch Edit ({selected_count} items)")
         self.resize(600, 700)
@@ -96,7 +109,7 @@ class BatchEditDialog(QDialog):
         header.setStyleSheet("color: #ff9800; font-size: 13px; margin-bottom: 10px;")
         layout.addWidget(header)
         
-        self.form = ProductFormWidget(self, categories_path=categories_path, batch_mode=True)
+        self.form = ProductFormWidget(self, categories_path=categories_path, batch_mode=True, dropdown_categories_path=dropdown_categories_path)
         layout.addWidget(self.form)
         
         footer = QHBoxLayout()
@@ -125,20 +138,23 @@ class BatchEditDialog(QDialog):
 
 
 class ProductEditDialog(QDialog):
-    def __init__(self, parent, product_service, categories_path, assets_path, product=None):
+    def __init__(self, parent, product_service, categories_path, assets_path, product=None, dropdown_categories_path=None):
         super().__init__(parent)
         self.product_service = product_service
         self.categories_path = categories_path
         self.assets_path = assets_path
         self.product = product or {}
         self.is_new = product is None
+        self.original_category = self.product.get("category_file", "")
+        if self.original_category and not self.original_category.endswith(".yaml"):
+            self.original_category += ".yaml"
         
         self.setWindowTitle("Add/Edit Product" if self.is_new else f"Edit Product: {self.product.get('id')}")
         self.resize(600, 700)
         
         layout = QVBoxLayout(self)
         
-        self.form = ProductFormWidget(self, categories_path=self.categories_path)
+        self.form = ProductFormWidget(self, categories_path=self.categories_path, dropdown_categories_path=dropdown_categories_path)
         self.form.load_data(self.product, self.product.get("category_file", ""))
         layout.addWidget(self.form)
         
@@ -155,13 +171,23 @@ class ProductEditDialog(QDialog):
     def save(self):
         data, category = self.form.get_data()
         
+        if not category:
+            QMessageBox.warning(self, "Validation Error", "Category is required.")
+            return
+
+        target_cat = str(category)
+        if target_cat and not target_cat.endswith(".yaml"):
+            target_cat += ".yaml"
+
         if not data.get("id"):
-            from models.product_service import ProductService
-            data["id"] = ProductService.get_next_id(category, self.categories_path)
+            data["id"] = ProductService.get_next_id(target_cat, self.categories_path)
             self.form.id_entry.setText(data["id"])
             
         try:
-            self.product_service.upsert_to_yaml(data, category, self.categories_path, self.assets_path)
+            if not self.is_new and self.original_category and self.original_category != target_cat:
+                self.product_service.remove_from_yaml(data.get("id"), self.original_category, self.categories_path)
+
+            self.product_service.upsert_to_yaml(data, target_cat, self.categories_path, self.assets_path)
             self.accept()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save: {e}")
@@ -182,6 +208,7 @@ class DatabaseManager(QDialog):
         
         self.setWindowTitle("Catalog Manager (Qt)" if not picker_mode else "Select Item")
         self.resize(1100, 750)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowMaximizeButtonHint)
         
         self.main_layout = QVBoxLayout(self)
         self._build_browser_view()
@@ -260,8 +287,11 @@ class DatabaseManager(QDialog):
         self.table_view.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection) # Multi-select
         self.table_view.setAlternatingRowColors(True)
         self.table_view.setSortingEnabled(True)
-        self.table_view.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Stretch)
+        self.table_view.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        self.table_view.setHorizontalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.table_view.doubleClicked.connect(self.on_row_double_click)
+        self.table_view.setColumnWidth(10, 300)
+        self.table_view.setColumnWidth(11, 400)
         self.main_layout.addWidget(self.table_view)
         
         # Action Footer
@@ -325,7 +355,8 @@ class DatabaseManager(QDialog):
             return
             
         cat_path, ass_path = self.get_current_paths()
-        dlg = BatchEditDialog(self, len(items), cat_path)
+        prod_cat_path = os.path.join("database", "categories")
+        dlg = BatchEditDialog(self, len(items), cat_path, dropdown_categories_path=prod_cat_path)
         if dlg.exec() == QDialog.DialogCode.Accepted:
             updates = dlg.result_data
             new_cat = dlg.result_category
@@ -333,6 +364,8 @@ class DatabaseManager(QDialog):
             # Apply to all
             for item in items:
                 old_cat = item.get("category_file", "")
+                if old_cat and not old_cat.endswith(".yaml"):
+                    old_cat += ".yaml"
                 
                 # Merge core fields
                 for k, v in updates.items():
@@ -349,6 +382,9 @@ class DatabaseManager(QDialog):
                     target_cat += ".yaml"
                     
                 item["category_file"] = target_cat
+                
+                if old_cat and target_cat and old_cat != target_cat:
+                    self.product_service.remove_from_yaml(item.get("id"), old_cat, cat_path)
                 
                 # Upsert uses ProductService which will handle the save
                 self.product_service.upsert_to_yaml(item, target_cat, cat_path, ass_path)
@@ -372,33 +408,23 @@ class DatabaseManager(QDialog):
             cat_file = item.get("category_file", "UNKNOWN.yaml")
             self.product_service.upsert_to_yaml(item, cat_file, prod_cat_path, prod_ass_path)
             
-            # 2. Remove from staging (by deleting it from the staging YAML)
-            stg_file_path = os.path.join(stg_cat_path, cat_file)
-            if os.path.exists(stg_file_path):
-                import yaml
-                with open(stg_file_path, "r", encoding="utf-8") as f:
-                    docs = list(yaml.safe_load_all(f))
-                
-                new_docs = [d for d in docs if d and d.get("id") != item["id"]]
-                
-                if new_docs:
-                    with open(stg_file_path, "w", encoding="utf-8") as f:
-                        yaml.safe_dump_all(new_docs, f, sort_keys=False)
-                else:
-                    os.remove(stg_file_path) # Delete empty file
+            # 2. Remove from staging
+            self.product_service.remove_from_yaml(item["id"], cat_file, stg_cat_path)
                     
         self._refresh_loaders()
         QMessageBox.information(self, "Success", f"Approved {len(items)} items to production.")
 
     def show_add_form(self):
         cat_path, ass_path = self.get_current_paths()
-        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path)
+        prod_cat_path = os.path.join("database", "categories")
+        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, dropdown_categories_path=prod_cat_path)
         if dlg.exec():
             self._refresh_loaders()
 
     def show_edit_form(self, item_full):
         cat_path, ass_path = self.get_current_paths()
-        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, item_full)
+        prod_cat_path = os.path.join("database", "categories")
+        dlg = ProductEditDialog(self, self.product_service, cat_path, ass_path, item_full, dropdown_categories_path=prod_cat_path)
         if dlg.exec():
             self._refresh_loaders()
 

@@ -35,9 +35,10 @@ class DimensionRow(QWidget):
         return None
 
 class ProductFormWidget(QWidget):
-    def __init__(self, parent=None, categories_path="database/categories", batch_mode=False):
+    def __init__(self, parent=None, categories_path="database/categories", batch_mode=False, dropdown_categories_path=None):
         super().__init__(parent)
         self.categories_path = categories_path
+        self.dropdown_categories_path = dropdown_categories_path or categories_path
         self.batch_mode = batch_mode
         self.dim_rows = []
         self._build_ui()
@@ -184,8 +185,8 @@ class ProductFormWidget(QWidget):
         main_layout.addWidget(scroll)
 
     def _get_existing_categories(self):
-        if not os.path.exists(self.categories_path): return []
-        return [f for f in os.listdir(self.categories_path) if f.endswith('.yaml')]
+        if not os.path.exists(self.dropdown_categories_path): return []
+        return [f for f in os.listdir(self.dropdown_categories_path) if f.endswith('.yaml')]
 
     def _on_category_changed(self, index):
         # Auto-fill ID if empty when category changes
@@ -194,7 +195,7 @@ class ProductFormWidget(QWidget):
             if not cat_file: return
             
             from models.product_service import ProductService
-            next_id = ProductService.get_next_id(cat_file, self.categories_path)
+            next_id = ProductService.get_next_id(cat_file, self.dropdown_categories_path)
             self.id_entry.setText(next_id)
 
     def add_dimension_row(self, key="", value=""):

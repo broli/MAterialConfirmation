@@ -2,13 +2,13 @@ param (
     [switch]$nobuild
 )
 
-# PKB Material Confirmation System - Deployment Script (v3.2)
+# PKB Material Confirmation System - Deployment Script (v4.0)
 
 $sourceDir = "C:\Users\carlo\Desktop\Programing\Python\MAterialConfirmation"
 $destDir = "C:\Users\carlo\Carpet Wagon\Bath PC - PKB Material Confirmation System"
 
 Write-Host "--------------------------------------------------"
-Write-Host "Starting Deployment of v3.2"
+Write-Host "Starting Deployment of v4.0"
 Write-Host "Source: $sourceDir"
 Write-Host "Target: $destDir"
 if ($nobuild) { Write-Host "Build Mode: SKIPPED (--nobuild)" }
@@ -26,7 +26,7 @@ if (!$nobuild) {
 }
 
 # 1. Copy EXE
-$exeName = "PKB Material Confirmation System_v3.2.exe"
+$exeName = "PKB Material Confirmation System_v4.0.exe"
 $sourceExe = Join-Path $sourceDir "dist\$exeName"
 $targetExe = Join-Path $destDir "PKB Material Confirmation System.exe"
 
@@ -51,5 +51,5 @@ foreach ($doc in $docs) {
 }
 
 Write-Host "--------------------------------------------------"
-Write-Host "Deployment Successful! v3.2 is now live."
+Write-Host "Deployment Successful! v4.0 is now live."
 Write-Host "--------------------------------------------------"

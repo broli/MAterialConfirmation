@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
         self.controller = controller
         self.ingestion_dialog = None
         
-        self.setWindowTitle("PKB ERP Command Center v3.2 (Qt)")
+        self.setWindowTitle("PKB ERP Command Center v4.0 (Qt)")
         self.setMinimumSize(1200, 800)
         
         # Load window geometry from config
