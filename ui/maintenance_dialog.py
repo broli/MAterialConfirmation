@@ -122,7 +122,7 @@ class MaintenanceDialog(QDialog):
         d_layout.addWidget(list_widget)
         
         btn_review = QPushButton("Review Selected")
-        def _review():
+        def _review(*args):
             idx = list_widget.currentRow()
             if idx < 0: return
             
@@ -153,10 +153,14 @@ class MaintenanceDialog(QDialog):
                     if not cat1.endswith(".yaml"): cat1 += ".yaml"
                     self.product_service.remove_from_yaml(item1.get("id"), cat1, os.path.join("database", "categories"))
                     
+                    if id1 in self.catalog:
+                        del self.catalog[id1]
+                    
                     QMessageBox.information(dlg, "Success", f"Merged {id1} into {prod_id} as alias.")
                     dlg.accept() # Close the list dialog so user can refresh
                     
         btn_review.clicked.connect(_review)
+        list_widget.itemDoubleClicked.connect(_review)
         d_layout.addWidget(btn_review)
         
         btn_close = QPushButton("Cancel")

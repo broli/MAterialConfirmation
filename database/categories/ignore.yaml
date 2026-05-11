@@ -1,35 +1,3 @@
-- id: '1'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: "Bath Bathroom Labor One Piece Demo/Install\nDemolition, Disposal,\
-    \ and haul away of existing wet space. Replace P-Trap, replace necessary wet \n\
-    space plumbing. Includes installation of moisture resistant backerboard and selected\
-    \ shower base \nor tub, walls, fixtures, and accessories. Adjust height of showerhead"
-- id: '2'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: "Bath Bathroom Labor Tub Install Kit\nTUB INSTALL KIT - Including:\
-    \ 12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow,\
-    \ 1 Corrugated sheet \ntemplate, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 1\
-    \ 1/2\", 2 LF. ABS-DWV pipe 1 1/2�, 1 pc-10 L.F Pex A white/ Pex A red, 2 Corner\
-    \ Reinforcement, Drain Brass Receptor, 8 pcs. Everflow \nFPXSL012 1/2� pex, F1960\
-    \ sleeve w/ stop, Color Coordinated: 3 Silicone, Color Coordinated: Matching Overflow\
-    \ Set, Wet-Area Plywood 5/8x4x8, 1 2x4 wood"
-- id: '3'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: Bath Vanities Vanity Labor Remove & Replace/Install Large
-    Vanity Up To 48" Includes demolition, disposal & haul away, and hook-ups of faucet.
-    (Does not include patching and painting or materials)
 - id: '4'
   sku: NaN
   brand: Labor
@@ -37,14 +5,6 @@
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Bath Flooring Pull Up Tile Pull Up of Tile (Per Square Foot)
-- id: '5'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: Contractor Tasks - NEW Miscellaneous Install (Labor Only)
-    Client to provide Material
 - id: '6'
   sku: NaN
   brand: Labor
@@ -64,26 +24,6 @@
   oneclick_description: Contractor Tasks - NEW Electrical Replace "Like for Like"
     Light Fixture Using Existing Electrical Does Not Include Additional Electrical
     / Patch & Paint
-- id: '8'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: Outside Partner Miscellaneous Remove & Install "Like for Like"
-    Size Labor Only - No Electrical or Patch Work Included
-- id: '9'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: "Outside Partner Painting / Patch Basic Patch & Paint Bathroom\
-    \ Walls & Ceiling (Does Not Include Doors & Door Casings)\nIncludes Patching any\
-    \ wall damages from Demolition, as well as labor for Priming & Painting. \nCustomer\
-    \ must supply paint and any applicable primer at time of installation. If Materials\
-    \ are not  available at time of installation customer is subject to a $150 trip\
-    \ surcharge"
 - id: '10'
   sku: NaN
   brand: Labor
@@ -112,53 +52,6 @@
   purchase_link: ''
   oneclick_description: Outside Partner Plumbing Move Vanity Drain (Up to 24") Moving
     Drain, Shut-Off Valves & Rerouting Plumbing Line (If Applicable)
-- id: '13'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: 'Outside Partner Miscellaneous Remove & Install "Like for
-    Like" Size Medicine Cabinet
-
-    Labor Only - No Electrical or Patch Work Included'
-- id: '14'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling
-    with lighting Ceiling with Lighting Less than 80sqft
-- id: '15'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: "Bath Bathroom Labor Miscellaneous Construction Miscellaneous\n\
-    Pull-Up of Tile outside of Wet Space (Min. \n(Does Not Include Drywall, Painting\
-    \ & Patching Work)"
-- id: '16'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: 'Bath Bathroom Labor Miscellaneous Construction Painting Drywall
-
-    Installation - Includes Taping, Patching & Texture (By SqFt)'
-- id: '17'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: 'Bath Bathroom Labor Miscellaneous Construction Construction
-
-    Related Build Pony Wall (P&I 2'' x 4'' and Drywall)
-
-    Includes Drywall & Framing up to Width (Must Consider Flooring)'
 - id: '18'
   sku: NaN
   brand: Labor
@@ -235,19 +128,6 @@
     finish: ''
     description: ''
     dimensions: {}
-- id: '25'
-  sku: ''
-  brand: NaN
-  provider: ''
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: Outside Partner Wall Prep / Finishing Work Basic Patch & Paint
-    Bathroom Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching
-    any wall damages from Demolition, as well as labor for Priming & Painting. Customer
-    must supply paint and any applicable primer at time of installation. If Materials
-    are available at time of installation customer is subject to a $150 trip surcharge.
-    Bath Flooring Pull Up Luxury Vinyl 60 Pull Up of Luxury Vinyl (Per Square Foot)
-  category_file: ignore
 - id: '26'
   sku: ''
   brand: NaN
@@ -380,36 +260,6 @@
   finish: UNKNOWN
   routing_tag: IGNORE
   oneclick_description: 'Bath Special Requests The following items are not included
-    in this agreement: medicine cabinet, mirror, plumbing labor, painting and patchwork,
-    and electrical work. This contract itemizes all client-selected materials. If
-    the scope of work changes, any additional labor or materials must be documented
-    in a Change Order (CO) and may incur an additional charge—unless the change is
-    informational only and does not affect cost or'
-  printable:
-    description: UNKNOWN
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-E490075E
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor Miscellaneous Construction Construction
-    Related Build Pony Wall (P&I 2' x 4' and Drywall) Includes Drywall & Framing up
-    to 6 FT Width (Must Consider Flooring)
-  printable:
-    description: Pony Wall (P&I 2' x 4' and Drywall)
-    finish: UNKNOWN
-    dimensions:
-      width: up to 6 FT
-  id: STG-E2319578
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: 'Bath Special Requests The following items are not included
     in this agreement: toilet, medicine cabinet, mirror, additional plumbing labor,
     and electrical work. This contract itemizes all client-selected materials. If
     the scope of work changes, any additional labor or materials must be documented
@@ -430,65 +280,6 @@
   brand: Labor
   finish: UNKNOWN
   routing_tag: IGNORE
-  oneclick_description: Outside Partner Wall Prep / Finishing Work Basic Patch & Paint
-    Kitchen Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching
-    any wall damages from Demolition, as well as labor for Priming & Painting. Customer
-    must supply paint and any applicable primer at time of installation. If Materials
-    are available at time of installation customer is subject to a $150 trip surcharge.
-  printable:
-    description: Patch & Paint Kitchen Walls & Ceiling
-    finish: UNKNOWN
-    dimensions:
-      UNKNOWN: UNKNOWN
-  id: STG-D7A1462A
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Outside Partner Miscellaneous Remove & Install "Like for Like"
-    Size Medicine Cabinet Labor Only - No Electrical or Patch Work Included Approved
-    by Tamar
-  printable:
-    description: Medicine Cabinet Labor
-    finish: UNKNOWN
-    dimensions:
-      size: Like for Like
-  id: STG-B946BC19
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Outside Partner Painting / Patch Basic Patch & Paint Bathroom
-    Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching any
-    wall damages from Demolition, as well as labor for Priming & Painting. Customer
-    must supply paint and any applicable primer at time of installation. If Materials
-    are available at time of installation customer is subject to a $150 trip surcharge.
-  printable:
-    description: Patch & Paint Bathroom Walls & Ceiling
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-98323E25
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Vanities Vanity Labor Remove & Replace/Install Large
-    Vanity Up To 48" Includes demolition, disposal & haul away, and hook-ups of faucet.
-    (Does not include patching painting or materials)
-  printable:
-    description: Large Vanity
-    finish: UNKNOWN
-    dimensions:
-      width: 48"
-  id: STG-93FD8E1A
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
   oneclick_description: Outside Partner Miscellaneous Remove & Install Recessed Medicine
     Cabinet Labor Only - No Electrical or Patch Work Included
   printable:
@@ -501,43 +292,6 @@
   brand: Labor
   finish: UNKNOWN
   routing_tag: IGNORE
-  oneclick_description: Outside Partner Miscellaneous Remove & Install "Like for Like"
-    Size Medicine Cabinet Labor Only - No Electrical or Patch Work Included
-  printable:
-    description: Remove & Install Medicine Cabinet
-    finish: UNKNOWN
-    dimensions:
-      size: Like for Like
-  id: STG-732E64B9
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: 'Bath Bathroom Labor Tub Install Kit TUB INSTALL KIT - Including:
-    12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1
-    Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 1 1/2",
-    2 LF. ABS-DWV pipe 1 1/2”, 1 pc-10 L.F Pex A white/ Pex A red, 2 Corner Reinforcement,
-    Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop,
-    Color Coordinated: 3 Silicone, Color Coordinated: Matching Overflow Set, Wet-Area
-    Plywood 5/8x4x8, 1 2x4 wood'
-  printable:
-    description: Bath Bathroom Labor Tub Install Kit
-    finish: UNKNOWN
-    dimensions:
-      drywall: 4x8
-      p_trap: 1 1/2"
-      abs_dwv_pipe: 1 1/2"
-      pex_a: 10 L.F
-      pex_sleeve: 1/2"
-      plywood: 5/8x4x8
-      wood: 2x4
-  id: STG-4D3C7C54
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
   oneclick_description: Bath Vanities Vanity Labor Faucet only installation Does not
     include materials
   printable:
@@ -545,79 +299,6 @@
     finish: UNKNOWN
     dimensions: {}
   id: STG-48FF616A
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Contractor Tasks - NEW Miscellaneous Install Mirror (Labor
-    Only) Client to provide Mirror Material Flooring Flooring Extra Labor Remove PULL
-    UP OF TILE PULL UP OF 30 TILE (IF NEEDED TO AVOID GAP BY DOOR FRAME, ADD SUB-FLOOR
-    TO ACCOUNT FOR POSSIBLE HEIGHT DISCREPANCY)
-  printable:
-    description: Mirror
-    finish: UNKNOWN
-    dimensions:
-      quantity: '30'
-  id: STG-4758226F
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Contractor Tasks - NEW Miscellaneous Install Mirror (Labor
-    Only) Client to provide Mirror Material
-  printable:
-    description: Mirror
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-126B8013
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
-    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
-    plumbing. Includes installation of moisture resistant backerboard and selected
-    shower or tub, walls, fixtures, and accessories. Adjust height of showerhead.
-  printable:
-    description: Bath Bathroom Labor One Piece Demo/Install
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-87EA1AC5
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
-    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
-    plumbing. Includes installation of moisture resistant backerboard and selected
-    shower base or tub, walls, fixtures, and accessories. Adjust height of showerhead.
-  printable:
-    description: Bath Bathroom Labor One Piece Demo/Install
-    finish: UNKNOWN
-    dimensions: {}
-  id: STG-1DA3E8AD
-  category_file: ignore
-- sku: UNKNOWN
-  brand: Labor
-  finish: UNKNOWN
-  routing_tag: IGNORE
-  oneclick_description: Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling
-    with lighting Ceiling with Lighting Less than 80sqft Bath Bathroom Labor Miscellaneous
-    Construction Miscellaneous 200 Pull-Up of Tile outside of Wet Space (Min. 50 Sq
-    Ft) (Does Not Include Drywall, Painting & Patching Work) Bath Bathroom Labor Miscellaneous
-    Construction Painting Drywall 200 Installation - Includes Taping, Patching & Texture
-    (By SqFt)
-  printable:
-    description: UNKNOWN
-    finish: UNKNOWN
-    dimensions:
-      area: Less than 80sqft
-      minimum_area: 50 Sq Ft
-  id: STG-02DB73C0
   category_file: ignore
 - sku: UNKNOWN
   brand: Labor
@@ -655,6 +336,71 @@
       length: 8FT
   id: STG-D68751DE
   category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Vanities Vanity Labor Remove & Replace/Install Large
+    Vanity Up To 48" Includes demolition, disposal & haul away, and hook-ups of faucet.
+    (Does not include patching painting or materials)
+  printable:
+    description: Large Vanity
+    finish: UNKNOWN
+    dimensions:
+      width: 48"
+  id: STG-93FD8E1A
+  category_file: ignore
+  aliases:
+  - Bath Vanities Vanity Labor Remove & Replace/Install Large Vanity Up To 48" Includes
+    demolition, disposal & haul away, and hook-ups of faucet. (Does not include patching
+    and painting or materials)
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling
+    with lighting Ceiling with Lighting Less than 80sqft Bath Bathroom Labor Miscellaneous
+    Construction Miscellaneous 200 Pull-Up of Tile outside of Wet Space (Min. 50 Sq
+    Ft) (Does Not Include Drywall, Painting & Patching Work) Bath Bathroom Labor Miscellaneous
+    Construction Painting Drywall 200 Installation - Includes Taping, Patching & Texture
+    (By SqFt)
+  printable:
+    description: UNKNOWN
+    finish: UNKNOWN
+    dimensions:
+      area: Less than 80sqft
+      minimum_area: 50 Sq Ft
+  id: STG-02DB73C0
+  category_file: ignore
+  aliases:
+  - "Bath Bathroom Labor Miscellaneous Construction Miscellaneous\nPull-Up of Tile\
+    \ outside of Wet Space (Min. \n(Does Not Include Drywall, Painting & Patching\
+    \ Work)"
+  - Bath Bathroom Labor Demo Ceiling Outside of Wetspace Ceiling with lighting Ceiling
+    with Lighting Less than 80sqft
+  - 'Bath Bathroom Labor Miscellaneous Construction Painting Drywall
+
+    Installation - Includes Taping, Patching & Texture (By SqFt)'
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor Miscellaneous Construction Construction
+    Related Build Pony Wall (P&I 2' x 4' and Drywall) Includes Drywall & Framing up
+    to 6 FT Width (Must Consider Flooring)
+  printable:
+    description: Pony Wall (P&I 2' x 4' and Drywall)
+    finish: UNKNOWN
+    dimensions:
+      width: up to 6 FT
+  id: STG-E2319578
+  category_file: ignore
+  aliases:
+  - 'Bath Bathroom Labor Miscellaneous Construction Construction
+
+    Related Build Pony Wall (P&I 2'' x 4'' and Drywall)
+
+    Includes Drywall & Framing up to Width (Must Consider Flooring)'
 - id: '32'
   sku: ''
   brand: NaN
@@ -680,3 +426,159 @@
     patching and painting, and install a recessed medicine cabinet provided by the
     client. Project does not include a new toilet, flooring, or vent. Project to be
     paid in cash.
+  - 'Bath Special Requests The following items are not included in this agreement:
+    medicine cabinet, mirror, plumbing labor, painting and patchwork, and electrical
+    work. This contract itemizes all client-selected materials. If the scope of work
+    changes, any additional labor or materials must be documented in a Change Order
+    (CO) and may incur an additional charge—unless the change is informational only
+    and does not affect cost or'
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Contractor Tasks - NEW Miscellaneous Install Mirror (Labor
+    Only) Client to provide Mirror Material Flooring Flooring Extra Labor Remove PULL
+    UP OF TILE PULL UP OF 30 TILE (IF NEEDED TO AVOID GAP BY DOOR FRAME, ADD SUB-FLOOR
+    TO ACCOUNT FOR POSSIBLE HEIGHT DISCREPANCY)
+  printable:
+    description: Mirror
+    finish: UNKNOWN
+    dimensions:
+      quantity: '30'
+  id: STG-4758226F
+  category_file: ignore
+  aliases:
+  - Contractor Tasks - NEW Miscellaneous Install (Labor Only) Client to provide Material
+  - Contractor Tasks - NEW Miscellaneous Install Mirror (Labor Only) Client to provide
+    Mirror Material
+- id: '13'
+  sku: NaN
+  brand: Labor
+  provider: PKB
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: 'Outside Partner Miscellaneous Remove & Install "Like for
+    Like" Size Medicine Cabinet
+
+    Labor Only - No Electrical or Patch Work Included'
+  category_file: ignore
+  aliases:
+  - Outside Partner Miscellaneous Remove & Install "Like for Like" Size Labor Only
+    - No Electrical or Patch Work Included
+  - Outside Partner Miscellaneous Remove & Install "Like for Like" Size Medicine Cabinet
+    Labor Only - No Electrical or Patch Work Included
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal,
+    and haul away of existing wet space. Replace P-Trap, replace necessary wet space
+    plumbing. Includes installation of moisture resistant backerboard and selected
+    shower base or tub, walls, fixtures, and accessories. Adjust height of showerhead.
+  printable:
+    description: Bath Bathroom Labor One Piece Demo/Install
+    finish: UNKNOWN
+    dimensions: {}
+  id: STG-1DA3E8AD
+  category_file: ignore
+  aliases:
+  - Bath Bathroom Labor One Piece Demo/Install Demolition, Disposal, and haul away
+    of existing wet space. Replace P-Trap, replace necessary wet space plumbing. Includes
+    installation of moisture resistant backerboard and selected shower or tub, walls,
+    fixtures, and accessories. Adjust height of showerhead.
+  - "Bath Bathroom Labor One Piece Demo/Install\nDemolition, Disposal, and haul away\
+    \ of existing wet space. Replace P-Trap, replace necessary wet \nspace plumbing.\
+    \ Includes installation of moisture resistant backerboard and selected shower\
+    \ base \nor tub, walls, fixtures, and accessories. Adjust height of showerhead"
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Bathroom Labor Tub Install Kit TUB INSTALL KIT - Including:
+    12 Sausage Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1
+    Corrugated sheet template, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 1 1/2",
+    2 LF. ABS-DWV pipe 1 1/2”, 1 pc-10 L.F Pex A white/ Pex A red, 2 Corner Reinforcement,
+    Drain Brass Receptor, 8 pcs. Everflow FPXSL012 1/2” pex, F1960 sleeve w/ stop,
+    Color Coordinated: 3 Silicone, Color Coordinated: Matching Overflow Set, Wet-Area
+    Plywood 5/8x4x8, 1 2x4 wood'
+  printable:
+    description: Bath Bathroom Labor Tub Install Kit
+    finish: UNKNOWN
+    dimensions:
+      drywall: 4x8
+      p_trap: 1 1/2"
+      abs_dwv_pipe: 1 1/2"
+      pex_a: 10 L.F
+      pex_sleeve: 1/2"
+      plywood: 5/8x4x8
+      wood: 2x4
+  id: STG-4D3C7C54
+  category_file: ignore
+  aliases:
+  - "Bath Bathroom Labor Tub Install Kit\nTUB INSTALL KIT - Including: 12 Sausage\
+    \ Adhesives, 1 Duraflex Caulking, 3 pcs. Pex, brass drop ear elbow, 1 Corrugated\
+    \ sheet \ntemplate, 4x8 Moisture-Resistant Drywall, 1pc. P-TRAP 1 1/2\", 2 LF.\
+    \ ABS-DWV pipe 1 1/2�, 1 pc-10 L.F Pex A white/ Pex A red, 2 Corner Reinforcement,\
+    \ Drain Brass Receptor, 8 pcs. Everflow \nFPXSL012 1/2� pex, F1960 sleeve w/ stop,\
+    \ Color Coordinated: 3 Silicone, Color Coordinated: Matching Overflow Set, Wet-Area\
+    \ Plywood 5/8x4x8, 1 2x4 wood"
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Painting / Patch Basic Patch & Paint Bathroom
+    Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching any
+    wall damages from Demolition, as well as labor for Priming & Painting. Customer
+    must supply paint and any applicable primer at time of installation. If Materials
+    are available at time of installation customer is subject to a $150 trip surcharge.
+  printable:
+    description: Patch & Paint Bathroom Walls & Ceiling
+    finish: UNKNOWN
+    dimensions: {}
+  id: STG-98323E25
+  category_file: ignore
+  aliases:
+  - "Outside Partner Painting / Patch Basic Patch & Paint Bathroom Walls & Ceiling\
+    \ (Does Not Include Doors & Door Casings)\nIncludes Patching any wall damages\
+    \ from Demolition, as well as labor for Priming & Painting. \nCustomer must supply\
+    \ paint and any applicable primer at time of installation. If Materials are not\
+    \  available at time of installation customer is subject to a $150 trip surcharge"
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Wall Prep / Finishing Work Basic Patch & Paint
+    Kitchen Walls & Ceiling (Does Not Include Doors & Door Casings) Includes Patching
+    any wall damages from Demolition, as well as labor for Priming & Painting. Customer
+    must supply paint and any applicable primer at time of installation. If Materials
+    are available at time of installation customer is subject to a $150 trip surcharge.
+  printable:
+    description: Patch & Paint Kitchen Walls & Ceiling
+    finish: UNKNOWN
+    dimensions:
+      UNKNOWN: UNKNOWN
+  id: STG-D7A1462A
+  category_file: ignore
+  aliases:
+  - Outside Partner Wall Prep / Finishing Work Basic Patch & Paint Bathroom Walls
+    & Ceiling (Does Not Include Doors & Door Casings) Includes Patching any wall damages
+    from Demolition, as well as labor for Priming & Painting. Customer must supply
+    paint and any applicable primer at time of installation. If Materials are available
+    at time of installation customer is subject to a $150 trip surcharge. Bath Flooring
+    Pull Up Luxury Vinyl 60 Pull Up of Luxury Vinyl (Per Square Foot)
+- sku: UNKNOWN
+  brand: BLUM
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Kitchen Refacing Hardware BLUM Concealed 110+� Hinge
+  printable:
+    description: Concealed 110+ degree Hinge
+    finish: UNKNOWN
+    dimensions:
+      angle: 110+
+    image_file: ''
+  id: STG-C121345F
+  category_file: ignore
+  provider: ''
+  purchase_link: ''
+  aliases: []

@@ -37,6 +37,22 @@ class SimilarItemsDialog(QDialog):
             layout.addWidget(btn_close)
             return
             
+        legend_layout = QHBoxLayout()
+        legend_layout.addWidget(QLabel("<b>Legend:</b>"))
+        lbl_unchanged = QLabel("Unchanged")
+        lbl_unchanged.setStyleSheet("color: white;")
+        lbl_added = QLabel("Added in Staging")
+        lbl_added.setStyleSheet("color: #4caf50; font-weight: bold;")
+        lbl_removed = QLabel("Missing in Staging")
+        lbl_removed.setStyleSheet("color: #f44336; text-decoration: line-through;")
+        legend_layout.addWidget(lbl_unchanged)
+        legend_layout.addWidget(QLabel(" | "))
+        legend_layout.addWidget(lbl_added)
+        legend_layout.addWidget(QLabel(" | "))
+        legend_layout.addWidget(lbl_removed)
+        legend_layout.addStretch()
+        layout.addLayout(legend_layout)
+            
         layout.addWidget(QLabel("<b>Top Production Matches:</b>"))
         
         scroll = QScrollArea()
@@ -45,6 +61,9 @@ class SimilarItemsDialog(QDialog):
         scroll_layout = QVBoxLayout(scroll_content)
         
         for score, prod_id, prod_desc in results:
+            if prod_id == self.staging_item.get("id"):
+                continue
+                
             prod_item = self.catalog.get(prod_id, {})
             
             frame = QFrame()

@@ -62,19 +62,6 @@
     description: Corner Caddy
     dimensions: {}
     image_file: cc-4-w_l.jpg
-- id: CC-ST-W
-  sku: CC-ST-W
-  brand: PKB
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: "Bath Accessories Storage Shelving BCI Single Tier Corner\
-    \ Shelf\n White"
-  printable:
-    finish: white
-    description: Single Tier Corner Shelf
-    dimensions: {}
-    image_file: cc-st-w_l.jpg
 - id: CC-4-SAN
   sku: CC-4-SAN
   brand: BCI
@@ -179,3 +166,19 @@
   category_file: Storage
   aliases:
   - 'Bath Accessories Storage Storage Pods ALFI-SS: Stainless Steel 16" x 16"'
+- id: CC-ST-W
+  sku: CC-ST-W
+  brand: PKB
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: "Bath Accessories Storage Shelving BCI Single Tier Corner\
+    \ Shelf\n White"
+  printable:
+    finish: white
+    description: Single Tier Corner Shelf
+    dimensions: {}
+    image_file: cc-st-w_l.jpg
+  category_file: Storage
+  aliases:
+  - Bath Accessories Storage Shelving BCI Single Tier Corner Shelf White

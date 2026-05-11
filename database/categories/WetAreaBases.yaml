@@ -169,3 +169,21 @@
   category_file: WetAreaBases
   aliases:
   - Bath Shower Bases HV Single Threshold Right Side Drain 60" x 30" 60x30 Right Drain
+- sku: DLT-1132600
+  brand: HV
+  finish: UNKNOWN
+  routing_tag: WH_OR_PROCURE
+  oneclick_description: Bath Shower Bases HV Single Threshold Center Drain 60" x 32"
+  printable:
+    description: Single Threshold Center Drain
+    finish: White
+    dimensions:
+      width: 60"
+      depth: 32"
+    image_file: white-dreamline-shower-pans-dlt-1132600-64_600.png
+  id: DLT-1132600
+  category_file: WetAreaBases
+  provider: DreamLine
+  purchase_link: ''
+  aliases:
+  - Bath Shower Bases HV Single Threshold Center Drain 60" x 32"
