@@ -1,3 +1,63 @@
+- id: UKD08
+  sku: UKD08
+  brand: UNIKOO
+  provider: Unikoo
+  routing_tag: PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Shower Doors Bypass Shower Doors Clear Glass Venice 56"
+    - 60"W x 76"H Matte Black 56" - 60"W x 76"H Exposed Roller Bypass Framed Shower
+    Door with Handles and 5/16" Clear Glass and Towel Bar & Handle Carpet Wagon Glendale_
+    Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2574701
+    - Page 3 of 27
+  printable:
+    finish: Matte Black
+    description: Exposed Roller Bypass Framed Shower Door with Clear Glass
+    dimensions:
+      Width: 56 inch - 60 inch
+      Height: 76 inch
+    image_file: venice udk08-Allcolors.png
+  category_file: GlassDoors.yaml
+  aliases: []
+- id: UKD08MB
+  sku: UKD08
+  brand: UNIKOO
+  provider: Unikoo
+  routing_tag: PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Shower Doors Bypass Shower Doors Clear Glass Venice 56"
+    - 60"W x 76"H Matte Black 56" - 60"W x 76"H Exposed Roller Bypass Framed Shower
+    Door with Handles and 5/16" Clear Glass and Towel Bar & Handle Carpet Wagon Glendale_
+    Inc. Payless Kitchen Cabinets & Bath Makeover - Home Improvement Agreement - 2574701
+    - Page 3 of 27
+  printable:
+    finish: Matte Black
+    description: Exposed Roller Bypass Framed Shower Door with Clear Glass
+    dimensions:
+      Width: 56 inch - 60 inch
+      Height: 76 inch
+    image_file: venice udk08-Allcolors.png
+  category_file: GlassDoors.yaml
+  aliases: []
+- id: GW-SFP-36-BN
+  sku: GW-SFP-36-BN
+  brand: Glass Warehouse
+  provider: Ferguson
+  purchase_link: https://www.fergusonhome.com/glass-warehouse-gw-sfp-36/s2015189
+  routing_tag: PROCURE
+  oneclick_description: Bath Shower Doors Glass Panel Brushed Nickel 24 - 46 in. x
+    78 in. Frameless 5/16" Fixed Shower Panel Clear Glass Fixed glass shower panels
+    do not fully contain water. Some water escaping the shower area is normal and
+    expected. This is a design characteristic and is not considered a defect or warranty
+    issue.
+  printable:
+    finish: Brushed Nickel
+    description: With Clear Glass
+    dimensions:
+      Width: 24 - 46
+      Height: '78'
+    image_file: ifvjdlptrdws3aw0qyux.png
+  category_file: GlassDoors.yaml
+  aliases: []
 - id: UKD07NBN
   sku: UKD07NBN
   brand: Unikoo
@@ -9,8 +69,27 @@
     & Handle
   printable:
     finish: Brushed Nickel
-    description: Bypass MAXWELL glass door
+    description: Bypass MAXWELL glass door with Clear Glass
     dimensions:
       Width: 60"
       Height: 72"
     image_file: UKD07 UKD12-60X70-BN-Main_428e54ae-e82a-46a8-83ea-51aeae8872fb.png
+  category_file: GlassDoors.yaml
+  aliases: []
+- id: UKD01-TF-60X72-MBL
+  sku: UKD01-TF-60X72-MBL
+  brand: Unikoo
+  provider: Unikoo
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Shower Doors Bypass Shower Doors Clear Glass Montclair
+    56"-60"W x 76"H Matte Black 56"-60"W x 76"H Bypass Semi-Frameless Door with 3/8"
+    Clear Glass
+  aliases: []
+  printable:
+    finish: Matte Black
+    description: Montclair Bypass Shower Doors, Clear Glass
+    image_file: UKD01-TF-60X72-MBL-Main.png
+    dimensions:
+      width: 56"-60"
+      height: 76"

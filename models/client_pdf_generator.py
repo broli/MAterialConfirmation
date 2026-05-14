@@ -205,28 +205,31 @@ class PDFGenerator:
         if os.path.exists(cover_img):
             pdf.image(cover_img, x=0, y=0, w=215.9)
             pdf.set_y(150) 
+        else:
+            print(f"  [!] Cover image not found: {cover_img}. Generating cover text anyway.")
+            pdf.set_y(100)
             
-            pdf.set_font("helvetica", "I", 14)
-            pdf.set_text_color(142, 142, 142) 
-            pdf.cell(0, 8, "Prepared for:", ln=True, align="C")
-            
-            client_name_display = client_info.get("name", "Valued Client")
-            pdf.set_font("helvetica", "B", 34)
-            pdf.set_text_color(21, 62, 131) 
-            pdf.cell(0, 14, client_name_display, ln=True, align="C")
-            
-            pdf.ln(4)
-            
-            pdf.set_font("helvetica", "I", 14)
-            pdf.set_text_color(142, 142, 142)
-            pdf.cell(0, 6, "Project:", ln=True, align="C")
-            
-            project_name_display = client_info.get('project', 'Remodel Project')
-            pdf.set_font("helvetica", "B", 22)
-            pdf.set_text_color(1, 161, 219)
-            pdf.cell(0, 10, project_name_display, ln=True, align="C")
-            
-            pdf.add_page()
+        pdf.set_font("helvetica", "I", 14)
+        pdf.set_text_color(142, 142, 142) 
+        pdf.cell(0, 8, "Prepared for:", ln=True, align="C")
+        
+        client_name_display = client_info.get("name", "Valued Client")
+        pdf.set_font("helvetica", "B", 34)
+        pdf.set_text_color(21, 62, 131) 
+        pdf.cell(0, 14, client_name_display, ln=True, align="C")
+        
+        pdf.ln(4)
+        
+        pdf.set_font("helvetica", "I", 14)
+        pdf.set_text_color(142, 142, 142)
+        pdf.cell(0, 6, "Project:", ln=True, align="C")
+        
+        project_name_display = client_info.get('project', 'Remodel Project')
+        pdf.set_font("helvetica", "B", 22)
+        pdf.set_text_color(1, 161, 219)
+        pdf.cell(0, 10, project_name_display, ln=True, align="C")
+        
+        pdf.add_page()
         
         pdf.set_text_color(0, 0, 0)
         
@@ -307,7 +310,12 @@ class PDFGenerator:
                     pdf.image(opt_path, x=13, y=pdf.get_y(), w=190)
         
         # --- EXPORT ---
-        client_name_safe = client_info.get("name", "Client").replace(" ", "_")
+        import re
+        client_name = client_info.get("name", "Client")
+        # Remove invalid characters and commas for Windows/Linux filenames
+        client_name_safe = re.sub(r'[\\/*?:"<>|,]', "", client_name)
+        client_name_safe = client_name_safe.replace(" ", "_").strip("_")
+        
         output_filename = os.path.join(self.output_path, f"{client_name_safe}_Confirmation.pdf")
         pdf.output(output_filename)
         

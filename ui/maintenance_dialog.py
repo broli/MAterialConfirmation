@@ -33,6 +33,11 @@ class MaintenanceDialog(QDialog):
         btn_dedupe.clicked.connect(self._find_duplicates)
         layout.addWidget(btn_dedupe)
         
+        btn_clean_aliases = QPushButton("🧹 Clean Duplicate Aliases")
+        btn_clean_aliases.setStyleSheet("padding: 10px; font-weight: bold;")
+        btn_clean_aliases.clicked.connect(self._clean_duplicate_aliases)
+        layout.addWidget(btn_clean_aliases)
+        
         layout.addStretch()
         
         btn_close = QPushButton("Close")
@@ -40,6 +45,8 @@ class MaintenanceDialog(QDialog):
         layout.addWidget(btn_close)
 
     def _clean_assets(self):
+        from models.config_manager import ConfigManager
+        
         assets_dir = os.path.join("database", "assets")
         if not os.path.exists(assets_dir):
             QMessageBox.information(self, "Info", "Assets directory not found.")
@@ -52,6 +59,12 @@ class MaintenanceDialog(QDialog):
             img = item.get("printable", {}).get("image_file", "").strip()
             if img:
                 used_files.add(img)
+                
+        cover_filename = ConfigManager.get("cover_image_filename")
+        if cover_filename:
+            used_files.add(cover_filename)
+        else:
+            used_files.add("Bath Document Cover Page.png")
                 
         unused_files = all_files - used_files
         
@@ -159,6 +172,88 @@ class MaintenanceDialog(QDialog):
                     QMessageBox.information(dlg, "Success", f"Merged {id1} into {prod_id} as alias.")
                     dlg.accept() # Close the list dialog so user can refresh
                     
+        btn_review.clicked.connect(_review)
+        list_widget.itemDoubleClicked.connect(_review)
+        d_layout.addWidget(btn_review)
+        
+        btn_close = QPushButton("Cancel")
+        btn_close.clicked.connect(dlg.reject)
+        d_layout.addWidget(btn_close)
+        
+        dlg.exec()
+
+    def _clean_duplicate_aliases(self):
+        items_with_duplicates = []
+        for item_id, item_data in self.catalog.items():
+            aliases = item_data.get("aliases", [])
+            oneclick = item_data.get("oneclick_description", "")
+            
+            if not isinstance(aliases, list):
+                continue
+                
+            seen = set()
+            duplicates = set()
+            
+            if oneclick:
+                seen.add(oneclick)
+                
+            for a in aliases:
+                a_str = str(a)
+                if a_str in seen:
+                    duplicates.add(a_str)
+                seen.add(a_str)
+                
+            if duplicates:
+                items_with_duplicates.append((item_id, item_data, list(duplicates)))
+                
+        if not items_with_duplicates:
+            QMessageBox.information(self, "Result", "No items with duplicate aliases found!")
+            return
+            
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Items with Duplicate Aliases")
+        dlg.resize(700, 500)
+        d_layout = QVBoxLayout(dlg)
+        d_layout.addWidget(QLabel(f"Found {len(items_with_duplicates)} items with duplicated aliases. Select one to automatically remove duplicates."))
+        
+        list_widget = QListWidget()
+        for item_id, item_data, dups in items_with_duplicates:
+            cat = item_data.get("category_file", "")
+            dup_str = ", ".join(dups)
+            list_widget.addItem(f"{item_id} ({cat}) - Duplicates: {dup_str}")
+            
+        d_layout.addWidget(list_widget)
+        
+        btn_review = QPushButton("Remove Duplicates for Selected")
+        def _review(*args):
+            idx = list_widget.currentRow()
+            if idx < 0: return
+            
+            item_id, item_data, dups = items_with_duplicates[idx]
+            
+            aliases = item_data.get("aliases", [])
+            oneclick = item_data.get("oneclick_description", "")
+            
+            new_aliases = []
+            seen = set()
+            if oneclick:
+                seen.add(oneclick)
+                
+            for a in aliases:
+                a_str = str(a)
+                if a_str not in seen:
+                    new_aliases.append(a)
+                    seen.add(a_str)
+                    
+            item_data["aliases"] = new_aliases
+            
+            cat_file = item_data.get("category_file", "UNKNOWN.yaml")
+            if not cat_file.endswith(".yaml"): cat_file += ".yaml"
+            self.product_service.upsert_to_yaml(item_data, cat_file, os.path.join("database", "categories"), os.path.join("database", "assets"))
+            
+            QMessageBox.information(dlg, "Success", f"Removed duplicates from {item_id}.")
+            dlg.accept()
+            
         btn_review.clicked.connect(_review)
         list_widget.itemDoubleClicked.connect(_review)
         d_layout.addWidget(btn_review)

@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QFont
 import os
+from ui.utils import clear_layout
 
 class ProductDetailDialog(QDialog):
     def __init__(self, parent, start_idx, controller):
@@ -64,15 +65,7 @@ class ProductDetailDialog(QDialog):
         
         self.load_item(self.idx)
 
-    def clear_layout(self, layout):
-        if layout is not None:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.deleteLater()
-                else:
-                    self.clear_layout(item.layout())
+
 
     def get_valid_items(self):
         # returns a list of valid indices based on hide_ignored
@@ -143,7 +136,7 @@ class ProductDetailDialog(QDialog):
 
     def load_item(self, idx):
         self.idx = idx
-        self.clear_layout(self.content_layout)
+        clear_layout(self.content_layout)
         
         items = self.controller.session_data.get("line_items", [])
         if idx < 0 or idx >= len(items):

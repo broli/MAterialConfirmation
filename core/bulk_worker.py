@@ -10,13 +10,7 @@ from models.gemini_service import GeminiClient, QuotaExceededError
 from models.product_service import ProductService
 from models.contract_ingestion import OneClickIngestor
 
-class BulkIngestWorker(QObject):
-    """
-    Background worker that handles the 3-stage bulk ingestion pipeline:
-    1. Parse PDFs -> Queue
-    2. Heuristic Pre-fill
-    3. Gemini API Processor (with retry logic)
-    """
+class BulkWorkerSignals(QObject):
     progress = Signal(str)
     result = Signal(dict)
     error = Signal(tuple)
@@ -25,8 +19,17 @@ class BulkIngestWorker(QObject):
     countdown_update = Signal(int)
     model_status_update = Signal(str)
 
+class BulkIngestWorker(QObject):
+    """
+    Background worker that handles the 3-stage bulk ingestion pipeline:
+    1. Parse PDFs -> Queue
+    2. Heuristic Pre-fill
+    3. Gemini API Processor (with retry logic)
+    """
+
     def __init__(self, target_folder_path: str, debug_mode: bool = False, mode: str = "extract"):
         super().__init__()
+        self.signals = BulkWorkerSignals()
         self.target_folder_path = target_folder_path
         self.debug_mode = debug_mode
         self.mode = mode
@@ -49,7 +52,7 @@ class BulkIngestWorker(QObject):
     def _log_debug(self, msg):
         if not self.debug_mode:
             return
-        self.progress.emit(f"[DEBUG] {msg}")
+        self.signals.progress.emit(f"[DEBUG] {msg}")
         try:
             with open(self.log_file, "a", encoding="utf-8") as f:
                 f.write(f"[{time.strftime('%H:%M:%S')}] {msg}\n")
@@ -61,44 +64,44 @@ class BulkIngestWorker(QObject):
 
     def run(self):
         try:
-            self.progress.emit(f"Starting Bulk Ingestion Pipeline ({self.mode} mode)...")
-            self.status_update.emit(f"Starting pipeline ({self.mode})...")
+            self.signals.progress.emit(f"Starting Bulk Ingestion Pipeline ({self.mode} mode)...")
+            self.signals.status_update.emit(f"Starting pipeline ({self.mode})...")
             
             if self.mode == "extract":
                 # Stage 1: Build Queue from PDFs
                 queue = self._build_queue()
                 self._save_queue(queue)
                 if not queue:
-                    self.progress.emit("No new unique items found in PDFs.")
-                    self.result.emit({"status": "success", "processed": 0})
+                    self.signals.progress.emit("No new unique items found in PDFs.")
+                    self.signals.result.emit({"status": "success", "processed": 0})
                 else:
-                    self.progress.emit(f"Extraction complete. {len(queue)} items queued in {os.path.basename(self.queue_file)}.")
-                    self.result.emit({"status": "success", "processed": len(queue)})
+                    self.signals.progress.emit(f"Extraction complete. {len(queue)} items queued in {os.path.basename(self.queue_file)}.")
+                    self.signals.result.emit({"status": "success", "processed": len(queue)})
                     
             elif self.mode == "process":
                 # Stage 2 & 3: Heuristics and Gemini
                 queue = self._load_queue()
                 if not queue:
-                    self.progress.emit("Queue is empty. Nothing to process.")
-                    self.status_update.emit("Queue empty.")
-                    self.result.emit({"status": "success", "processed": 0})
-                    self.finished.emit()
+                    self.signals.progress.emit("Queue is empty. Nothing to process.")
+                    self.signals.status_update.emit("Queue empty.")
+                    self.signals.result.emit({"status": "success", "processed": 0})
+                    self.signals.finished.emit()
                     return
 
-                self.progress.emit(f"Queue loaded with {len(queue)} items. Running Heuristics...")
-                self.status_update.emit(f"Running Heuristics ({len(queue)} items)...")
+                self.signals.progress.emit(f"Queue loaded with {len(queue)} items. Running Heuristics...")
+                self.signals.status_update.emit(f"Running Heuristics ({len(queue)} items)...")
                 queue = self._run_heuristics(queue)
                 self._save_queue(queue)
                 
-                self.progress.emit(f"Starting Gemini processing for {len(queue)} items...")
+                self.signals.progress.emit(f"Starting Gemini processing for {len(queue)} items...")
                 processed_count = self._process_queue_with_gemini()
                 
-                self.result.emit({"status": "success", "processed": processed_count})
+                self.signals.result.emit({"status": "success", "processed": processed_count})
                 
         except Exception as e:
-            self.error.emit((type(e), e, None))
+            self.signals.error.emit((type(e), e, None))
         finally:
-            self.finished.emit()
+            self.signals.finished.emit()
 
     def _save_queue(self, queue):
         with open(self.queue_file, "w", encoding="utf-8") as f:
@@ -140,7 +143,7 @@ class BulkIngestWorker(QObject):
             try:
                 if self.debug_mode:
                     self._log_debug(f"Extracting {os.path.basename(pdf)}...")
-                self.progress.emit(f"Extracting {os.path.basename(pdf)}...")
+                self.signals.progress.emit(f"Extracting {os.path.basename(pdf)}...")
                 
                 ingestor = OneClickIngestor(pdf, debug_mode=self.debug_mode)
                 data = ingestor.extract_data()
@@ -162,7 +165,7 @@ class BulkIngestWorker(QObject):
                     elif self.debug_mode and clean_desc:
                         self._log_debug(f"Skipping duplicate: '{clean_desc[:30]}...'")
             except Exception as e:
-                self.progress.emit(f"Warning: Failed to extract from {os.path.basename(pdf)}: {e}")
+                self.signals.progress.emit(f"Warning: Failed to extract from {os.path.basename(pdf)}: {e}")
                 if self.debug_mode:
                     self._log_debug(f"Error extracting {os.path.basename(pdf)}: {e}")
 
@@ -197,10 +200,10 @@ class BulkIngestWorker(QObject):
         try:
             gemini = GeminiClient(
                 debug_mode=self.debug_mode,
-                model_status_callback=self.model_status_update.emit
+                model_status_callback=self.signals.model_status_update.emit
             )
         except Exception as e:
-            self.progress.emit(f"Gemini Init Error: {e}")
+            self.signals.progress.emit(f"Gemini Init Error: {e}")
             return 0
             
         queue = self._load_queue()
@@ -211,8 +214,8 @@ class BulkIngestWorker(QObject):
             item = queue[0]
             desc = item["raw_description"]
             
-            self.progress.emit(f"Processing ({processed_count + 1}/{total_items}): {desc[:30]}...")
-            self.status_update.emit(f"Processing ({processed_count + 1}/{total_items})")
+            self.signals.progress.emit(f"Processing ({processed_count + 1}/{total_items}): {desc[:30]}...")
+            self.signals.status_update.emit(f"Processing ({processed_count + 1}/{total_items})")
             
             try:
                 # Call Gemini
@@ -262,24 +265,24 @@ class BulkIngestWorker(QObject):
                 time.sleep(1)
                 
             except QuotaExceededError as e:
-                self.progress.emit(f"🛑 FATAL ERROR: {e}")
-                self.status_update.emit("Daily Quota Exhausted! Stopping.")
+                self.signals.progress.emit(f"🛑 FATAL ERROR: {e}")
+                self.signals.status_update.emit("Daily Quota Exhausted! Stopping.")
                 self.is_running = False
                 break
                 
             except Exception as e:
-                self.progress.emit(f"API Error. Pausing for 80 seconds... ({e})")
-                self.status_update.emit("API Rate Limit - Paused")
+                self.signals.progress.emit(f"API Error. Pausing for 80 seconds... ({e})")
+                self.signals.status_update.emit("API Rate Limit - Paused")
                 
                 # Sleep for 80 seconds checking self.is_running
                 for i in range(80):
                     if not self.is_running:
                         break
-                    self.countdown_update.emit(80 - i)
+                    self.signals.countdown_update.emit(80 - i)
                     time.sleep(1)
                 
                 # Clear countdown when resuming
-                self.countdown_update.emit(0)
+                self.signals.countdown_update.emit(0)
                 
                 if not self.is_running:
                     break

@@ -10,42 +10,15 @@ from models.config_manager import ConfigManager
 from ui.settings import SettingsWindow
 from ui.database_manager import DatabaseManager
 from ui.batch_pdf import BatchPdfIngestWindow
-from ui.ingestion_progress import IngestionProgressDialog
-from ui.product_detail import ProductDetailDialog
 from ui.components.product_form import ProductFormWidget
-from ui.sync_progress_dialog import SyncProgressDialog
+from ui.components.progress_dialog import ProgressDialog
+from ui.product_detail import ProductDetailDialog
+from ui.utils import clear_layout
+from core.thread_utils import run_in_thread
+from core.workers import SyncWorker, UpdateChecker
 from models.github_sync_engine import GithubSyncEngine
-
-class UpdateChecker(QThread):
-    finished = Signal(bool) # True if update available
-
-    def __init__(self, owner, repo, token, local_path):
-        super().__init__()
-        self.owner = owner
-        self.repo = repo
-        self.token = token
-        self.local_path = local_path
-        
-    def run(self):
-        try:
-            engine = GithubSyncEngine(self.owner, self.repo, self.token)
-            latest_sha = engine.get_latest_commit()
-            if not latest_sha:
-                self.finished.emit(False)
-                return
-                
-            version_file = os.path.join(self.local_path, "version.txt")
-            local_sha = ""
-            if os.path.exists(version_file):
-                with open(version_file, "r") as f:
-                    local_sha = f.read().strip()
-                    
-            self.finished.emit(local_sha != latest_sha)
-        except Exception:
-            self.finished.emit(False)
-
 class TempItemEditDialog(QDialog):
-    def __init__(self, parent, categories_path="database/categories", item_data=None):
+    def __init__(self, parent, categories_path=None, item_data=None):
         super().__init__(parent)
         self.categories_path = categories_path
         self.item_data = item_data or {}
@@ -193,9 +166,12 @@ class MainWindow(QMainWindow):
         token = ConfigManager.get("github_token")
         local_path = self.controller.db_loader.base_path
         
-        self.update_checker = UpdateChecker(owner, repo, token, local_path)
-        self.update_checker.finished.connect(self._on_update_check_done)
-        self.update_checker.start()
+        worker = UpdateChecker(owner, repo, token, local_path)
+        worker.signals.result.connect(self._on_update_check_done)
+        
+        if not hasattr(self, '_threads'):
+            self._threads = []
+        run_in_thread(worker, self._threads)
         
     def _on_update_check_done(self, update_available):
         if update_available:
@@ -404,7 +380,7 @@ class MainWindow(QMainWindow):
         self.btn_load_dir.setText("⌛ Processing...")
         
         # Show verbose popup
-        self.ingestion_dialog = IngestionProgressDialog(self)
+        self.ingestion_dialog = ProgressDialog(self, title="PDF Ingestion Progress", show_abort=True)
         self.ingestion_dialog.show()
         
         self.update_status("📖 Reading PDF...")
@@ -450,16 +426,6 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(self, "Error", f"Failed to generate {name}:\n{err_msg}")
         self.update_status(f"❌ {name} generation failed.")
 
-    def clear_layout(self, layout):
-        if layout is not None:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.deleteLater()
-                else:
-                    self.clear_layout(item.layout())
-
     def show_item_detail(self, idx):
         if getattr(self, '_detail_dialog_open', False):
             return
@@ -483,7 +449,7 @@ class MainWindow(QMainWindow):
         self.entry_client.setText(session_data.get("client_name", ""))
         self.entry_po.setText(session_data.get("project_po", ""))
         
-        self.clear_layout(self.workspace_grid)
+        clear_layout(self.workspace_grid)
         
         items = session_data.get("line_items", [])
         hide_ignored = self.hide_ignored_var.isChecked()
@@ -627,7 +593,7 @@ class MainWindow(QMainWindow):
         return False
 
     def open_add_temp_item(self):
-        dialog = TempItemEditDialog(self)
+        dialog = TempItemEditDialog(self, categories_path=self.controller.db_loader.categories_path)
         if dialog.exec() == QDialog.DialogCode.Accepted and hasattr(dialog, 'result_data'):
             if "line_items" not in self.controller.session_data:
                 self.controller.session_data["line_items"] = []
@@ -643,7 +609,7 @@ class MainWindow(QMainWindow):
         items = self.controller.session_data.get("line_items", [])
         if 0 <= idx < len(items):
             item = items[idx]
-            dialog = TempItemEditDialog(self, item_data=item)
+            dialog = TempItemEditDialog(self, categories_path=self.controller.db_loader.categories_path, item_data=item)
             if dialog.exec() == QDialog.DialogCode.Accepted and hasattr(dialog, 'result_data'):
                 items[idx] = dialog.result_data
                 self.populate_ui()
@@ -669,8 +635,7 @@ class MainWindow(QMainWindow):
         if getattr(dialog, 'db_modified', False):
             self.controller.refresh_catalog()
             if self.controller.session_data and "line_items" in self.controller.session_data:
-                self.ingestion_dialog = IngestionProgressDialog(self)
-                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog = ProgressDialog(self, title="Re-evaluating Matches", show_abort=True)
                 self.ingestion_dialog.show()
             self.controller.reevaluate_unmatched()
 
@@ -681,8 +646,7 @@ class MainWindow(QMainWindow):
         if getattr(dialog, 'db_modified', False):
             self.controller.refresh_catalog()
             if self.controller.session_data and "line_items" in self.controller.session_data:
-                self.ingestion_dialog = IngestionProgressDialog(self)
-                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog = ProgressDialog(self, title="Re-evaluating Matches", show_abort=True)
                 self.ingestion_dialog.show()
             self.controller.reevaluate_unmatched()
 
@@ -696,17 +660,39 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Missing Token", "You cannot publish without an Admin Token. Please set it in settings.json.")
             return
 
-        dialog = SyncProgressDialog(self, is_publish=is_publish)
+        dialog = ProgressDialog(self, title="Publishing Database" if is_publish else "Syncing Database", show_abort=False)
         dialog.show()
-        dialog.start_sync(owner, repo, token, local_path)
+        
+        worker = SyncWorker(owner, repo, token, local_path, is_publish)
+        worker.signals.progress.connect(dialog.update_status)
+        worker.signals.progress.connect(dialog.append_log)
+        worker.signals.progress_val.connect(dialog.update_progress)
+        
+        def on_sync_finished(result):
+            success, message = result
+            dialog.update_status(message)
+            dialog.append_log(message)
+            dialog.set_finished()
+            dialog.show()
+            dialog.raise_()
+            dialog.activateWindow()
+            if not success:
+                dialog.status_label.setStyleSheet("color: red; font-weight: bold; font-size: 14px;")
+            else:
+                dialog.status_label.setStyleSheet("color: #4caf50; font-weight: bold; font-size: 14px;")
+                
+        worker.signals.result.connect(on_sync_finished)
+        
+        if not hasattr(self, '_threads'):
+            self._threads = []
+        run_in_thread(worker, self._threads)
         
         # When closed, refresh DB if it was a download sync
         dialog.exec()
         if not is_publish:
             self.controller.refresh_catalog()
             if self.controller.session_data and "line_items" in self.controller.session_data:
-                self.ingestion_dialog = IngestionProgressDialog(self)
-                self.ingestion_dialog.setWindowTitle("Re-evaluating Matches")
+                self.ingestion_dialog = ProgressDialog(self, title="Re-evaluating Matches", show_abort=True)
                 self.ingestion_dialog.show()
             self.controller.reevaluate_unmatched()
 

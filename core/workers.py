@@ -1,5 +1,7 @@
 from PySide6.QtCore import QObject, Signal, QThread
 import traceback
+import os
+from models.github_sync_engine import GithubSyncEngine
 
 class WorkerSignals(QObject):
     """
@@ -17,6 +19,38 @@ class WorkerSignals(QObject):
     result = Signal(object)
     progress = Signal(str)
     status_color = Signal(str)
+    progress_val = Signal(int, int)
+
+
+class UpdateChecker(QObject):
+    def __init__(self, owner, repo, token, local_path):
+        super().__init__()
+        self.owner = owner
+        self.repo = repo
+        self.token = token
+        self.local_path = local_path
+        self.signals = WorkerSignals()
+        
+    def run(self):
+        try:
+            engine = GithubSyncEngine(self.owner, self.repo, self.token)
+            latest_sha = engine.get_latest_commit()
+            if not latest_sha:
+                self.signals.result.emit(False)
+                return
+                
+            version_file = os.path.join(self.local_path, "version.txt")
+            local_sha = ""
+            if os.path.exists(version_file):
+                with open(version_file, "r") as f:
+                    local_sha = f.read().strip()
+                    
+            self.signals.result.emit(local_sha != latest_sha)
+        except Exception as e:
+            self.signals.error.emit((type(e), e, traceback.format_exc()))
+            self.signals.result.emit(False)
+        finally:
+            self.signals.finished.emit()
 
 
 class OllamaPingWorker(QObject):
@@ -53,6 +87,9 @@ class IngestionWorker(QObject):
     def _progress_callback(self, msg: str):
         # We pass this callback down into the service to receive progress updates
         self.signals.progress.emit(msg)
+
+    def _progress_val_callback(self, current: int, total: int):
+        self.signals.progress_val.emit(current, total)
 
     def run(self):
         try:
@@ -93,6 +130,7 @@ class IngestionWorker(QObject):
             # Step 3: Enrich with LLM
             self.match_service.enrich_items(
                 raw_data["line_items"],
+                progress_callback=self._progress_val_callback,
                 status_callback=self._progress_callback
             )
 
@@ -154,6 +192,9 @@ class ReevaluateWorker(QObject):
     def _progress_callback(self, msg: str):
         self.signals.progress.emit(msg)
 
+    def _progress_val_callback(self, current: int, total: int):
+        self.signals.progress_val.emit(current, total)
+
     def run(self):
         try:
             items_to_eval = [item for item in self.line_items if not item.get("confirmed", False)]
@@ -168,6 +209,7 @@ class ReevaluateWorker(QObject):
 
             self.match_service.enrich_items(
                 items_to_eval,
+                progress_callback=self._progress_val_callback,
                 status_callback=self._progress_callback
             )
 
@@ -175,6 +217,65 @@ class ReevaluateWorker(QObject):
             self.signals.result.emit(True)
         except Exception as e:
             self.signals.error.emit((type(e), e, traceback.format_exc()))
+        finally:
+            self.signals.finished.emit()
+
+
+class SyncWorker(QObject):
+    """
+    Worker for syncing the database with GitHub.
+    Can either be a 'download' (sync) or 'upload' (publish).
+    """
+    def __init__(self, owner, repo, token, local_path, is_publish=False):
+        super().__init__()
+        self.owner = owner
+        self.repo = repo
+        self.token = token
+        self.local_path = local_path
+        self.is_publish = is_publish
+        self.signals = WorkerSignals()
+
+    def _progress_callback(self, current, total, msg=None):
+        if msg:
+            self.signals.progress.emit(msg)
+        if total > 0:
+            self.signals.progress_val.emit(current, total)
+
+    def run(self):
+        try:
+            engine = GithubSyncEngine(self.owner, self.repo, self.token)
+            
+            if self.is_publish:
+                self.signals.progress.emit("🚀 Preparing to publish changes...")
+                success, result = engine.publish_changes(
+                    self.local_path, 
+                    progress_callback=lambda c, t, m: self._progress_callback(c, t, m)
+                )
+                if success:
+                    self.signals.result.emit((True, f"Successfully published! New SHA: {result[:7]}"))
+                else:
+                    self.signals.result.emit((False, f"Publish failed: {result}"))
+            else:
+                self.signals.progress.emit("🔄 Checking for updates...")
+                self.signals.progress.emit("📥 Downloading latest database...")
+                success = engine.download_full_zip(
+                    self.local_path,
+                    progress_callback=lambda c, t: self._progress_callback(c, t)
+                )
+                if success:
+                    # Update version.txt
+                    latest_sha = engine.get_latest_commit()
+                    if latest_sha:
+                        version_file = os.path.join(self.local_path, "version.txt")
+                        with open(version_file, "w") as f:
+                            f.write(latest_sha)
+                    self.signals.result.emit((True, "Database synchronized successfully."))
+                else:
+                    self.signals.result.emit((False, "Failed to download database update."))
+                    
+        except Exception as e:
+            self.signals.error.emit((type(e), e, traceback.format_exc()))
+            self.signals.result.emit((False, str(e)))
         finally:
             self.signals.finished.emit()
 

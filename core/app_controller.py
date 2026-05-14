@@ -5,7 +5,8 @@ from models.catalog_loader import CatalogLoader
 from models.client_pdf_generator import PDFGenerator
 from models.excel_routing_engine import ExcelRoutingEngine
 from core.workers import IngestionWorker, OllamaPingWorker
-from PySide6.QtCore import QThread, QObject, Signal
+from core.thread_utils import run_in_thread
+from PySide6.QtCore import QObject, Signal
 
 class AppController(QObject):
     """
@@ -20,6 +21,7 @@ class AppController(QObject):
     ingestion_error = Signal(str)
     generation_finished = Signal(str, str) # type, path
     generation_error = Signal(str, str)    # type, error
+    progress_updated = Signal(int, int)
     
     def __init__(self):
         super().__init__()
@@ -75,19 +77,9 @@ class AppController(QObject):
 
     def check_ollama_background(self):
         """Perform a silent ping to warn user if service is offline."""
-        thread = QThread()
         worker = OllamaPingWorker(self.match_service)
-        worker.moveToThread(thread)
-        thread._worker = worker  # Prevent garbage collection
-        
-        thread.started.connect(worker.run)
         worker.signals.result.connect(self._on_ollama_checked)
-        worker.signals.finished.connect(thread.quit)
-        worker.signals.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
-        
-        self._threads.append(thread)
-        thread.start()
+        run_in_thread(worker, self._threads)
 
     def _on_ollama_checked(self, result):
         success, err = result
@@ -124,21 +116,14 @@ class AppController(QObject):
         self.target_pdf_dir = os.path.dirname(pdf_path)
         self.session_path = os.path.splitext(pdf_path)[0] + ".json"
         
-        thread = QThread()
         worker = IngestionWorker(pdf_path, self.match_service.debug_mode, self.match_service)
-        worker.moveToThread(thread)
-        thread._worker = worker  # Prevent garbage collection
         
-        thread.started.connect(worker.run)
         worker.signals.progress.connect(self.status_updated.emit)
+        worker.signals.progress_val.connect(self.progress_updated.emit)
         worker.signals.result.connect(self._on_ingestion_result)
         worker.signals.error.connect(lambda e: self.ingestion_error.emit(str(e[1])))
-        worker.signals.finished.connect(thread.quit)
-        worker.signals.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
         
-        self._threads.append(thread)
-        thread.start()
+        run_in_thread(worker, self._threads)
 
     def _on_ingestion_result(self, result):
         if "error" in result:
@@ -189,22 +174,15 @@ class AppController(QObject):
             self.session_loaded.emit(self.session_data)
             return
             
-        thread = QThread()
         from core.workers import ReevaluateWorker
         worker = ReevaluateWorker(self.session_data["line_items"], self.match_service)
-        worker.moveToThread(thread)
-        thread._worker = worker
         
-        thread.started.connect(worker.run)
         worker.signals.progress.connect(self.status_updated.emit)
+        worker.signals.progress_val.connect(self.progress_updated.emit)
         worker.signals.result.connect(self._on_reevaluate_result)
         worker.signals.error.connect(lambda e: self.ingestion_error.emit(str(e[1])))
-        worker.signals.finished.connect(thread.quit)
-        worker.signals.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
         
-        self._threads.append(thread)
-        thread.start()
+        run_in_thread(worker, self._threads)
 
     def _on_reevaluate_result(self, changed):
         self.session_loaded.emit(self.session_data)
@@ -252,22 +230,14 @@ class AppController(QObject):
             
         self.status_updated.emit("⏳ Starting PDF Generation...")
         
-        thread = QThread()
         from core.workers import GenerationWorker
         worker = GenerationWorker('pdf', payload, output_dir, self.match_service.debug_mode)
-        worker.moveToThread(thread)
-        thread._worker = worker
         
-        thread.started.connect(worker.run)
         worker.signals.progress.connect(self.status_updated.emit)
         worker.signals.result.connect(lambda path: self.generation_finished.emit('pdf', path))
         worker.signals.error.connect(lambda e: self.generation_error.emit('pdf', str(e[1])))
-        worker.signals.finished.connect(thread.quit)
-        worker.signals.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
         
-        self._threads.append(thread)
-        thread.start()
+        run_in_thread(worker, self._threads)
         return True, "Started"
 
     def generate_excel(self, client_name: str, project_po: str):
@@ -286,20 +256,12 @@ class AppController(QObject):
         
         self.status_updated.emit("⏳ Starting Excel Generation...")
         
-        thread = QThread()
         from core.workers import GenerationWorker
         worker = GenerationWorker('excel', excel_payload, output_dir, self.match_service.debug_mode)
-        worker.moveToThread(thread)
-        thread._worker = worker
         
-        thread.started.connect(worker.run)
         worker.signals.progress.connect(self.status_updated.emit)
         worker.signals.result.connect(lambda path: self.generation_finished.emit('excel', path))
         worker.signals.error.connect(lambda e: self.generation_error.emit('excel', str(e[1])))
-        worker.signals.finished.connect(thread.quit)
-        worker.signals.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
         
-        self._threads.append(thread)
-        thread.start()
+        run_in_thread(worker, self._threads)
         return True, "Started"

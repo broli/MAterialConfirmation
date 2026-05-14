@@ -1,20 +1,3 @@
-- id: AGI-NICHE-MB
-  sku: AGI-NICHE-MB
-  brand: PKB
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-MB: Liquid
-    Accents
-
-    12 X 24 Inch Niche, Matte Black'
-  printable:
-    finish: Matte Black
-    description: Niche
-    dimensions:
-      width: '12'
-      height: '24'
-    image_file: la-niche-mb_l.jpg
 - id: AGI-NICHE-SS
   sku: AGI-NICHE-SS
   brand: PKB
@@ -32,36 +15,6 @@
       width: '12'
       height: '24'
     image_file: LA-NICHE-SS.jpg
-- id: AGI-NICHE-W
-  sku: AGI-NICHE-W
-  brand: PKB
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid
-    Accents
-
-    12 X 24 Inch Niche, White'
-  printable:
-    finish: white
-    description: Niche
-    dimensions:
-      width: '12'
-      height: '24'
-    image_file: la-niche-w.jpg
-- id: CC-4-W
-  sku: CC-4-W
-  brand: BCI
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: "Bath Accessories Storage Shelving BCI 4 Shelf Corner Caddy\n\
-    \ White"
-  printable:
-    finish: white
-    description: Corner Caddy
-    dimensions: {}
-    image_file: cc-4-w_l.jpg
 - id: CC-4-SAN
   sku: CC-4-SAN
   brand: BCI
@@ -148,24 +101,6 @@
     description: 4-Shelf Corner Caddy
     dimensions: {}
     image_file: cc-4-cs_g_l.jpg
-- id: ABN1616-PSS
-  sku: ABN1616-PSS
-  brand: ALFI
-  provider: HD
-  routing_tag: WH_OR_PROCURE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Storage Storage Pods ALFI-SS: Stainless
-    Steel 16" x 16"'
-  printable:
-    finish: Stainless Steel
-    description: Storage Pods
-    image_file: ABN1616-PSS.png
-    dimensions:
-      width: 16"
-      height: 16"
-  category_file: Storage
-  aliases:
-  - 'Bath Accessories Storage Storage Pods ALFI-SS: Stainless Steel 16" x 16"'
 - id: CC-ST-W
   sku: CC-ST-W
   brand: PKB
@@ -182,3 +117,78 @@
   category_file: Storage
   aliases:
   - Bath Accessories Storage Shelving BCI Single Tier Corner Shelf White
+- id: CC-4-W
+  sku: CC-4-W
+  brand: BCI
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: "Bath Accessories Storage Shelving BCI 4 Shelf Corner Caddy\n\
+    \ White"
+  printable:
+    finish: white
+    description: Corner Caddy
+    dimensions: {}
+    image_file: cc-4-w_l.jpg
+  category_file: Storage
+  aliases:
+  - Bath Accessories Storage Shelving BCI 4 Shelf Corner Caddy Matching
+- id: AGI-NICHE-MB
+  sku: AGI-NICHE-MB
+  brand: PKB
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-MB: Liquid
+    Accents
+
+    12 X 24 Inch Niche, Matte Black'
+  printable:
+    finish: Matte Black
+    description: Niche
+    dimensions:
+      width: '12'
+      height: '24'
+    image_file: la-niche-mb_l.jpg
+  category_file: Storage
+  aliases:
+  - 'Bath Accessories Storage Storage Pods LA-NICHE-MB: Liquid Accents 12 X 24 Inch
+    Niche, Matte Black'
+- id: AGI-NICHE-W
+  sku: AGI-NICHE-W
+  brand: PKB
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid
+    Accents
+
+    12 X 24 Inch Niche, White'
+  printable:
+    finish: white
+    description: Niche
+    dimensions:
+      width: '12'
+      height: '24'
+    image_file: la-niche-w.jpg
+  category_file: Storage
+  aliases:
+  - 'Bath Accessories Storage Storage Pods LA-NICHE-W: Liquid Accents 12 X 24 Inch
+    Niche, White'
+- id: ABN1616-PSS
+  sku: ABN1616-PSS
+  brand: ALFI
+  provider: HD
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Storage Storage Pods ALFI-SS: Stainless
+    Steel 16" x 16"'
+  printable:
+    finish: Stainless Steel
+    description: Storage Pods
+    image_file: ABN1616-PSS.png
+    dimensions:
+      width: 16"
+      height: 16"
+  category_file: Storage
+  aliases: []

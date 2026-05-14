@@ -10,7 +10,8 @@ from models.product_service import ProductService
 from models.catalog_loader import CatalogLoader
 from ui.components.product_form import ProductFormWidget
 from core.bulk_worker import BulkIngestWorker
-from ui.ingestion_progress import IngestionProgressDialog
+from ui.components.progress_dialog import ProgressDialog
+from core.thread_utils import run_in_thread
 
 class CatalogTableModel(QAbstractTableModel):
     def __init__(self, catalog=None):
@@ -199,8 +200,8 @@ class ProductEditDialog(QDialog):
                     aliases.append(staging_desc)
                     prod_item["aliases"] = aliases
                     
-                    prod_cat_path = os.path.join("database", "categories")
-                    prod_ass_path = os.path.join("database", "assets")
+                    prod_cat_path = self.db_loader.categories_path
+                    prod_ass_path = self.db_loader.assets_path
                     cat_file = prod_item.get("category_file", "")
                     if cat_file and not cat_file.endswith(".yaml"):
                         cat_file += ".yaml"
@@ -289,8 +290,8 @@ class DatabaseManager(QDialog):
         self.refresh_data()
 
     def get_current_paths(self):
-        base = "database" if self.current_source == "Production" else "staging_database"
-        return os.path.join(base, "categories"), os.path.join(base, "assets")
+        loader = self.db_loader if self.current_source == "Production" else self.staging_loader
+        return loader.categories_path, loader.assets_path
 
     def _build_browser_view(self):
         # Top Controls
@@ -524,27 +525,20 @@ class DatabaseManager(QDialog):
 
     def _setup_worker_and_dialog(self, worker_instance, title):
         self.bulk_worker = worker_instance
-        self.bulk_thread = QThread()
-        self.bulk_worker.moveToThread(self.bulk_thread)
         
-        self.progress_dlg = IngestionProgressDialog(self)
-        self.progress_dlg.setWindowTitle(title)
+        self.progress_dlg = ProgressDialog(self, title=title)
         self.progress_dlg.setModal(True)
         
         self.progress_dlg.rejected.connect(self.bulk_worker.stop)
         
-        self.bulk_thread.started.connect(self.bulk_worker.run)
-        self.bulk_worker.progress.connect(self.progress_dlg.append_log)
-        self.bulk_worker.status_update.connect(self.progress_dlg.update_status)
-        self.bulk_worker.model_status_update.connect(self.progress_dlg.update_model_status)
-        self.bulk_worker.countdown_update.connect(self.progress_dlg.update_countdown)
-        self.bulk_worker.result.connect(self._on_bulk_finished)
-        self.bulk_worker.finished.connect(self.bulk_thread.quit)
-        self.bulk_worker.finished.connect(self.progress_dlg.set_finished)
-        self.bulk_worker.finished.connect(self.bulk_worker.deleteLater)
-        self.bulk_thread.finished.connect(self.bulk_thread.deleteLater)
+        self.bulk_worker.signals.progress.connect(self.progress_dlg.append_log)
+        self.bulk_worker.signals.status_update.connect(self.progress_dlg.update_status)
+        self.bulk_worker.signals.model_status_update.connect(self.progress_dlg.update_model_status)
+        self.bulk_worker.signals.countdown_update.connect(self.progress_dlg.update_countdown)
+        self.bulk_worker.signals.result.connect(self._on_bulk_finished)
+        self.bulk_worker.signals.finished.connect(self.progress_dlg.set_finished)
         
-        self.bulk_thread.start()
+        self.bulk_thread = run_in_thread(self.bulk_worker)
         self.progress_dlg.show()
         
     def _is_thread_running(self):

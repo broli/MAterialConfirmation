@@ -35,7 +35,7 @@ class DimensionRow(QWidget):
         return None
 
 class ProductFormWidget(QWidget):
-    def __init__(self, parent=None, categories_path="database/categories", batch_mode=False, dropdown_categories_path=None):
+    def __init__(self, parent=None, categories_path=None, batch_mode=False, dropdown_categories_path=None):
         super().__init__(parent)
         self.categories_path = categories_path
         self.dropdown_categories_path = dropdown_categories_path or categories_path

@@ -76,7 +76,7 @@ class BatchPdfIngestWindow(QDialog):
         right_layout = QVBoxLayout(right_frame)
         right_layout.addWidget(QLabel("<b>2. Modify extracted details</b>"))
         
-        self.form = ProductFormWidget(self, categories_path=os.path.join(self.controller.db_loader.base_path, "categories"))
+        self.form = ProductFormWidget(self, categories_path=self.controller.db_loader.categories_path)
         right_layout.addWidget(self.form)
         
         self.btn_save = QPushButton("Save to Database")
