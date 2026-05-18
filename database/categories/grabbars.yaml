@@ -12,20 +12,6 @@
     dimensions:
       width: '12'
     image_file: Moen_R8712D3GCH.jpg
-- id: LR8724D3GCH
-  sku: LR8724D3GCH
-  brand: Moen
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: "Bath Accessories Grab Bars Traditional 24\" Traditional Grab\
-    \ Bar \nChrome"
-  printable:
-    finish: Chrome
-    description: Traditional
-    dimensions:
-      width: '24'
-    image_file: Moen_R8712D3GCH.jpg
 - id: R8736D3GCH
   sku: R8736D3GCH
   brand: Moen
@@ -229,22 +215,6 @@
     dimensions:
       width: '12'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
-- id: R8718BL
-  sku: R8718BL
-  brand: Moen
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
-    Grab
-
-    Bar Matte Black'
-  printable:
-    finish: Matte Black
-    description: Contemporary
-    dimensions:
-      width: '18'
-    image_file: 51IK7miEa7L._AC_SL1500_.jpg
 - id: R8724P
   sku: R8724P
   brand: Moen
@@ -260,22 +230,6 @@
     description: Contemporary
     dimensions:
       width: '24'
-    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
-- id: R8718P
-  sku: R8718P
-  brand: Moen
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
-    Grab
-
-    Bar Brushed Nickel'
-  printable:
-    finish: Brushed Nickel
-    description: Contemporary
-    dimensions:
-      width: '18'
     image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
 - id: R8724BL
   sku: R8724BL
@@ -293,3 +247,58 @@
     dimensions:
       width: '24'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
+- id: R8718P
+  sku: R8718P
+  brand: Moen
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '18'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  category_file: grabbars
+  aliases:
+  - Bath Accessories Grab Bars Contemporary 18" Contemporary Grab Bar Brushed Nickel
+- id: R8718BL
+  sku: R8718BL
+  brand: Moen
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 18" Contemporary
+    Grab
+
+    Bar Matte Black'
+  printable:
+    finish: Matte Black
+    description: Contemporary
+    dimensions:
+      width: '18'
+    image_file: 51IK7miEa7L._AC_SL1500_.jpg
+  category_file: grabbars
+  aliases:
+  - Bath Accessories Grab Bars Contemporary 18" Contemporary Grab Bar Matte Black
+- id: LR8724D3GCH
+  sku: LR8724D3GCH
+  brand: Moen
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: "Bath Accessories Grab Bars Traditional 24\" Traditional Grab\
+    \ Bar \nChrome"
+  printable:
+    finish: Chrome
+    description: Traditional
+    dimensions:
+      width: '24'
+    image_file: Moen_R8712D3GCH.jpg
+  category_file: grabbars
+  aliases:
+  - Bath Accessories Grab Bars Traditional 24" Traditional Grab Bar Chrome

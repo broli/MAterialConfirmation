@@ -180,10 +180,9 @@
     dimensions:
       width: 60"
       depth: 32"
-    image_file: white-dreamline-shower-pans-dlt-1132600-64_600.png
+    image_file: white-dreamline-shower-pans-dlt-1132600-64_600_upscayl_1x_upscayl-standard-4x.png
   id: DLT-1132600
-  category_file: WetAreaBases
+  category_file: WetAreaBases.yaml
   provider: DreamLine
   purchase_link: ''
-  aliases:
-  - Bath Shower Bases HV Single Threshold Center Drain 60" x 32"
+  aliases: []

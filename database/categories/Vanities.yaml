@@ -1,0 +1,70 @@
+- id: EV48P2-PG
+  sku: EV48P2-PG
+  brand: Glacier Bay
+  provider: Home Depot
+  routing_tag: PROCURE
+  purchase_link: https://www.homedepot.com/p/Glacier-Bay-Everdean-49-in-Single-Sink-Pearl-Gray-Bath-Vanity-with-White-Cultured-Marble-Top-Assembled-EV48P2-PG/311606070
+  oneclick_description: Bath Vanities Pre-Packaged Vanities Everdean Pearl Grey 48.5"W
+    x 18.75"D x 34.75"H Everdeen 48.5"W x 18.75"D x 34.75"H Pearl Grey Furniture Style
+    Vanity with Solid Surface top and Single White basin (Requires 4" spread faucet)
+  aliases: []
+  printable:
+    finish: Pearl Grey
+    description: Everdean Furniture Style Vanity with Solid Surface top and Single
+      White basin
+    image_file: glacier-bay-bathroom-vanities-with-tops-ev48p2-pg-64_600.png
+    dimensions:
+      width: 48.5"
+      depth: 18.75"
+      height: 34.75"
+- id: BSCM60-WH
+  sku: BSCM60-WH
+  brand: Glacier Bay
+  provider: Home Depot
+  routing_tag: WAREHOUSE
+  purchase_link: https://www.homedepot.com/p/Glacier-Bay-60-in-W-Cultured-Marble-Vanity-Backsplash-in-White-BSCM60-WH/307398043
+  oneclick_description: Bath Vanities Pre-Packaged Vanities Vanity Backsplash 2.375"
+    x 36.5" Cultured Marble Vanity Backsplash in White
+  aliases: []
+  printable:
+    finish: White
+    description: Vanity Backsplash
+    image_file: white-glacier-bay-bathroom-vanity-backsplashes-ns22gbcom-w-64_600.png
+    dimensions:
+      width: 36.5"
+      height: 2.375"
+- id: NS22GBCOM-W
+  sku: NS22GBCOM-W
+  brand: Glacier Bay
+  provider: Home Depot
+  routing_tag: PROCURE
+  purchase_link: https://www.homedepot.com/p/Glacier-Bay-21-in-W-Cultured-Marble-Vanity-Sidesplash-in-White-NS22GBCOM-W/204494373
+  oneclick_description: Bath Vanities Pre-Packaged Vanities Vanity Sidesplash 2.375"
+    x 17.875" Cultured Marble Vanity Sidesplash in White
+  aliases: []
+  printable:
+    finish: White
+    description: Vanity Sidesplash
+    image_file: white-glacier-bay-bathroom-vanity-backsplashes-ns22gbcom-w-64_600.png
+    dimensions:
+      width: 2.375"
+      depth: 17.875"
+- id: PPLNKDVR30D
+  sku: PPLNKDVR30D
+  brand: Home Decorators
+  provider: Home Depot
+  routing_tag: PROCURE
+  purchase_link: https://www.homedepot.com/p/Home-Decorators-Collection-Sedgewood-30-5-in-W-x-18-75-in-D-x-34-375-in-H-Single-Sink-Bath-Vanity-in-Dove-Gray-with-Arctic-Solid-Surface-Top-PPLNKDVR30D/306307924
+  oneclick_description: Bath Vanities Pre-Packaged Vanities Sedgewood Dove Grey 31.5"W
+    x 18.75"D x 34.75"H Sedgewood 31.5"W x 18.75"D x 34.75"H Grey Furniture Style
+    Vanity with Solid Surface top and Single White basin (Requires 4" spread faucet)
+  aliases: []
+  printable:
+    finish: Dove Grey
+    description: Sedgewood Furniture Style Vanity with Solid Surface top and Single
+      White basin
+    image_file: home-decorators-collection-bathroom-vanities-with-tops-pplnkdvr30d-e1_600.png
+    dimensions:
+      width: 31.5"
+      depth: 18.75"
+      height: 34.75"

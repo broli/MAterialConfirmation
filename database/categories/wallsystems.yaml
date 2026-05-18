@@ -95,3 +95,64 @@
   aliases:
   - 'Bath Accessories Window Trim Kits BCI Window Trim Kit White WK- W: Window Kit
     White'
+- sku: W-CP-SAN
+  brand: BCI
+  finish: Santorini White
+  routing_tag: WH_OR_PROCURE
+  oneclick_description: 'Bath Wall Systems BCI Walls Single Panels Elite - Individual
+    Walls Santorini White Smooth Ceiling W-CP-SAN: Ceiling Panel Santorini White'
+  printable:
+    description: Ceiling Panel
+    finish: Santorini White
+    dimensions: {}
+    image_file: Santorini White pattern.png
+  id: W-CP-SAN
+  category_file: wallsystems
+  provider: BCI
+  purchase_link: ''
+  aliases: []
+- id: W-LEHR-W
+  sku: W-LEHR-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
+    White Laser-Etched: Herringbone Standard - Shower W-LEHR-W: LE/Herringbone Shower
+    System White'
+  aliases: []
+  printable:
+    finish: White, Grey Laser Etched
+    description: Bath Wall Systems
+    image_file: herringbone_white_l.jpg
+    dimensions:
+      pattern: Herringbone
+- id: W-WC-IC-W
+  sku: W-WC-IC-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Trim Elite - Trim Inside Corner
+    Inside Corner White W-WC-IC-W: Wainscoting Inside Corners White'
+  aliases: []
+  printable:
+    finish: White
+    description: Wainscoting Inside Corners
+    image_file: W-WC-IC-W.png
+    dimensions: {}
+- id: W-WC-W
+  sku: W-WC-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Single Panels Elite - Individual
+    Walls White Sim-Tile: Wainscot Wainscot W-WC-W: 8 Ft Section Wainscoting White'
+  aliases: []
+  printable:
+    finish: White
+    description: Individual Walls Sim-Tile Wainscot
+    image_file: wainscot-white_l.jpg
+    dimensions:
+      length: 8 Ft

@@ -221,6 +221,11 @@ class MainWindow(QMainWindow):
         
         role = ConfigManager.get("role") or "user"
         
+        self.btn_sync = QPushButton("🔄 Sync Database")
+        self.btn_sync.setStyleSheet("background-color: #1976d2; color: white;")
+        self.btn_sync.clicked.connect(lambda: self.open_sync_dialog(is_publish=False))
+        layout.addWidget(self.btn_sync)
+
         if role == "admin":
             self.btn_manage_db = QPushButton("⚙️ Manage Database")
             self.btn_manage_db.setStyleSheet("background-color: #1565c0; color: white;")
@@ -231,11 +236,6 @@ class MainWindow(QMainWindow):
             self.btn_publish.setStyleSheet("background-color: #d32f2f; color: white;")
             self.btn_publish.clicked.connect(lambda: self.open_sync_dialog(is_publish=True))
             layout.addWidget(self.btn_publish)
-        else:
-            self.btn_sync = QPushButton("🔄 Sync Database")
-            self.btn_sync.setStyleSheet("background-color: #1976d2; color: white;")
-            self.btn_sync.clicked.connect(lambda: self.open_sync_dialog(is_publish=False))
-            layout.addWidget(self.btn_sync)
             
         self.btn_settings = QPushButton("⚙️ Settings")
         self.btn_settings.clicked.connect(self.open_settings)

@@ -5,16 +5,6 @@
   routing_tag: IGNORE
   purchase_link: ''
   oneclick_description: Bath Flooring Pull Up Tile Pull Up of Tile (Per Square Foot)
-- id: '6'
-  sku: NaN
-  brand: Labor
-  provider: PKB
-  routing_tag: IGNORE
-  purchase_link: ''
-  oneclick_description: 'Contractor Tasks - NEW Miscellaneous Installing New Bathroom
-    Hardware
-
-    Installation of the following item'
 - id: '7'
   sku: NaN
   brand: Labor
@@ -582,3 +572,131 @@
   provider: ''
   purchase_link: ''
   aliases: []
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Special Requests This Price Does Not Include: - Flooring
+    - Patch & Paint - Vanity - Electrical Work'
+  printable:
+    description: Vanity
+    finish: UNKNOWN
+    dimensions: {}
+    image_file: ''
+  id: STG-F666B25E
+  category_file: ignore
+  provider: ''
+  purchase_link: ''
+  aliases: []
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Special Requests This price does not include: Toilet,
+    flooring, vanity faucet, medicine cabinet, mirror, outside wet area plumbing,
+    painting /patchwork, electrical, and hook-up of sink.'
+  printable:
+    description: UNKNOWN
+    finish: UNKNOWN
+    dimensions: {}
+    image_file: ''
+  id: STG-E028AEF4
+  category_file: ignore
+  provider: ''
+  purchase_link: ''
+  aliases: []
+- id: '6'
+  sku: NaN
+  brand: Labor
+  provider: PKB
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: 'Contractor Tasks - NEW Miscellaneous Installing New Bathroom
+    Hardware
+
+    Installation of the following item'
+  category_file: ignore
+  aliases:
+  - 'Contractor Tasks - NEW Miscellaneous Installing New Bathroom Hardware Installation
+    of the following item(s): Toilet Paper Holder, Towel Bar'
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Electrical Install New Exhaust Fan Using New
+    JBox & New Venting Through Roof or Stucco & New Switch (Includes Exterior Stucco
+    Patch Work)
+  printable:
+    description: Exhaust Fan
+    finish: UNKNOWN
+    dimensions: {}
+    image_file: ''
+  id: STG-6E92DFBB
+  category_file: ignore
+  provider: ''
+  purchase_link: ''
+  aliases: []
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Electrical Replace "Like for Like" Light Fixture
+    Using Existing Electrical Client will provide Light Fixture we will intall
+  printable:
+    description: Light Fixture
+    finish: UNKNOWN
+    dimensions: {}
+  id: STG-A25EE913
+  category_file: ignore
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: White
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Painting / Patch Painting Base Boards (Kitchen
+    or Bath Area) Includes White Finish Paint
+  printable:
+    description: Patch Painting Base Boards
+    finish: White
+    dimensions: {}
+  id: STG-D8B95065
+  category_file: ignore
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: White
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Painting / Patch Painting Base Boards (Kitchen
+    or Bath Area) Includes White Finish Paint (For Kitchen or Bath)
+  printable:
+    description: Patch Painting Base Boards
+    finish: White
+    dimensions: {}
+  id: STG-093FFD8E
+  category_file: ignore
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Plumbing Move Vanity Drain (Up to 24") Moving
+    Drain, Shut-Off Valves & Rerouting Plumbing Line (If Applicable) For Floating
+    Vanity
+  printable:
+    description: Plumbing Move
+    finish: UNKNOWN
+    dimensions:
+      width: Up to 24"
+  id: STG-09FDC6CB
+  category_file: ignore
+- sku: UNKNOWN
+  brand: UNKNOWN
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: The work shall be substantially completed within approximately
+    4-8 working days of said date of commencement (for reface/bath/flooring starting
+    from demolition date, for kitchen remodel starting from new cabinet installation)
+  printable:
+    description: UNKNOWN
+    finish: UNKNOWN
+    dimensions:
+      duration: 4-8 working days
+  id: STG-3378713D
+  category_file: ignore

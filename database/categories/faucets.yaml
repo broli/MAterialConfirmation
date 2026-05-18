@@ -1,2 +1,29 @@
 - id: '1'
-  sku: 'SKU1'
+  sku: SKU1
+- id: TR1000BN
+  sku: TR1000BN
+  brand: Moen
+  provider: Home Depot
+  routing_tag: WAREHOUSE
+  purchase_link: https://www.homedepot.com/p/MOEN-72-in-Adjustable-Straight-Decorative-Tension-Shower-Rod-in-Brushed-Nickel-TR1000BN/204293378
+  oneclick_description: Bath Accessories Curtain Rod Straight Brushed Nickel
+  aliases: []
+  printable:
+    finish: Brushed Nickel
+    description: Curtain Rod Straight
+    image_file: TR1000BN.png
+    dimensions: {}
+- id: K-393-N4-BV
+  sku: K-393-N4-BV
+  brand: KOHLER
+  provider: Home Depot
+  routing_tag: WH_OR_PROCURE
+  purchase_link: https://www.homedepot.com/p/KOHLER-Devonshire-4-in-Centerset-2-Handle-Mid-Arc-Water-Saving-Bathroom-Faucet-in-Vibrant-Brushed-Bronze-K-393-N4-BV/202388550
+  oneclick_description: Bath Vanities Vanity Faucets Kohler Devonshire 4" Spread Brushed
+    Nickel
+  aliases: []
+  printable:
+    finish: Brushed Nickel
+    description: Devonshire 4 in. Centerset
+    image_file: vibrant-brushed-bronze-kohler-centerset-bathroom-faucets-k-393-n4-bv-64_600_upscayl_1x_upscayl-standard-4x.png
+    dimensions: {}
