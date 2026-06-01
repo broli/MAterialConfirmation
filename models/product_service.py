@@ -20,7 +20,6 @@ All methods are @staticmethods — no instantiation required:
 import os
 import shutil
 import yaml
-import customtkinter as ctk
 
 
 class ProductService:
