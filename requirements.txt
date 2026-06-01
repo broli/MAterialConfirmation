@@ -2,7 +2,6 @@ altgraph==0.17.5
 cffi==2.0.0
 charset-normalizer==3.4.7
 cryptography==46.0.7
-customtkinter==5.2.2
 darkdetect==0.8.0
 defusedxml==0.7.1
 et_xmlfile==2.0.0

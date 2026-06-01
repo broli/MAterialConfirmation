@@ -1,5 +1,10 @@
 import os
 import sys
+
+# Force Qt to use the native Linux file dialogs via the XDG portal
+if sys.platform.startswith("linux"):
+    os.environ["QT_QPA_PLATFORMTHEME"] = "xdgdesktopportal"
+
 from PySide6.QtWidgets import QApplication, QDialog
 import qdarktheme
 

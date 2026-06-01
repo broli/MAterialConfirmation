@@ -12,14 +12,14 @@ class ConfigManager:
         "Kitchen Team": {
             "github_owner": "BathPC",
             "github_repo": "material-confirmation-db-kitchen",
-            "github_token": "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",
+            "github_token": "ghp_e9",
             "role": "user",
             "cover_image_filename": "Kitchen Document Cover Page.png"
         },
         "Bath Team": {
             "github_owner": "BathPC",
             "github_repo": "material-confirmation-db",
-            "github_token": "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",
+            "github_token": "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",
             "role": "user",
             "cover_image_filename": "Bath Document Cover Page.png"
         }
