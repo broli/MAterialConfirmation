@@ -1,14 +1,22 @@
-# Python Workspace Setup Documentation
+# Python Workspace Setup Documentation (CachyOS & Fish Shell)
 
-This document serves as a template and guide for creating new Python project workspaces. Following these steps ensures your local IDE (e.g., VS Code) and AI assistants can immediately and reliably interact with your project without dependency or environment resolution issues.
+This document serves as a template and guide for creating new Python project workspaces on CachyOS using the Fish shell. Following these steps ensures your local IDE (e.g., VS Code) and AI assistants can immediately and reliably interact with your project without dependency or environment resolution issues.
 
 ## 1. Virtual Environment Initialization
 
 Always create a local virtual environment named `.venv` in the root directory of your new project. This isolates your project dependencies and avoids polluting the global Python installation.
 
+> [!IMPORTANT]
+> CachyOS (Arch Linux) enforces **PEP 668** (externally managed environments). This means that running `pip install` globally on the system Python will fail with an `externally-managed-environment` error. You **must** use a virtual environment like `.venv` to install python packages.
+
 Open your terminal in the new project folder and run:
-```powershell
+```fish
 python -m venv .venv
+```
+
+To activate the virtual environment manually in your Fish terminal:
+```fish
+source .venv/bin/activate.fish
 ```
 
 ## 2. IDE and AI Configuration (`.vscode/settings.json`)
@@ -19,28 +27,27 @@ Create a `.vscode` directory in your project root, and inside it, create a `sett
 
 ```json
 {
-    "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
+    "python.defaultInterpreterPath": ".venv/bin/python",
     "python.terminal.activateEnvironment": true,
     "python.terminal.useEnvFile": true,
-    "terminal.integrated.profiles.windows": {
-        "AutoVenv PowerShell": {
-            "source": "PowerShell",
+    "terminal.integrated.profiles.linux": {
+        "AutoVenv Fish": {
+            "path": "fish",
             "args": [
-                "-NoExit",
-                "-Command",
-                "if (Test-Path '.\\.venv\\Scripts\\Activate.ps1') { .\\.venv\\Scripts\\Activate.ps1 }"
+                "-C",
+                "if test -f .venv/bin/activate.fish; source .venv/bin/activate.fish; end"
             ]
         }
     },
-    "terminal.integrated.defaultProfile.windows": "AutoVenv PowerShell"
+    "terminal.integrated.defaultProfile.linux": "AutoVenv Fish"
 }
 ```
 
 ### Why is this necessary?
-- **`python.defaultInterpreterPath`**: Tells the IDE to use your local `.venv`.
-- **`AutoVenv PowerShell`**: Creates a custom terminal profile that automatically executes `Activate.ps1` when a new terminal is launched. This guarantees the AI assistant's integrated terminal runs within the context of your virtual environment.
+- **`python.defaultInterpreterPath`**: Tells the IDE to use your local `.venv/bin/python` interpreter.
+- **`AutoVenv Fish`**: Creates a custom Linux terminal profile that automatically executes `source .venv/bin/activate.fish` if the virtual environment exists when a new terminal is launched. This guarantees the AI assistant's integrated terminal runs within the context of your virtual environment.
 
-*Note: If you still experience issues with the language server not finding packages, you may optionally add `python.analysis.extraPaths`: `[".venv/Lib/site-packages"]` to your settings.*
+*Note: If you still experience issues with the language server not finding packages, you may optionally add `python.analysis.extraPaths`: `[".venv/lib/python3.*/site-packages"]` to your settings (replace `python3.*` with your specific Python version directory inside `.venv/lib`).*
 
 ## 3. Type Checking Configuration (`pyrightconfig.json`)
 
@@ -57,7 +64,7 @@ To ensure type checkers like Pyright correctly resolve your virtual environment,
 
 Create a `requirements.txt` file to track dependencies. 
 Once your environment is active, install them via:
-```powershell
+```fish
 pip install -r requirements.txt
 ```
 
@@ -77,7 +84,7 @@ __pycache__/
 ## Summary Checklist for New Projects:
 - [ ] Create folder
 - [ ] Run `python -m venv .venv`
-- [ ] Create `.vscode/settings.json` with the custom PowerShell profile
+- [ ] Create `.vscode/settings.json` with the custom Fish profile
 - [ ] Create `pyrightconfig.json`
 - [ ] Create `.gitignore`
 - [ ] `pip install` required libraries and freeze to `requirements.txt`

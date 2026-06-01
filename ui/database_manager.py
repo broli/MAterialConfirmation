@@ -156,10 +156,36 @@ class ProductEditDialog(QDialog):
         
         self.form = ProductFormWidget(self, categories_path=self.categories_path, dropdown_categories_path=dropdown_categories_path)
         self.form.load_data(self.product, self.product.get("category_file", ""))
+        self.form.copy_from_requested.connect(self._on_copy_from_requested)
         layout.addWidget(self.form)
         
         self.controller = controller
-        
+
+    def _on_copy_from_requested(self):
+        if not self.controller:
+            return
+            
+        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
+        if dlg.exec():
+            item_id = dlg.selected_item_id
+            if item_id:
+                item_full = self.controller.catalog.get(item_id)
+                if not item_full: return
+                
+                msg = QMessageBox(self)
+                msg.setWindowTitle("Merge Strategy")
+                msg.setText("How would you like to merge this data?")
+                btn_overwrite = msg.addButton("Overwrite Existing Data", QMessageBox.ButtonRole.AcceptRole)
+                btn_fill = msg.addButton("Fill Empty Fields Only", QMessageBox.ButtonRole.AcceptRole)
+                msg.addButton("Cancel", QMessageBox.ButtonRole.RejectRole)
+                
+                msg.exec()
+                
+                if msg.clickedButton() == btn_overwrite:
+                    self.form.copy_from(item_full, item_full.get("category_file", ""), "overwrite")
+                elif msg.clickedButton() == btn_fill:
+                    self.form.copy_from(item_full, item_full.get("category_file", ""), "fill_empty")
+
         footer = QHBoxLayout()
         btn_save = QPushButton("Save")
         btn_save.clicked.connect(self.save)

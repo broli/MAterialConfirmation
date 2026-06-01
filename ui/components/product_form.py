@@ -35,6 +35,8 @@ class DimensionRow(QWidget):
         return None
 
 class ProductFormWidget(QWidget):
+    copy_from_requested = Signal()
+
     def __init__(self, parent=None, categories_path="database/categories", batch_mode=False, dropdown_categories_path=None):
         super().__init__(parent)
         self.categories_path = categories_path
@@ -53,6 +55,13 @@ class ProductFormWidget(QWidget):
         content = QWidget()
         layout = QVBoxLayout(content)
         
+        # --- Top Actions ---
+        if not self.batch_mode:
+            self.btn_copy_from = QPushButton("📋 Copy from existing item...")
+            self.btn_copy_from.setStyleSheet("background-color: #1976D2; color: white; font-weight: bold; padding: 6px;")
+            self.btn_copy_from.clicked.connect(self.copy_from_requested.emit)
+            layout.addWidget(self.btn_copy_from)
+
         # --- Core Fields ---
         core_group = QGroupBox("Core Information")
         core_layout = QGridLayout()
@@ -247,6 +256,57 @@ class ProductFormWidget(QWidget):
             abs_path = os.path.abspath(path)
             self.image_entry.setText(abs_path) # Store absolute path temporarily before save
             self._update_image_preview(abs_path)
+
+    def copy_from(self, source_data: dict, source_category: str, strategy: str = "overwrite"):
+        """
+        Merge data from an existing item.
+        Strategies:
+        - 'overwrite': Replace all fields except 'id' and 'oneclick_description'
+        - 'fill_empty': Only replace fields that are currently empty
+        """
+        current_data, current_category = self.get_data()
+        
+        # Save protected unique fields
+        protected_id = self.id_entry.text()
+        protected_oneclick = self.oneclick_entry.text()
+
+        def should_update(field_val_current):
+            if strategy == "overwrite":
+                return True
+            # For 'fill_empty', update if current is completely empty or empty list/dict
+            if not field_val_current:
+                return True
+            return False
+
+        # Load the source into the form field by field manually, or just construct a merged dict and use load_data
+        merged_data = dict(current_data)
+        
+        # We must look at the source fields and decide whether to pull them into merged_data
+        for k, v in source_data.items():
+            if k == "printable": continue
+            if should_update(current_data.get(k)):
+                merged_data[k] = v
+                
+        # Handle printable
+        merged_printable = dict(current_data.get("printable", {}))
+        source_printable = source_data.get("printable", {})
+        for pk, pv in source_printable.items():
+            if should_update(merged_printable.get(pk)):
+                merged_printable[pk] = pv
+        if merged_printable:
+            merged_data["printable"] = merged_printable
+
+        # Decide category
+        if should_update(current_category):
+            final_cat = source_category
+        else:
+            final_cat = current_category
+
+        # Restore the protected fields NO MATTER WHAT (they should never be copied from another item)
+        merged_data["id"] = protected_id
+        merged_data["oneclick_description"] = protected_oneclick
+
+        self.load_data(merged_data, final_cat)
 
     def load_data(self, data: dict, category: str = ""):
         self.id_entry.setText(str(data.get("id", "")))

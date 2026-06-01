@@ -27,3 +27,4 @@ staging_database/
 *.xlsx
 *.7z
 settings.json
+.env

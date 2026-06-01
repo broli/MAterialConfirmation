@@ -67,7 +67,7 @@ done
 
 # Copy the icon
 if [ -f "./icon/Icon_512.png" ]; then
-    cp -f "./icon/Icon_512.png" "$appDir/app.png"
+    cp -f "./icon/Icon_512.png" "$appDir/pkb-material-confirmation.png"
 fi
 
 # Create the .desktop file
@@ -80,7 +80,7 @@ Version=1.0
 Name=PKB Material Confirmation System
 Comment=Manage and confirm materials for projects
 Exec="$appDir/$TARGET_NAME"
-Icon=$appDir/app.png
+Icon=$appDir/pkb-material-confirmation.png
 Terminal=false
 Type=Application
 Categories=Utility;Office;
