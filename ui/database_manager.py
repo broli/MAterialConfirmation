@@ -158,34 +158,10 @@ class ProductEditDialog(QDialog):
         self.form = ProductFormWidget(self, categories_path=self.categories_path, dropdown_categories_path=dropdown_categories_path)
         self.form.load_data(self.product, self.product.get("category_file", ""))
         self.form.copy_from_requested.connect(self._on_copy_from_requested)
+        self.form.link_alias_requested.connect(self._on_link_alias_requested)
         layout.addWidget(self.form)
         
         self.controller = controller
-
-    def _on_copy_from_requested(self):
-        if not self.controller:
-            return
-            
-        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
-        if dlg.exec():
-            item_id = dlg.selected_item_id
-            if item_id:
-                item_full = self.controller.catalog.get(item_id)
-                if not item_full: return
-                
-                msg = QMessageBox(self)
-                msg.setWindowTitle("Merge Strategy")
-                msg.setText("How would you like to merge this data?")
-                btn_overwrite = msg.addButton("Overwrite Existing Data", QMessageBox.ButtonRole.AcceptRole)
-                btn_fill = msg.addButton("Fill Empty Fields Only", QMessageBox.ButtonRole.AcceptRole)
-                msg.addButton("Cancel", QMessageBox.ButtonRole.RejectRole)
-                
-                msg.exec()
-                
-                if msg.clickedButton() == btn_overwrite:
-                    self.form.copy_from(item_full, item_full.get("category_file", ""), "overwrite")
-                elif msg.clickedButton() == btn_fill:
-                    self.form.copy_from(item_full, item_full.get("category_file", ""), "fill_empty")
 
         footer = QHBoxLayout()
         btn_save = QPushButton("Save")
@@ -203,6 +179,70 @@ class ProductEditDialog(QDialog):
         footer.addWidget(btn_save)
         footer.addWidget(btn_cancel)
         layout.addLayout(footer)
+
+    def _on_copy_from_requested(self):
+        if not self.controller:
+            return
+            
+        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
+        if dlg.exec():
+            item_id = dlg.selected_item_id
+            if item_id:
+                item_full = self.controller.catalog.get(item_id)
+                if not item_full: return
+                
+                msg = QMessageBox(self)
+                msg.setWindowTitle("Merge Strategy")
+                msg.setText("How would you like to merge this data?")
+                msg.setStyleSheet("QPushButton { min-width: 180px; padding: 5px; }")
+                btn_overwrite = msg.addButton("Overwrite Existing Data", QMessageBox.ButtonRole.AcceptRole)
+                btn_fill = msg.addButton("Fill Empty Fields Only", QMessageBox.ButtonRole.AcceptRole)
+                msg.addButton("Cancel", QMessageBox.ButtonRole.RejectRole)
+                
+                msg.exec()
+                
+                if msg.clickedButton() == btn_overwrite:
+                    self.form.copy_from(item_full, item_full.get("category_file", ""), "overwrite")
+                elif msg.clickedButton() == btn_fill:
+                    self.form.copy_from(item_full, item_full.get("category_file", ""), "fill_empty")
+
+    def _on_link_alias_requested(self):
+        if not self.controller:
+            return
+            
+        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
+        if dlg.exec():
+            prod_id = dlg.selected_item_id
+            if prod_id:
+                prod_item = self.controller.catalog.get(prod_id)
+                if not prod_item: return
+                
+                staging_desc = self.product.get("oneclick_description", "").strip()
+                if not staging_desc:
+                    staging_desc = self.form.oneclick_entry.text().strip()
+                    
+                aliases = prod_item.get("aliases", [])
+                if not isinstance(aliases, list): aliases = []
+                
+                if staging_desc and staging_desc not in aliases:
+                    aliases.append(staging_desc)
+                    prod_item["aliases"] = aliases
+                    
+                    prod_cat_path = self.controller.db_loader.categories_path
+                    prod_ass_path = self.controller.db_loader.assets_path
+                    cat_file = prod_item.get("category_file", "UNKNOWN.yaml")
+                    if cat_file and not cat_file.endswith(".yaml"):
+                        cat_file += ".yaml"
+                    if not cat_file:
+                        cat_file = "UNKNOWN.yaml"
+                    
+                    self.product_service.upsert_to_yaml(prod_item, cat_file, prod_cat_path, prod_ass_path)
+                
+                if not self.is_new and self.original_category:
+                    self.product_service.remove_from_yaml(self.product.get("id"), self.original_category, self.categories_path)
+                
+                QMessageBox.information(self, "Success", f"Linked as alias to {prod_id} and deleted from staging.")
+                self.accept()
 
     def _on_find_similar(self):
         from ui.components.similar_items_dialog import SimilarItemsDialog
@@ -403,6 +443,12 @@ class DatabaseManager(QDialog):
         self.btn_approve.hide() # Hidden by default, shown in Staging
         self.footer_layout.addWidget(self.btn_approve)
         
+        self.btn_link_alias = QPushButton("🔗 Link as Alias to Existing...")
+        self.btn_link_alias.setStyleSheet("background-color: #00897b; color: white; font-weight: bold;")
+        self.btn_link_alias.clicked.connect(self.on_link_alias_selected)
+        self.btn_link_alias.hide()
+        self.footer_layout.addWidget(self.btn_link_alias)
+        
         self.footer_layout.addStretch()
         
         if self.picker_mode:
@@ -419,9 +465,11 @@ class DatabaseManager(QDialog):
         self.current_source = text
         if text == "Staging Area":
             self.btn_approve.show()
+            self.btn_link_alias.show()
             self.btn_add.hide()
         else:
             self.btn_approve.hide()
+            self.btn_link_alias.hide()
             self.btn_add.show()
         self.refresh_data()
 
@@ -508,6 +556,55 @@ class DatabaseManager(QDialog):
                     
         self._refresh_loaders()
         QMessageBox.information(self, "Success", f"Approved {len(items)} items to production.")
+
+    def on_link_alias_selected(self):
+        items = self.get_selected_items()
+        if not items:
+            QMessageBox.warning(self, "Warning", "Select an item from Staging to link.")
+            return
+            
+        if len(items) > 1:
+            QMessageBox.warning(self, "Warning", "Please select only one item to link as an alias at a time.")
+            return
+            
+        staging_item = items[0]
+        
+        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
+        if dlg.exec():
+            prod_id = dlg.selected_item_id
+            if not prod_id: return
+            
+            prod_item = self.controller.catalog.get(prod_id)
+            if not prod_item: return
+            
+            staging_desc = staging_item.get("oneclick_description", "").strip()
+            if not staging_desc:
+                printable = staging_item.get("printable", {})
+                staging_desc = printable.get("description", "").strip()
+                
+            aliases = prod_item.get("aliases", [])
+            if not isinstance(aliases, list): aliases = []
+            
+            if staging_desc and staging_desc not in aliases:
+                aliases.append(staging_desc)
+                prod_item["aliases"] = aliases
+                
+                prod_cat_path = os.path.join("database", "categories")
+                prod_ass_path = os.path.join("database", "assets")
+                cat_file = prod_item.get("category_file", "UNKNOWN.yaml")
+                if cat_file and not cat_file.endswith(".yaml"):
+                    cat_file += ".yaml"
+                
+                self.product_service.upsert_to_yaml(prod_item, cat_file, prod_cat_path, prod_ass_path)
+            
+            stg_cat_path = os.path.join("staging_database", "categories")
+            old_cat = staging_item.get("category_file", "UNKNOWN.yaml")
+            if old_cat and not old_cat.endswith(".yaml"):
+                old_cat += ".yaml"
+            self.product_service.remove_from_yaml(staging_item["id"], old_cat, stg_cat_path)
+            
+            self._refresh_loaders()
+            QMessageBox.information(self, "Success", f"Linked as alias to {prod_id} and deleted from staging.")
 
     def show_maintenance(self):
         from ui.maintenance_dialog import MaintenanceDialog

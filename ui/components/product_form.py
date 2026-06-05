@@ -36,6 +36,7 @@ class DimensionRow(QWidget):
 
 class ProductFormWidget(QWidget):
     copy_from_requested = Signal()
+    link_alias_requested = Signal()
 
     def __init__(self, parent=None, categories_path="database/categories", batch_mode=False, dropdown_categories_path=None):
         super().__init__(parent)
@@ -57,10 +58,19 @@ class ProductFormWidget(QWidget):
         
         # --- Top Actions ---
         if not self.batch_mode:
+            top_actions_layout = QHBoxLayout()
+            
             self.btn_copy_from = QPushButton("📋 Copy from existing item...")
             self.btn_copy_from.setStyleSheet("background-color: #1976D2; color: white; font-weight: bold; padding: 6px;")
             self.btn_copy_from.clicked.connect(self.copy_from_requested.emit)
-            layout.addWidget(self.btn_copy_from)
+            top_actions_layout.addWidget(self.btn_copy_from)
+            
+            self.btn_link_alias = QPushButton("🔗 Link as Alias (Discard)...")
+            self.btn_link_alias.setStyleSheet("background-color: #00897b; color: white; font-weight: bold; padding: 6px;")
+            self.btn_link_alias.clicked.connect(self.link_alias_requested.emit)
+            top_actions_layout.addWidget(self.btn_link_alias)
+            
+            layout.addLayout(top_actions_layout)
 
         # --- Core Fields ---
         core_group = QGroupBox("Core Information")

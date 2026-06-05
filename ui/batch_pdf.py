@@ -78,6 +78,7 @@ class BatchPdfIngestWindow(QDialog):
         
         self.form = ProductFormWidget(self, categories_path=os.path.join(self.controller.db_loader.base_path, "categories"))
         self.form.copy_from_requested.connect(self._on_copy_from_requested)
+        self.form.link_alias_requested.connect(self._on_link_alias_requested)
         right_layout.addWidget(self.form)
         
         self.btn_save = QPushButton("Save to Database")
@@ -105,6 +106,7 @@ class BatchPdfIngestWindow(QDialog):
                 msg = QMessageBox(self)
                 msg.setWindowTitle("Merge Strategy")
                 msg.setText("How would you like to merge this data?")
+                msg.setStyleSheet("QPushButton { min-width: 180px; padding: 5px; }")
                 btn_overwrite = msg.addButton("Overwrite Existing Data", QMessageBox.ButtonRole.AcceptRole)
                 btn_fill = msg.addButton("Fill Empty Fields Only", QMessageBox.ButtonRole.AcceptRole)
                 msg.addButton("Cancel", QMessageBox.ButtonRole.RejectRole)
@@ -115,6 +117,53 @@ class BatchPdfIngestWindow(QDialog):
                     self.form.copy_from(item_full, item_full.get("category_file", ""), "overwrite")
                 elif msg.clickedButton() == btn_fill:
                     self.form.copy_from(item_full, item_full.get("category_file", ""), "fill_empty")
+
+    def _on_link_alias_requested(self):
+        from ui.database_manager import DatabaseManager
+        dlg = DatabaseManager(self.controller, parent=self, picker_mode=True)
+        if dlg.exec():
+            prod_id = dlg.selected_item_id
+            if prod_id:
+                prod_item = self.controller.catalog.get(prod_id)
+                if not prod_item: return
+                
+                rows = self.table_view.selectionModel().selectedRows()
+                if not rows:
+                    QMessageBox.warning(self, "Warning", "Please select an item from the queue first.")
+                    return
+                    
+                row_idx = rows[0].row()
+                staging_item = self.unmatched_items[row_idx]
+                staging_desc = staging_item.get("raw_description", "").strip()
+                
+                if not staging_desc:
+                    staging_desc = self.form.oneclick_entry.text().strip()
+                
+                if not staging_desc:
+                    QMessageBox.warning(self, "Warning", "No description to link as alias.")
+                    return
+                
+                aliases = prod_item.get("aliases", [])
+                if not isinstance(aliases, list): aliases = []
+                
+                if staging_desc not in aliases:
+                    aliases.append(staging_desc)
+                    prod_item["aliases"] = aliases
+                    
+                    prod_cat_path = os.path.join(self.controller.db_loader.base_path, "categories")
+                    prod_ass_path = os.path.join(self.controller.db_loader.base_path, "assets")
+                    cat_file = prod_item.get("category_file", "UNKNOWN.yaml")
+                    if cat_file and not cat_file.endswith(".yaml"):
+                        cat_file += ".yaml"
+                    
+                    from models.product_service import ProductService
+                    ProductService.upsert_to_yaml(prod_item, cat_file, prod_cat_path, prod_ass_path)
+                
+                QMessageBox.information(self, "Success", f"Linked as alias to {prod_id} and removed from queue.")
+                self.db_modified = True
+                self.unmatched_items.pop(row_idx)
+                self.table_model.update_data(self.unmatched_items)
+                self.form.load_data({}) # Clear form
         
     def log_to_console(self, msg):
         pass # Console removed

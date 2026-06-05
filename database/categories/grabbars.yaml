@@ -215,22 +215,6 @@
     dimensions:
       width: '12'
     image_file: 51IK7miEa7L._AC_SL1500_.jpg
-- id: R8724P
-  sku: R8724P
-  brand: Moen
-  provider: ''
-  routing_tag: WAREHOUSE
-  purchase_link: ''
-  oneclick_description: 'Bath Accessories Grab Bars Contemporary 24" Contemporary
-    Grab
-
-    Bar Brushed Nickel'
-  printable:
-    finish: Brushed Nickel
-    description: Contemporary
-    dimensions:
-      width: '24'
-    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
 - id: R8724BL
   sku: R8724BL
   brand: Moen
@@ -302,3 +286,42 @@
   category_file: grabbars
   aliases:
   - Bath Accessories Grab Bars Traditional 24" Traditional Grab Bar Chrome
+- id: LCNR-SS-SAN
+  sku: LCNR-SS-SAN
+  brand: BCI
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat
+    (900 Pound Capacity) Matching
+  aliases:
+  - 'Bath Accessories Seating BCI 28.5 x 28.5 Hexagon Corner Seat (900
+
+    Pound Capacity) Santorini White'
+  printable:
+    finish: white
+    description: White Corner Hexagon Shower Seat
+    image_file: lcnr-ss-san_l.jpg
+    dimensions:
+      width: '28'
+      height: '20.5'
+      depth: '1.75'
+- id: R8724P
+  sku: R8724P
+  brand: Moen
+  provider: ''
+  routing_tag: WAREHOUSE
+  purchase_link: ''
+  oneclick_description: 'Bath Accessories Grab Bars Contemporary 24" Contemporary
+    Grab
+
+    Bar Brushed Nickel'
+  printable:
+    finish: Brushed Nickel
+    description: Contemporary
+    dimensions:
+      width: '24'
+    image_file: peened-stainless-steel-moen-grab-bars-r8712p-64_600.png
+  category_file: grabbars
+  aliases:
+  - Bath Accessories Grab Bars Contemporary 24" Contemporary Grab Bar Brushed Nickel

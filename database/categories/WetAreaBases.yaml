@@ -88,20 +88,6 @@
       Length: '30'
       Depth: '14.25'
     image_file: B23605-6030L-WH-B1.png
-- id: DLT-1136601
-  sku: MISSING_SKU
-  brand: HV
-  provider: MISSING_PROVIDER
-  purchase_link: ''
-  routing_tag: WH_OR_PROCURE
-  oneclick_description: Bath Shower Bases HV Single Threshold Center Drain 60" x 36"
-  printable:
-    finish: White
-    description: ''
-    dimensions:
-      Width: '60'
-      Depth: '36'
-    image_file: white-dreamline-shower-pans-dlt-1136600-64_1200.png
 - id: RT-603015CL-L-W
   sku: RT-603015CL-L-W
   brand: BCI
@@ -186,3 +172,53 @@
   provider: DreamLine
   purchase_link: ''
   aliases: []
+- id: DLT-1136601
+  sku: DLT-1136601
+  brand: PKB HV
+  provider: Home Depot
+  routing_tag: WH_OR_PROCURE
+  purchase_link: https://www.homedepot.com/p/DreamLine-SlimLine-60-in-x-36-in-Single-Threshold-Shower-Pan-Base-in-White-with-Left-Hand-Drain-DLT-1136601/204047614
+  oneclick_description: Bath Shower Bases HV Single Threshold Left Side Drain 60"
+    x 36"
+  aliases: []
+  printable:
+    finish: White
+    description: 60 in. x 36 in. Single Threshold Shower Pan Base in White with Left
+      Hand Drain
+    image_file: white-dreamline-shower-pans-dlt-1132602-64_600 left.png
+    dimensions:
+      width: '60'
+      Length: '36'
+- id: SL-PL-W-SF
+  sku: SL-PL-W-SF
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom
+    Sprayfoam Bases Standard Shower Base (Up to 60" L x 36" W) White SL-PL-W-SF: Sprayfoam
+    Custom Shower Base, White'
+  aliases: []
+  printable:
+    finish: White
+    description: Standard Shower Base
+    image_file: Elite_Product Guide_05_23 _LRV3_Spreads.png
+    dimensions:
+      length: 60"
+      width: 36"
+- id: NewAGESurfaces
+  sku: NewAGESurfaces
+  brand: NewAGESurfaces
+  provider: NewAGESurfaces
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Shower Bases Solid Surface Single Threshold Up to 72"
+    x 40" White 6-8 Week Timeline
+  aliases: []
+  printable:
+    finish: White
+    description: Solid Surface Single Threshold
+    image_file: Screenshot_20260605_162314.png
+    dimensions:
+      width: 72"
+      depth: 40"

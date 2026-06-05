@@ -34,3 +34,18 @@
     description: LVP Ecru
     dimensions: {}
     image_file: MonumentalPlus-570+104-Ecru.png
+- id: MISPrescottAustellGrove
+  sku: MISPrescottAustellGrove
+  brand: MSI
+  provider: MSI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Flooring Bathroom Flooring Package (Under 120 SqFt) Prescott
+    Austell Grove
+  aliases: []
+  printable:
+    finish: Austell Grove
+    description: Flooring Package
+    image_file: xl-prescott-austell-grove-vinyl-flooring-a.jpg
+    dimensions:
+      coverage: Under 120 SqFt

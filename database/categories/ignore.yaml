@@ -700,3 +700,76 @@
       duration: 4-8 working days
   id: STG-3378713D
   category_file: ignore
+- id: '38'
+  sku: '38'
+  brand: UNKNOWN
+  provider: ''
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: 'Outside Partner Plumbing Moving Drain Lines in Concrete Floor
+    (Per LF) Includes jackhammering, moving drain, filling in with concrete CO # 2'
+  aliases: []
+  printable:
+    finish: UNKNOWN
+    description: 'Plumbing Moving Drain Lines in Concrete Floor (Per LF) Includes
+      jackhammering, moving drain, filling in with concrete CO # 2'
+    image_file: ''
+    dimensions: {}
+- id: '39'
+  sku: ''
+  brand: UNKNOWN
+  provider: ''
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: Outside Partner Construction Related Enlarging Bathroom Door
+    (Inc. New Framing) Does Not Include New Door Material w/ Patching no Painting
+  aliases: []
+  printable:
+    finish: UNKNOWN
+    description: Enlarging Bathroom Door
+    image_file: ''
+    dimensions: {}
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Electrical Install New Exhaust Fan Using Existing
+    JBox & Venting Existing location only, include hooking up existing ducting. Does
+    not include additional lines for light or heaters Bath Bathroom Labor Miscellaneous
+    Construction Miscellaneous 50 Pull-Up of Tile outside of Wet Space (Min. 50 Sq
+    Ft) (Does Not Include Drywall, Painting & Patching Work)
+  printable:
+    description: Pull-Up of Tile
+    finish: UNKNOWN
+    dimensions:
+      minimum_area: 50 Sq Ft
+  id: STG-52C39F6D
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: Outside Partner Miscellaneous Install Mirror (Labor Only)
+    Client to provide Mirror Material Bath Bathroom Labor Miscellaneous Construction
+    Painting Drywall 45 Installation - Includes Taping, Patching & Texture (By SqFt)
+  printable:
+    description: Mirror Installation (Labor Only)
+    finish: UNKNOWN
+    dimensions:
+      area: 45 SqFt
+  id: STG-7B278A70
+  category_file: ignore
+- sku: UNKNOWN
+  brand: Labor
+  finish: UNKNOWN
+  routing_tag: IGNORE
+  oneclick_description: 'Bath Bathroom Labor Miscellaneous Construction Miscellaneous
+    Installing New Bathroom Hardware Installation of the following item(s): Toilet
+    Paper Holder, Rob Hooks, Towel Bar (Specify)'
+  printable:
+    description: Toilet Paper Holder, Rob Hooks, Towel Bar
+    finish: UNKNOWN
+    dimensions:
+      size: UNKNOWN
+  id: STG-9923B818
+  category_file: ignore

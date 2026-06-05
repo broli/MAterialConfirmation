@@ -51,20 +51,6 @@
     description: ''
     dimensions: {}
     image_file: BCI wallsystem white.png
-- id: W-LESU-GL
-  sku: W-LESU-GL
-  brand: BCI
-  provider: BCI
-  routing_tag: WH_OR_PROCURE
-  purchase_link: ''
-  oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
-    Grayline Laser-Etched: Subway Standard - Shower W-LESU-GL: LE/3X6 Subway Shower
-    System Grayline'
-  printable:
-    finish: White, Grey line
-    description: LE/3x6 Subway Shower System Grayline
-    dimensions: {}
-    image_file: W-LESU-GL 3x6-subway_grayline_l.jpg
 - id: W-BCK-F-EV
   sku: W-BCK-F-EV
   brand: BCI
@@ -156,3 +142,49 @@
     image_file: wainscot-white_l.jpg
     dimensions:
       length: 8 Ft
+- id: W-LESU-GL
+  sku: W-LESU-GL
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Wall Systems Elite - Wall Systems
+    Grayline Laser-Etched: Monument Standard - Shower W-LEMT-GL: LE/9X15 Monument
+    Shower System Grayline CO # 2 Omit - Change to 3 back panels'
+  aliases: []
+  printable:
+    finish: 'Grayline Laser-Etched: Monument'
+    description: Wall Systems Elite - Wall Systems (pictured subway pattern)
+    image_file: Grayline.png
+    dimensions:
+      panel_size: 9X15
+- id: W-BCK-MT-GL
+  sku: W-BCK-MT-GL
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Single Panels Elite - Individual
+    Walls Grayline Laser-Etched: Monument Back Wall Flat W-BCK-MT-GL: LE/9X15 Monument
+    Grayline Back Wall CO # 2 Change wall system to backpanels'
+  aliases: []
+  printable:
+    finish: 'Grayline Laser-Etched: Monument'
+    description: Wall Systems Elite - Wall Systems (pictured Subway pattern)
+    image_file: Grayline.png
+    dimensions:
+      panel_size: 9X15
+- id: CT-OC2-W
+  sku: CT-OC2-W
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Wall Systems BCI Walls Trim Elite - Trim Outside Outside
+    White CT-OC2-W: 2 In Outside Corner Trim White'
+  aliases: []
+  printable:
+    finish: White
+    description: Outside Corner Trim (Pictured in beige, it will match you walls)
+    image_file: ct-oc-s_l.jpg
+    dimensions: {}
