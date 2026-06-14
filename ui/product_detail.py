@@ -4,6 +4,73 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QFont
 import os
 from ui.utils import clear_layout
+from ui.components.product_form import ProductFormWidget
+import copy
+
+class OverrideDialog(QDialog):
+    def __init__(self, parent, base_data, current_overrides):
+        super().__init__(parent)
+        self.setWindowTitle("Override Product Details (Temporary)")
+        self.setMinimumSize(600, 700)
+        
+        self.base_data = base_data
+        
+        layout = QVBoxLayout(self)
+        
+        lbl_info = QLabel("<b>Note:</b> Changes made here only affect this specific item for this export. The master database will not be updated.")
+        lbl_info.setStyleSheet("color: #ffa726; background: #3e2723; padding: 10px; border-radius: 4px;")
+        lbl_info.setWordWrap(True)
+        layout.addWidget(lbl_info)
+        
+        self.form = ProductFormWidget(self, batch_mode=False)
+        
+        merged_data = copy.deepcopy(base_data)
+        if current_overrides:
+            def deep_merge(target, updates):
+                for k, v in updates.items():
+                    if isinstance(v, dict) and isinstance(target.get(k), dict):
+                        deep_merge(target[k], v)
+                    else:
+                        target[k] = v
+            deep_merge(merged_data, current_overrides)
+            
+        self.form.load_data(merged_data)
+        
+        layout.addWidget(self.form, 1)
+        
+        footer = QHBoxLayout()
+        btn_save = QPushButton("Save Overrides")
+        btn_save.setStyleSheet("background-color: #2e7d32; color: white;")
+        btn_save.clicked.connect(self.accept)
+        
+        btn_cancel = QPushButton("Cancel")
+        btn_cancel.clicked.connect(self.reject)
+        
+        footer.addStretch()
+        footer.addWidget(btn_save)
+        footer.addWidget(btn_cancel)
+        layout.addLayout(footer)
+
+    def get_overrides(self):
+        new_data, _ = self.form.get_data()
+        overrides = {}
+        
+        for k in ["sku", "brand", "provider", "routing_tag", "oneclick_description"]:
+            if new_data.get(k) != self.base_data.get(k):
+                overrides[k] = new_data.get(k)
+                
+        new_printable = new_data.get("printable", {})
+        base_printable = self.base_data.get("printable", {})
+        
+        print_diff = {}
+        for k, v in new_printable.items():
+            if k not in base_printable or base_printable[k] != v:
+                print_diff[k] = v
+                
+        if print_diff:
+            overrides["printable"] = print_diff
+            
+        return overrides
 
 class ProductDetailDialog(QDialog):
     def __init__(self, parent, start_idx, controller):
@@ -56,7 +123,13 @@ class ProductDetailDialog(QDialog):
         btn_close.setFixedWidth(100)
         btn_close.clicked.connect(self.accept)
         
+        self.btn_override = QPushButton("Override Details")
+        self.btn_override.setFixedWidth(130)
+        self.btn_override.setStyleSheet("background-color: #ffa726; color: black; font-weight: bold;")
+        self.btn_override.clicked.connect(self.on_override)
+        
         footer.addWidget(self.btn_change)
+        footer.addWidget(self.btn_override)
         footer.addWidget(self.btn_confirm)
         footer.addStretch()
         footer.addWidget(btn_close)
@@ -113,6 +186,29 @@ class ProductDetailDialog(QDialog):
                 self.load_item(self.idx)
             else:
                 if self.parent().change_item_match(self.idx):
+                    self.load_item(self.idx)
+
+    def on_override(self):
+        items = self.controller.session_data.get("line_items", [])
+        if 0 <= self.idx < len(items):
+            item = items[self.idx]
+            match_id = item.get("_match", {}).get("match_id")
+            
+            if not match_id:
+                QMessageBox.warning(self, "No Match", "This item has no database match to override. Please assign a match first.")
+                return
+                
+            db_item = self.controller.find_product_by_id(match_id)
+            if not db_item:
+                QMessageBox.warning(self, "Error", "Database product not found.")
+                return
+                
+            current_overrides = item.get("overrides", {})
+            
+            dlg = OverrideDialog(self, db_item, current_overrides)
+            if dlg.exec() == QDialog.DialogCode.Accepted:
+                new_overrides = dlg.get_overrides()
+                if self.controller.update_item_overrides(self.idx, new_overrides):
                     self.load_item(self.idx)
 
     def on_qty_change(self, delta):
@@ -256,10 +352,29 @@ class ProductDetailDialog(QDialog):
                 scroll_l = QVBoxLayout(scroll_content)
                 scroll_l.setSpacing(8)
                 
+                # Apply overrides for display
+                overrides = item_data.get("overrides", {})
+                if overrides:
+                    import copy
+                    product = copy.deepcopy(product)
+                    def deep_merge(target, updates):
+                        for k, v in updates.items():
+                            if isinstance(v, dict) and isinstance(target.get(k), dict):
+                                deep_merge(target[k], v)
+                            else:
+                                target[k] = v
+                    deep_merge(product, overrides)
+                    
+                    lbl_warn = QLabel("⚠️ Displaying temporary overrides for this item")
+                    lbl_warn.setStyleSheet("color: #ffa726; font-weight: bold; font-size: 11px;")
+                    scroll_l.addWidget(lbl_warn)
+                
                 # Brand & SKU
                 brand_sku = QHBoxLayout()
-                lbl_brand = QLabel(f"<b>Brand:</b> {product.get('brand', 'N/A')}")
-                lbl_sku = QLabel(f"<b>SKU:</b> {product.get('sku', 'N/A')}")
+                b_color = "#ffa726" if "brand" in overrides else "white"
+                s_color = "#ffa726" if "sku" in overrides else "white"
+                lbl_brand = QLabel(f"<b style='color:{b_color}'>Brand:</b> <span style='color:{b_color}'>{product.get('brand', 'N/A')}</span>")
+                lbl_sku = QLabel(f"<b style='color:{s_color}'>SKU:</b> <span style='color:{s_color}'>{product.get('sku', 'N/A')}</span>")
                 brand_sku.addWidget(lbl_brand)
                 brand_sku.addSpacing(20)
                 brand_sku.addWidget(lbl_sku)
@@ -268,20 +383,26 @@ class ProductDetailDialog(QDialog):
                 
                 # Description
                 full_desc = product.get('oneclick_description', 'N/A')
-                lbl_full_desc = QLabel(f"<b>Description:</b><br>{full_desc}")
+                d_color = "#ffa726" if "oneclick_description" in overrides else "white"
+                lbl_full_desc = QLabel(f"<b style='color:{d_color}'>Description:</b><br><span style='color:{d_color}'>{full_desc}</span>")
                 lbl_full_desc.setWordWrap(True)
                 scroll_l.addWidget(lbl_full_desc)
                 
                 # Printable Details
                 printable = product.get('printable', {})
-                p_text = f"<b>Finish:</b> {printable.get('finish', 'N/A')}<br>"
+                print_overrides = overrides.get("printable", {})
+                
+                f_color = "#ffa726" if "finish" in print_overrides else "white"
+                p_text = f"<b>Finish:</b> <span style='color:{f_color}'>{printable.get('finish', 'N/A')}</span><br>"
                 
                 dims = printable.get('dimensions', {})
+                d_color = "#ffa726" if "dimensions" in print_overrides else "white"
                 if dims:
                     dim_str = ", ".join([f"{k}: {v}" for k, v in dims.items()])
-                    p_text += f"<b>Dimensions:</b> {dim_str}"
+                    p_text += f"<b>Dimensions:</b> <span style='color:{d_color}'>{dim_str}</span>"
                 else:
-                    p_text += "<b>Dimensions:</b> N/A"
+                    p_text += f"<b>Dimensions:</b> <span style='color:{d_color}'>N/A</span>"
+
                 
                 lbl_printable = QLabel(p_text)
                 lbl_printable.setStyleSheet("background-color: #333; padding: 5px; border-radius: 3px;")

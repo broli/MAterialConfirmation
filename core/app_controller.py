@@ -210,15 +210,37 @@ class AppController(QObject):
                 db_item["room"] = item.get("room", "General")
                 payload["products"].append(db_item)
             elif item.get("confirmed") and item.get("matched_id"):
-                db_item = self.catalog.get(item["matched_id"], {}).copy()
+                import copy
+                db_item = copy.deepcopy(self.catalog.get(item["matched_id"], {}))
                 if db_item:
                     if db_item.get("routing_tag", "").strip().upper() == "IGNORE":
                         continue
+                        
+                    # Apply temporary overrides if any
+                    overrides = item.get("overrides", {})
+                    if overrides:
+                        def deep_merge(target, updates):
+                            for k, v in updates.items():
+                                if isinstance(v, dict) and isinstance(target.get(k), dict):
+                                    deep_merge(target[k], v)
+                                else:
+                                    target[k] = v
+                        deep_merge(db_item, overrides)
                         
                     db_item["qty"] = item.get("qty", 1)
                     db_item["room"] = item.get("room", "General")
                     payload["products"].append(db_item)
         return payload
+
+    def update_item_overrides(self, idx: int, overrides: dict):
+        if not self.session_data or "line_items" not in self.session_data:
+            return False
+        if 0 <= idx < len(self.session_data["line_items"]):
+            item = self.session_data["line_items"][idx]
+            item["overrides"] = overrides
+            self.status_updated.emit(f"✅ Overrides saved for item {idx+1}")
+            return True
+        return False
 
     def generate_pdf(self, client_name: str, project_po: str):
         payload = self.prepare_payload(client_name, project_po)

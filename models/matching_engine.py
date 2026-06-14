@@ -490,12 +490,9 @@ class MatchService:
         self._debug_mode = debug_mode
         self._log_dir    = log_dir
         
-        self._llm: "GeminiClient | LocalLLMClient"
+        self._llm: "GeminiClient"
         gemini_key = ConfigManager.get("gemini_api_key")
-        if gemini_key:
-            self._llm = GeminiClient(api_key=gemini_key, debug_mode=debug_mode, log_dir=log_dir)
-        else:
-            self._llm = LocalLLMClient(model=llm_model, debug_mode=debug_mode, log_dir=log_dir)
+        self._llm = GeminiClient(api_key=gemini_key, debug_mode=debug_mode, log_dir=log_dir)
             
         # Create the match logger only when debug is on (avoids empty log files).
         self._match_log: MatchDebugLogger | None = (
@@ -508,11 +505,9 @@ class MatchService:
 
     def check_ollama_ready(self) -> tuple[bool, str]:
         """
-        Verify the LLM connection (Ollama or Gemini).
+        Verify the LLM connection (Gemini).
         Returns (True, "OK") or (False, "Error message").
         """
-        if isinstance(self._llm, GeminiClient):
-            return True, "Connected to Gemini API."
         return self._llm.check_connection()
 
     # ------------------------------------------------------------------

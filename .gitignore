@@ -28,3 +28,8 @@ staging_database/
 *.7z
 settings.json
 .env
+secrets_env.py
+scratch/
+windows_build/
+config.yaml
+tree.json

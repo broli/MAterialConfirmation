@@ -5,6 +5,17 @@ import sys
 if sys.platform.startswith("linux"):
     os.environ["QT_QPA_PLATFORMTHEME"] = "xdgdesktopportal"
 
+# Determine the directory of the script or the compiled executable
+if getattr(sys, 'frozen', False):
+    # Running as a PyInstaller compiled executable
+    app_dir = os.path.dirname(sys.executable)
+else:
+    # Running from the source script
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Lock the working directory to the app's root folder
+os.chdir(app_dir)
+
 from PySide6.QtWidgets import QApplication, QDialog
 import qdarktheme
 

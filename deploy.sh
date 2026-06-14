@@ -80,6 +80,7 @@ Version=1.0
 Name=PKB Material Confirmation System
 Comment=Manage and confirm materials for projects
 Exec="$appDir/$TARGET_NAME"
+Path=$appDir
 Icon=$appDir/pkb-material-confirmation.png
 Terminal=false
 Type=Application

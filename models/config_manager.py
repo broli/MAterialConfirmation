@@ -1,25 +1,40 @@
 import os
 import json
+import sys
+
+# Try importing secrets_env from the correct location depending on how the app is run
+try:
+    # When running as standard script or PyInstaller
+    import secrets_env
+    KITCHEN_TOKEN = getattr(secrets_env, "KITCHEN_TEAM_TOKEN", "")
+    BATH_TOKEN = getattr(secrets_env, "BATH_TEAM_TOKEN", "")
+    READ_ONLY_TOKEN = getattr(secrets_env, "GITHUB_READ_ONLY_TOKEN", "")
+    GEMINI_KEY = getattr(secrets_env, "GEMINI_API_KEY", "")
+except ImportError:
+    KITCHEN_TOKEN = ""
+    BATH_TOKEN = ""
+    READ_ONLY_TOKEN = ""
+    GEMINI_KEY = ""
 
 class ConfigManager:
     """
     Manages application settings stored in a local settings.json file.
     """
     CONFIG_FILE = "settings.json"
-    #GITHUB_READ_ONLY_TOKEN = "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"
+    #GITHUB_READ_ONLY_TOKEN = READ_ONLY_TOKEN
     
     TEAM_PRESETS = {
         "Kitchen Team": {
             "github_owner": "BathPC",
             "github_repo": "material-confirmation-db-kitchen",
-            "github_token": "ghp_e9",
+            "github_token": KITCHEN_TOKEN,
             "role": "user",
             "cover_image_filename": "Kitchen Document Cover Page.png"
         },
         "Bath Team": {
             "github_owner": "BathPC",
             "github_repo": "material-confirmation-db",
-            "github_token": "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",
+            "github_token": BATH_TOKEN,
             "role": "user",
             "cover_image_filename": "Bath Document Cover Page.png"
         }
@@ -55,7 +70,7 @@ class ConfigManager:
         "github_repo": "material-confirmation-db",
         "github_token": "",
         "github_branch": "main",
-        "gemini_api_key": ""
+        "gemini_api_key": GEMINI_KEY
     }
 
     @classmethod

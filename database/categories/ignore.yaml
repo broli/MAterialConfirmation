@@ -773,3 +773,17 @@
       size: UNKNOWN
   id: STG-9923B818
   category_file: ignore
+- id: '40'
+  sku: ''
+  brand: UNKNOWN
+  provider: ''
+  routing_tag: IGNORE
+  purchase_link: ''
+  oneclick_description: Bath Bathroom Labor Miscellaneous Construction Plumbing Moving
+    Drain Lines on Raised Foundation (Per LF)
+  aliases: []
+  printable:
+    finish: UNKNOWN
+    description: Drain Lines on Raised Foundation
+    image_file: ''
+    dimensions: {}

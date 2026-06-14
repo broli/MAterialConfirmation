@@ -63,25 +63,27 @@ class GeminiClient:
         debug_mode: bool = False,
         log_dir: str = "logs",
     ):
-        self.api_key = api_key or ConfigManager.get("gemini_api_key")
+        self.api_key = api_key or ConfigManager.get("gemini_api_key") or ""
         self.model = model or ConfigManager.get("gemini_model") or "gemini-3.0-flash"
         self.log_callback = log_callback
         self.model_status_callback = model_status_callback
         self.debug_mode = debug_mode
         self.log_dir = log_dir
 
-        if not self.api_key:
-            raise ValueError("Gemini API key is required. Please set it in Settings (Admin).")
-
         # Instructor-patched OpenAI client -> Gemini API
         self.client = instructor.from_openai(
             OpenAI(
                 base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-                api_key=self.api_key,
+                api_key=self.api_key if self.api_key else "dummy_key",
                 max_retries=0, # Disable internal rate limit retries so we can waterfall immediately
             ),
             mode=instructor.Mode.JSON,
         )
+
+    def check_connection(self) -> tuple[bool, str]:
+        if not self.api_key or self.api_key == "dummy_key":
+            return False, "Gemini API key is required. Please set it in Settings (Admin)."
+        return True, "Connected to Gemini API."
 
     @classmethod
     def get_ranked_models(cls, api_key: str) -> list[str]:

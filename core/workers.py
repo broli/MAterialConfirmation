@@ -104,7 +104,7 @@ class IngestionWorker(QObject):
                 if role == "admin":
                     self.signals.error.emit((
                         ConnectionError, 
-                        ConnectionError(f"AI service is not responding.\n\n{err}\n\nPlease ensure Ollama is running."), 
+                        ConnectionError(f"AI service is not configured or responding.\n\n{err}\n\nPlease ensure you have entered a valid Gemini API Key in Settings."), 
                         ""
                     ))
                     self.signals.finished.emit()
