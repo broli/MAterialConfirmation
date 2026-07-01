@@ -189,6 +189,23 @@
     dimensions:
       width: '60'
       Length: '36'
+- id: SL-PL-W-SF
+  sku: SL-PL-W-SF
+  brand: BCI
+  provider: BCI
+  routing_tag: WH_OR_PROCURE
+  purchase_link: ''
+  oneclick_description: 'Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom
+    Sprayfoam Bases Standard Shower Base (Up to 60" L x 36" W) White SL-PL-W-SF: Sprayfoam
+    Custom Shower Base, White'
+  aliases: []
+  printable:
+    finish: White
+    description: Standard Shower Base
+    image_file: Elite_Product Guide_05_23 _LRV3_Spreads.png
+    dimensions:
+      length: 60"
+      width: 36"
 - id: NewAGESurfaces
   sku: NewAGESurfaces
   brand: NewAGESurfaces
@@ -205,25 +222,3 @@
     dimensions:
       width: 72"
       depth: 40"
-- id: SL-PL-W-SF
-  sku: SL-PL-W-SF
-  brand: BCI
-  provider: BCI
-  routing_tag: WH_OR_PROCURE
-  purchase_link: ''
-  oneclick_description: 'Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom
-    Sprayfoam Bases Standard Shower Base (Up to 60" L x 36" W) White SL-PL-W-SF: Sprayfoam
-    Custom Shower Base, White'
-  aliases:
-  - 'Bath Shower Bases BCI Shower Bases Elite Shower Bases Custom Sprayfoam Bases
-    Extra Large - Center Drain Only (Up To 72" L x 48" W) White SL-PLXL-W-SF: Sprayfoam
-    Custom Shower Base, White - Extra Large (Over 60 In. Length Or 36 In. Width) -
-    Center Drain Only'
-  printable:
-    finish: White
-    description: Standard Shower Base
-    image_file: Elite_Product Guide_05_23 _LRV3_Spreads.png
-    dimensions:
-      length: 60"
-      width: 36"
-  category_file: WetAreaBases

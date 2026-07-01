@@ -188,18 +188,3 @@
     description: Outside Corner Trim (Pictured in beige, it will match you walls)
     image_file: ct-oc-s_l.jpg
     dimensions: {}
-- id: SSM-PS-1BW-SR
-  sku: SSM-PS-1BW-SR
-  brand: BCI
-  provider: BCI
-  routing_tag: WH_OR_PROCURE
-  purchase_link: ''
-  oneclick_description: Bath Wall Systems BCI PuroStone Single Panels 60" x 96" Sahara
-  aliases: []
-  printable:
-    finish: Sahara
-    description: BCI PuroStone Single Panels
-    image_file: PuroStone Brochure Sahara.png
-    dimensions:
-      width: 60"
-      height: 96"

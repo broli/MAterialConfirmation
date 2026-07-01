@@ -162,3 +162,21 @@
     dimensions:
       width: 46" - 49"
       height: 76"
+- id: K-707536-L-SHP
+  sku: K-707536-L-SHP
+  brand: Kohler
+  provider: Home Depot / Amazon/ Lowes
+  routing_tag: PROCURE
+  purchase_link: ''
+  oneclick_description: Bath Shower Doors Pivoting Shower Doors Revel Brushed Nickel
+    36" - 40" x 74" Revel Pivot Door with 5/16" Frameless Clear Glass
+  aliases: []
+  printable:
+    finish: Brushed Nickel
+    description: 'Revel Pivot
+
+      Door with Frameless
+
+      Clear Glass'
+    image_file: 61XfTCM9j+L._AC_SL1500_.png
+    dimensions: {}
