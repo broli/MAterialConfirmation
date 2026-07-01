@@ -775,15 +775,21 @@
   category_file: ignore
 - id: '40'
   sku: ''
-  brand: UNKNOWN
+  brand: ''
   provider: ''
   routing_tag: IGNORE
   purchase_link: ''
-  oneclick_description: Bath Bathroom Labor Miscellaneous Construction Plumbing Moving
-    Drain Lines on Raised Foundation (Per LF)
+  oneclick_description: 'Bath Special Requests This price does not include: New Flooring,
+    Toilet, Medicine Cabinet, Mirror, Extensive Plumbing, Painting & Patch work, Electrical,
+    and Removal/Hook-up of Vanity, Vanity Faucet & Vanity Sink. Client is aware, Existing
+    Bathroom Walls & Flooring outside the Wet Space along with Mirrors are subject
+    to Damages caused by Demolition. This contract itemizes all client-selected materials.
+    If the scope of work changes, any additional labor or materials must be documented
+    in a Change Order (CO) and may incur an additional charge—unless the change is
+    informational only and does not affect cost or labor.'
   aliases: []
   printable:
-    finish: UNKNOWN
-    description: Drain Lines on Raised Foundation
+    finish: ''
+    description: ''
     image_file: ''
     dimensions: {}

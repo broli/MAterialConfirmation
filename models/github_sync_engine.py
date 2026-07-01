@@ -132,11 +132,15 @@ class GithubSyncEngine:
 
         # 5. Fetch to test connection and permissions (intercepts 403 early)
         if progress_callback: progress_callback(0, 0, "Connecting to GitHub...")
-        fetch_res = subprocess.run(["git", "fetch", "origin"], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        git_env = os.environ.copy()
+        git_env["GIT_TERMINAL_PROMPT"] = "0"
+        
+        fetch_res = subprocess.run(["git", "fetch", "origin"], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=git_env)
         if fetch_res.returncode != 0:
             err_msg = fetch_res.stderr.decode('utf-8') if fetch_res.stderr else ""
-            if "403" in err_msg:
-                return False, "Failed to connect to GitHub (403 Forbidden). Your token does NOT have write access. Please generate a new GitHub Personal Access Token with the 'repo' scope."
+            if "403" in err_msg or "Authentication failed" in err_msg or "terminal prompts disabled" in err_msg or "could not read Password" in err_msg:
+                return False, "Failed to authenticate with GitHub. Your token may be invalid, expired, or lacking 'repo' scope."
             elif "not found" in err_msg.lower():
                 return False, f"Repository '{self.owner}/{self.repo}' not found on GitHub. Please create it first."
 
@@ -164,18 +168,18 @@ class GithubSyncEngine:
             subprocess.run(["git", "branch", "-M", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
             # Try a regular push first, then force if it fails (e.g., first push or overwritten history)
-            push_res = subprocess.run(["git", "push", "-u", "origin", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            push_res = subprocess.run(["git", "push", "-u", "origin", branch], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=git_env)
             if push_res.returncode != 0:
                 err_msg = push_res.stderr.decode('utf-8') if push_res.stderr else ""
-                if "403" in err_msg:
-                    return False, "Push failed (403 Forbidden). Your token does NOT have write access. Ensure it has the 'repo' scope."
+                if "403" in err_msg or "Authentication failed" in err_msg or "terminal prompts disabled" in err_msg:
+                    return False, "Push failed. Your token does NOT have write access. Ensure it has the 'repo' scope."
                 
                 # If push fails, try force push (common for new repos or forceful syncs in this specific app design)
-                force_push_res = subprocess.run(["git", "push", "-u", "origin", branch, "--force"], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                force_push_res = subprocess.run(["git", "push", "-u", "origin", branch, "--force"], cwd=local_db_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=git_env)
                 if force_push_res.returncode != 0:
                     err_msg_force = force_push_res.stderr.decode('utf-8') if force_push_res.stderr else ""
-                    if "403" in err_msg_force:
-                        return False, "Force push failed (403 Forbidden). Your token does NOT have write access. Ensure it has the 'repo' scope."
+                    if "403" in err_msg_force or "Authentication failed" in err_msg_force or "terminal prompts disabled" in err_msg_force:
+                        return False, "Force push failed. Your token does NOT have write access. Ensure it has the 'repo' scope."
                     return False, f"Failed to push to GitHub: {err_msg_force}"
         except subprocess.CalledProcessError as e:
             return False, f"Failed to push to GitHub: {e.stderr.decode('utf-8') if e.stderr else 'Check your token and repository name.'}"

@@ -21,7 +21,7 @@ This file tracks all hardcoded version mentions across the project for easy glob
   - Line 11: `Write-Host "Starting Deployment of v4.0"`
   - Line 29: `$exeName = "PKB Material Confirmation System_v4.0.exe"`
   - Line 54: `Write-Host "Deployment Successful! v4.0 is now live."`
-- **build_macos.sh**
+- **build_macos.fish**
   - Line 3: `# PKB Material Confirmation System - macOS "One-Click" Build Script (v4.0)`
 - **gui_main.spec**
   - Line 39: `name='PKB Material Confirmation System_v4.0'`
